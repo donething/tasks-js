@@ -1,5 +1,17 @@
 {
+  "version": "0.0.1",
+  "description": "定时任务脚本",
+  "scripts": {
+    "build": "tsc",
+    "test": "mocha --reporter spec"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "devDependencies": {
     "@types/node": "^17.0.25"
+  },
+  "dependencies": {
+    "do-utils": "^1.0.45"
   }
 }
