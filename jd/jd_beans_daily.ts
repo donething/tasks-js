@@ -1,14 +1,12 @@
-import {USERAGENT_IOS} from "../utils/useragent"
-import {request} from "do-utils"
-import {date} from "do-utils/dist/text"
+const {USERAGENT_IOS} = require("../utils/useragent")
+const {date, request} = require("../utils/utils")
 
 // cookie
-const jdCookie: string = process.env.JD_COOKIE
+const jdCookie: string = process.env.JD_COOKIE || ""
 // 指定获取最近几天内，每日京东的变化量，不指定时为 30 天内
 const jdBeansRecentDay: number = Number(process.env.JD_BEANS_RECENT_DAY) || 30
 
 const headers = {
-  "authority": "bean.m.jd.com",
   "accept": "application/json, text/javascript, */*; q=0.01",
   "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
   "cookie": jdCookie,
@@ -52,7 +50,7 @@ const getBeansInDay = async (day: number): Promise<Map<string, number>> => {
     let obj: BeanDetail = await resp.json()
     if (obj.code !== "0") {
       console.warn("获取京豆变化的详细信息失败", obj)
-      return
+      return beansMap
     }
 
     // 已读取完所有页
@@ -81,7 +79,13 @@ const getBeansInDay = async (day: number): Promise<Map<string, number>> => {
 
 // 展示数据
 const printBeans = async () => {
+  if (!jdCookie) {
+    console.log("Cookie 为空，无法获取京豆变化量")
+    return
+  }
+
   let beans = await getBeansInDay(jdBeansRecentDay)
+  console.log("每日京豆变化：")
   for (let [k, v] of Object.entries(beans)) {
     console.log(k, v)
   }
