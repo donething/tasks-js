@@ -1,12 +1,15 @@
+/**
+ * 展示最近几天内京豆的变化
+ * cron 5 0 * * *  jd_beans_daily.ts
+ */
 const axios = require('axios')
 const {USERAGENT_IOS} = require("../utils/useragent")
-const {date} = require("../utils/utils")
+const {date, notify} = require("../utils/utils")
 
 // cookie
-// const jdCookie: string = process.env.JD_COOKIE || ""
 const jdCookie: string = process.env.JD_COOKIE || ""
-// 指定获取最近几天内，每日京东的变化量，不指定时为 30 天内
-const jdBeansRecentDay: number = Number(process.env.JD_BEANS_RECENT_DAY) || 30
+// 指定获取最近几天内，每日京东的变化量，不指定时为 7 天内
+const jdBeansRecentDay: number = Number(process.env.JD_BEANS_RECENT_DAY) || 7
 
 const headers = {
   "accept": "application/json, text/javascript, */*; q=0.01",
@@ -91,7 +94,7 @@ const getBeansInDay = async (day: number): Promise<Map<string, number>> => {
     }
 
     // 继续下一页
-    console.log(`已获取第 ${page} 页的京豆变化，继续获取下一页`)
+    console.log(`已获取第 ${page} 页，继续获取下一页`)
     page++
   }
 }
@@ -105,12 +108,16 @@ const printBeans = async (day?: number) => {
 
   let beans = await getBeansInDay(day || jdBeansRecentDay)
   let total = 0
-  console.log("每日京豆变化：")
+  let msg = "\n[每日京豆变化]\n"
+
   beans.forEach((v, k) => {
     total += v
-    console.log(`${k}: ${v}`)
+    msg += `${k}: ${v}\n`
   })
-  console.log(`共 ${beans.size} 天，平均每天增加 ${Math.round(total / beans.size)} 个京豆`)
+
+  msg += `共 ${beans.size} 天，平均每天增加 ${Math.round(total / beans.size)} 个京豆`
+  console.log(msg)
+  notify("京豆变化", msg)
 }
 
 printBeans()

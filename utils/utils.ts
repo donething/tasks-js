@@ -28,3 +28,22 @@ exports.date = function (date = new Date(), fmt = "YYYY-mm-dd HH:MM:SS"): string
 
   return fmt
 }
+
+/**
+ * 调用青龙的通知
+ * @param title 标题
+ * @param msg 内容
+ */
+exports.notify = (title: string, msg?: string) => {
+  try {
+    const {sendNotify} = require('./sendNotify')
+    sendNotify(title, msg)
+  } catch (e) {
+    // @ts-ignore
+    if (e instanceof Error && e?.code === "MODULE_NOT_FOUND") {
+      console.warn("没有找到通知模块：'./sendNotify'")
+    } else {
+      throw e
+    }
+  }
+}
