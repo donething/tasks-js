@@ -41,7 +41,7 @@ exports.notify = (title: string, msg?: string) => {
   try {
     const {sendNotify} = require('../sendNotify')
     sendNotify(title, msg)
-    console.log("已发送通知消息")
+    console.log(`已发送通知消息："${title}"`)
   } catch (e) {
     // @ts-ignore
     if (e instanceof Error && e?.code === "MODULE_NOT_FOUND") {
