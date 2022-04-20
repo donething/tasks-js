@@ -10,6 +10,8 @@ const jdCookie: string = process.env.JD_COOKIE || ""
 // 指定获取最近几天内，每日京东的变化量，不指定时为 7 天内
 const jdBeansRecentDay: number = Number(process.env.JD_BEANS_RECENT_DAY) || 7
 
+console.log("青龙环境变量：", JSON.stringify(process.env))
+
 const headers = {
   "accept": "application/json, text/javascript, */*; q=0.01",
   "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
