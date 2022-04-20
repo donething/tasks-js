@@ -45,13 +45,6 @@ const getBeansInDay = async (day: number): Promise<Map<string, number>> => {
   // 按天保存京豆的变化量，如{"2022-04-18": 130, "2022-04-19": 152}
   let beansMap = new Map<string, number>()
 
-  // 初始化 每日、对应的京豆(0)
-  for (let d = 0; d < day; d++) {
-    let c = new Date()
-    c.setDate(c.getDate() - d)
-    beansMap.set(date(c, "YYYY-mm-dd"), 0)
-  }
-
   // 开始联网获取京豆变化
   let page = 1
   while (true) {
@@ -61,13 +54,14 @@ const getBeansInDay = async (day: number): Promise<Map<string, number>> => {
 
     if (obj.code && obj.code !== "0") {
       console.warn("获取京豆变化的详细信息失败：", obj)
+      notify("获取京豆变化失败", JSON.stringify(obj))
       return beansMap
     }
 
     // 已读取完所有页
     if (!obj.code || !obj.jingDetailList || obj.jingDetailList.length === 0) {
       console.log("已读取完所有页，返回")
-      return beansMap
+      break
     }
 
     // 计数
@@ -76,11 +70,12 @@ const getBeansInDay = async (day: number): Promise<Map<string, number>> => {
       let mdate = item.date.substring(0, item.date.indexOf(" "))
       // 如果该日期超出了指定的天数内，就可以停止继续获取京豆变化量了
       if (mdate <= expiration) {
-        return beansMap
+        break
       }
       // 当前日期是否在初始化日期内（可选判断）
       if (beansMap.get(mdate) === undefined) {
-        console.log(`当前日期"${mdate}"不在初始化日期内，退出`)
+        console.log(`当前日期"${mdate}"不在初始化日期内`)
+        notify("获取京豆变化失败", `当前日期"${mdate}"不在初始化日期内`)
         return beansMap
       }
 
@@ -96,6 +91,19 @@ const getBeansInDay = async (day: number): Promise<Map<string, number>> => {
     console.log(`已获取第 ${page} 页，继续获取下一页`)
     page++
   }
+
+  // 如果某日没有增加京豆，依然创建日期并设值为 0
+  for (let d = 0; d < day; d++) {
+    let c = new Date()
+    c.setDate(c.getDate() - d)
+    let cText = date(c, "YYYY-mm-dd")
+
+    if (beansMap.get(cText) === undefined) {
+      beansMap.set(cText, 0)
+    }
+  }
+
+  return beansMap
 }
 
 // 展示数据
@@ -114,9 +122,13 @@ const printBeans = async (day?: number) => {
     msg += `${k}: ${v}\n`
   })
 
-  msg += `共 ${beans.size} 天，平均每天增加 ${Math.round(total / beans.size)} 个京豆`
-  console.log(msg)
-  notify("京豆变化", msg)
+  if (beans.size > 0) {
+    msg += `共 ${beans.size} 天，平均每天增加 ${Math.round(total / beans.size)} 个京豆\n`
+    console.log(msg)
+    notify("京豆变化", msg)
+  } else {
+    console.log("没有获取到京豆变化的信息")
+  }
 }
 
 printBeans()

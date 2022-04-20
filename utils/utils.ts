@@ -39,12 +39,13 @@ exports.date = function (date = new Date(), fmt = "YYYY-mm-dd HH:MM:SS"): string
  */
 exports.notify = (title: string, msg?: string) => {
   try {
-    const {sendNotify} = require('./sendNotify')
+    const {sendNotify} = require('../sendNotify')
     sendNotify(title, msg)
+    console.log("已发送通知消息")
   } catch (e) {
     // @ts-ignore
     if (e instanceof Error && e?.code === "MODULE_NOT_FOUND") {
-      console.warn("没有找到通知模块：'./sendNotify'")
+      console.warn("推送消息失败，没有找到通知模块：'./sendNotify'")
     } else {
       throw e
     }
