@@ -3,8 +3,7 @@
  * cron 5 0 * * *  jd_beans_daily.ts
  */
 const axios = require('axios')
-const {USERAGENT_IOS} = require("../utils/useragent")
-const {date, notify} = require("../utils/utils")
+const {date, notify, USERAGENT_IOS} = require("../utils/utils")
 
 // cookie
 const jdCookie: string = process.env.JD_COOKIE || ""
