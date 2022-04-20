@@ -45,7 +45,8 @@ const getBeansInDay = async (day: number): Promise<Map<string, number>> => {
   let expirationDate = new Date()
   expirationDate.setDate(expirationDate.getDate() - day + 1)
   let expiration = date(expirationDate, "YYYY-mm-dd")
-  console.log(`查询截止日(包含)：${expiration}`)
+  console.log(`展示最近几天内京豆的变化`)
+  console.log(`查询截止日：${expiration}。可设置环境变量"JD_BEANS_RECENT_DAY"来指定天数`)
 
   // 按天保存京豆的变化量，如{"2022-04-18": 130, "2022-04-19": 152}
   let beansMap = new Map<string, number>()
