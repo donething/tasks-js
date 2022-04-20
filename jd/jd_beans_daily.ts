@@ -3,14 +3,13 @@
  * cron 5 0 * * *  jd_beans_daily.ts
  */
 const axios = require('axios')
-const {date, notify, USERAGENT_IOS} = require("../utils/utils")
+// 根据是否是青龙环境，选择 require 路径
+const {date, notify, USERAGENT_IOS} = require(process.env.cmd_ql ? "./utils/utils" : "../utils/utils")
 
 // cookie
 const jdCookie: string = process.env.JD_COOKIE || ""
 // 指定获取最近几天内，每日京东的变化量，不指定时为 7 天内
 const jdBeansRecentDay: number = Number(process.env.JD_BEANS_RECENT_DAY) || 7
-
-console.log("青龙环境变量：", JSON.stringify(process.env))
 
 const headers = {
   "accept": "application/json, text/javascript, */*; q=0.01",
