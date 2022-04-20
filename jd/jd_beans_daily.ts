@@ -60,7 +60,7 @@ const getBeansInDay = async (day: number): Promise<Map<string, number>> => {
 
     if (obj.code && obj.code !== "0") {
       console.warn("获取京豆变化的详细信息失败：", obj)
-      notify("获取京豆变化失败", JSON.stringify(obj))
+      await notify("获取京豆变化失败", JSON.stringify(obj))
       return beansMap
     }
 
@@ -125,7 +125,7 @@ const printBeans = async (day?: number) => {
   if (beans.size > 0) {
     msg += `共 ${beans.size} 天，平均每天增加 ${Math.round(total / beans.size)} 个京豆\n`
     console.log(msg)
-    notify("京豆变化", msg)
+    await notify("京豆变化", msg)
   } else {
     console.log("没有获取到京豆变化的信息")
   }

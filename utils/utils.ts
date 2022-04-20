@@ -37,10 +37,10 @@ exports.date = function (date = new Date(), fmt = "YYYY-mm-dd HH:MM:SS"): string
  * @param title 标题
  * @param msg 内容
  */
-exports.notify = (title: string, msg?: string) => {
+exports.notify = async (title: string, msg?: string) => {
   try {
     const {sendNotify} = require('../sendNotify')
-    sendNotify(title, msg)
+    await sendNotify(title, msg)
     console.log(`已发送通知消息："${title}"`)
   } catch (e) {
     // @ts-ignore
