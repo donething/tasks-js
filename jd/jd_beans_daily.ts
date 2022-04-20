@@ -1,10 +1,14 @@
 /**
  * 展示最近几天内京豆的变化
+ * 可以指定环境变量"JD_BEANS_RECENT_DAY"，设置获取的最近天数。不指定时为 7
  * cron 5 0 * * *  jd_beans_daily.ts
  */
+// 是否为青龙环境
+const isQL = !!process.env.cmd_ql
+
 const axios = require('axios')
 // 根据是否是青龙环境，选择 require 路径
-const {date, notify, USERAGENT_IOS} = require(process.env.cmd_ql ? "./utils/utils" : "../utils/utils")
+const {date, notify, USERAGENT_IOS} = require(isQL ? "./utils/utils" : "../utils/utils")
 
 // cookie
 const jdCookie: string = process.env.JD_COOKIE || ""
@@ -39,7 +43,7 @@ interface JingDetailList {
 const getBeansInDay = async (day: number): Promise<Map<string, number>> => {
   // 计算截止日期
   let expirationDate = new Date()
-  expirationDate.setDate(expirationDate.getDate() - day)
+  expirationDate.setDate(expirationDate.getDate() - day + 1)
   let expiration = date(expirationDate, "YYYY-mm-dd")
   console.log(`查询截止日(包含)：${expiration}`)
 
@@ -73,12 +77,6 @@ const getBeansInDay = async (day: number): Promise<Map<string, number>> => {
       if (mdate <= expiration) {
         break
       }
-      // 当前日期是否在初始化日期内（可选判断）
-      if (beansMap.get(mdate) === undefined) {
-        console.log(`当前日期"${mdate}"不在初始化日期内`)
-        notify("获取京豆变化失败", `当前日期"${mdate}"不在初始化日期内`)
-        return beansMap
-      }
 
       // 不计算支出的京豆
       if (Number(item.amount) < 0) {
@@ -89,7 +87,7 @@ const getBeansInDay = async (day: number): Promise<Map<string, number>> => {
     }
 
     // 继续下一页
-    console.log(`已获取第 ${page} 页，继续获取下一页`)
+    !isQL && console.log(`已获取第 ${page} 页，继续获取下一页`)
     page++
   }
 
