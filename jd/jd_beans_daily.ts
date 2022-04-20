@@ -66,7 +66,7 @@ const getBeansInDay = async (day: number): Promise<Map<string, number>> => {
 
     // 已读取完所有页
     if (!obj.code || !obj.jingDetailList || obj.jingDetailList.length === 0) {
-      console.log("已读取完所有页，返回")
+      !isQL && console.log("已读取完所有页，返回")
       break
     }
 
