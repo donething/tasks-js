@@ -1,7 +1,7 @@
 /**
  * 展示最近几天内京豆的变化
  * 可以指定环境变量"JD_BEANS_RECENT_DAY"，设置获取的最近天数。不指定时为 7
- * cron 5 0 * * *  jd_beans_daily.ts
+ * cron 5 13,22 * * * 京豆变化
  */
 // 是否为青龙环境
 const isQL = !!process.env.cmd_ql
