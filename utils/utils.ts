@@ -1,5 +1,3 @@
-const WXQiYe = require("do-utils/dist/wxpush/qiye")
-
 // 用户代理 iOS
 exports.USERAGENT_IOS = "Mozilla/5.0 (iPhone; CPU iPhone OS 15_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/99.0.4844.59 Mobile/15E148 Safari/604.1"
 
@@ -46,6 +44,7 @@ exports.notify = async (title: string, msg?: string) => {
   }
 
   let tk = process.env.WX_PUSH.split(",")
+  const WXQiYe = require("do-utils/dist/wxpush/qiye")
   let wx = new WXQiYe(tk[0], tk[1])
   let err = await wx.pushText(Number(tk[3]), title + "\n\n" + msg, tk[2])
 
