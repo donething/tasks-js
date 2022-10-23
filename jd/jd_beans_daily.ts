@@ -9,6 +9,7 @@ const isQL = !!process.env.cmd_ql
 const axios = require('axios')
 // 根据是否是青龙环境，选择 require 路径
 const {date, notify, USERAGENT_IOS} = require(isQL ? "./utils/utils" : "../utils/utils")
+const {sendNotify} = require(isQL ? "./utils/sendNotify" : "../utils/sendNotify")
 
 // cookie
 const jdCookie: string = process.env.JD_COOKIE || ""
@@ -61,7 +62,7 @@ const getBeansInDay = async (day: number): Promise<Map<string, number>> => {
 
       if (obj.code && obj.code !== "0") {
         console.warn("获取京豆变化的详细信息失败：", obj)
-        await notify("获取京豆变化失败", JSON.stringify(obj))
+        await sendNotify("获取京豆变化失败", JSON.stringify(obj))
         return beansMap
       }
 
@@ -126,7 +127,7 @@ const printBeans = async (day?: number) => {
   if (beans.size > 0) {
     msg += `\n共 ${beans.size} 天，平均每天增加 ${Math.round(total / beans.size)} 个京豆\n`
     console.log(msg)
-    await notify("[青龙]京豆变化", msg)
+    await sendNotify("[青龙]京豆变化", msg)
   } else {
     console.log("没有获取到京豆变化的信息")
   }
