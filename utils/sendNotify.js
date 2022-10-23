@@ -984,6 +984,7 @@ function pushPlusNotify(text, desp) {
 }
 
 module.exports = {
+  qywxamNotify,
   sendNotify,
   BARK_PUSH,
 };
