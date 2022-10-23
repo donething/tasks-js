@@ -40,8 +40,8 @@ exports.date = function (date = new Date(), fmt = "YYYY-mm-dd HH:MM:SS"): string
 exports.notify = async (title: string, msg?: string) => {
   try {
     const {sendNotify} = require('../sendNotify')
-    await sendNotify(title, msg)
-    console.log(`已发送通知消息："${title}"`)
+    let result = await sendNotify(title, msg)
+    console.log(`已发送通知消息："${title}"。推送结果：${JSON.stringify(result)}`)
   } catch (e) {
     // @ts-ignore
     if (e instanceof Error && e?.code === "MODULE_NOT_FOUND") {
