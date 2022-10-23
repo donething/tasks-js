@@ -38,6 +38,7 @@ exports.date = function (date = new Date(), fmt = "YYYY-mm-dd HH:MM:SS"): string
  * @param msg 内容
  */
 exports.notify = async (title: string, msg?: string) => {
+  /*
   if (!process.env.WX_PUSH) {
     console.log("微信推送 token 为空，无法推送消息")
     return
@@ -54,13 +55,14 @@ exports.notify = async (title: string, msg?: string) => {
   }
 
   console.log("已推送微信消息")
+   */
 
   // 青龙自带的通知
-  /*
+
   try {
     const {sendNotify} = require('../sendNotify')
-    let result = await sendNotify(title, msg)
-    console.log(`已发送通知消息："${title}"。推送结果：${JSON.stringify(result)}`)
+    await sendNotify(title, msg)
+    console.log(`已发送通知消息："${title}"`)
   } catch (e) {
     // @ts-ignore
     if (e instanceof Error && e?.code === "MODULE_NOT_FOUND") {
@@ -69,5 +71,4 @@ exports.notify = async (title: string, msg?: string) => {
       throw e
     }
   }
-   */
 }
