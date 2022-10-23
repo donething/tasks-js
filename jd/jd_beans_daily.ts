@@ -8,7 +8,8 @@ const isQL = !!process.env.cmd_ql
 
 const axios = require('axios')
 // 根据是否是青龙环境，选择 require 路径
-const {date, notify, USERAGENT_IOS} = require(isQL ? "./utils/utils" : "../utils/utils")
+const {date, USERAGENT_IOS} = require(isQL ? "./utils/utils" : "../utils/utils")
+const {notify} = require(isQL ? "./utils/sendNotify" : "../utils/sendNotify")
 
 // cookie
 const jdCookie: string = process.env.JD_COOKIE || ""
