@@ -127,7 +127,7 @@ const printBeans = async (day?: number) => {
   if (beans.size > 0) {
     msg += `\n共 ${beans.size} 天，平均每天增加 ${Math.round(total / beans.size)} 个京豆\n`
     console.log(msg)
-    await sendNotify("[青龙]京豆变化", msg)
+    await sendNotify("[青龙] 京豆变化", msg)
   } else {
     console.log("没有获取到京豆变化的信息")
   }
