@@ -40,7 +40,7 @@ exports.date = function (date = new Date(), fmt = "YYYY-mm-dd HH:MM:SS"): string
 exports.notify = async (title: string, msg?: string) => {
   // 青龙自带的通知
   try {
-    const {sendNotify} = require('../sendNotify')
+    const {sendNotify} = require('./sendNotify')
     await sendNotify(title, msg)
     console.log(`已发送通知消息："${title}"`)
   } catch (e) {
