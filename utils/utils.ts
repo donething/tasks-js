@@ -41,7 +41,7 @@ exports.notify = async (title: string, msg?: string) => {
   // 青龙自带的通知
   try {
     const {sendNotify} = require('../sendNotify')
-    await sendNotify(title, msg, {}, "青龙脚本定时任务")
+    await sendNotify(title, msg)
     console.log(`已发送通知消息："${title}"`)
   } catch (e) {
     // @ts-ignore
