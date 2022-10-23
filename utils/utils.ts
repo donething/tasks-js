@@ -38,30 +38,10 @@ exports.date = function (date = new Date(), fmt = "YYYY-mm-dd HH:MM:SS"): string
  * @param msg 内容
  */
 exports.notify = async (title: string, msg?: string) => {
-  /*
-  if (!process.env.WX_PUSH) {
-    console.log("微信推送 token 为空，无法推送消息")
-    return
-  }
-
-  let tk = process.env.WX_PUSH.split(",")
-  const WXQiYe = require("do-utils/dist/wxpush/qiye")
-  let wx = new WXQiYe(tk[0], tk[1])
-  let err = await wx.pushText(Number(tk[3]), title + "\n\n" + msg, tk[2])
-
-  if (err) {
-    console.log("推送微信消息出错：" + err)
-    return
-  }
-
-  console.log("已推送微信消息")
-   */
-
   // 青龙自带的通知
-
   try {
     const {sendNotify} = require('../sendNotify')
-    await sendNotify(title, msg)
+    await sendNotify(title, msg, {}, "青龙脚本定时任务")
     console.log(`已发送通知消息："${title}"`)
   } catch (e) {
     // @ts-ignore

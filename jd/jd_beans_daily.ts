@@ -116,7 +116,7 @@ const printBeans = async (day?: number) => {
 
   let beans = await getBeansInDay(day || jdBeansRecentDay)
   let total = 0
-  let msg = "\n[每日京豆变化]\n"
+  let msg = "[每日京豆变化]\n"
 
   beans.forEach((v, k) => {
     total += v
@@ -124,7 +124,7 @@ const printBeans = async (day?: number) => {
   })
 
   if (beans.size > 0) {
-    msg += `共 ${beans.size} 天，平均每天增加 ${Math.round(total / beans.size)} 个京豆\n`
+    msg += `\n\n共 ${beans.size} 天，平均每天增加 ${Math.round(total / beans.size)} 个京豆\n`
     console.log(msg)
     await notify("京豆变化", msg)
   } else {
