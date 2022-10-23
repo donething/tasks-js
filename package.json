@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@types/node": "^17.0.25",
-    "axios": "^0.26.1"
+    "axios": "^0.26.1",
+    "do-utils": "^1.0.49"
   }
 }

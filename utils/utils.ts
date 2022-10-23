@@ -1,4 +1,6 @@
 // 用户代理 iOS
+import {WXQiYe} from "do-utils/dist/wxpush/qiye"
+
 exports.USERAGENT_IOS = "Mozilla/5.0 (iPhone; CPU iPhone OS 15_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/99.0.4844.59 Mobile/15E148 Safari/604.1"
 
 /**
@@ -38,6 +40,24 @@ exports.date = function (date = new Date(), fmt = "YYYY-mm-dd HH:MM:SS"): string
  * @param msg 内容
  */
 exports.notify = async (title: string, msg?: string) => {
+  if (!process.env.WX_PUSH) {
+    console.log("微信推送 token 为空，无法推送消息")
+    return
+  }
+
+  let tk = process.env.WX_PUSH.split(",")
+  let wx = new WXQiYe(tk[0], tk[1])
+  let err = await wx.pushText(Number(tk[3]), title + "\n\n" + msg, tk[2])
+
+  if (err) {
+    console.log("推送微信消息出错：" + err)
+    return
+  }
+
+  console.log("已推送微信消息")
+
+  // 青龙自带的通知
+  /*
   try {
     const {sendNotify} = require('../sendNotify')
     let result = await sendNotify(title, msg)
@@ -50,4 +70,5 @@ exports.notify = async (title: string, msg?: string) => {
       throw e
     }
   }
+   */
 }

@@ -53,44 +53,45 @@ const getBeansInDay = async (day: number): Promise<Map<string, number>> => {
 
   // 开始联网获取京豆变化
   let page = 1
-  while (true) {
-    let resp = await axios.post("https://bean.m.jd.com/beanDetail/detail.json",
-      `page=${page}`, {headers: headers})
-    let obj: BeanDetail = resp.data
+  getter:
+    while (true) {
+      let resp = await axios.post("https://bean.m.jd.com/beanDetail/detail.json",
+        `page=${page}`, {headers: headers})
+      let obj: BeanDetail = resp.data
 
-    if (obj.code && obj.code !== "0") {
-      console.warn("获取京豆变化的详细信息失败：", obj)
-      await notify("获取京豆变化失败", JSON.stringify(obj))
-      return beansMap
-    }
+      if (obj.code && obj.code !== "0") {
+        console.warn("获取京豆变化的详细信息失败：", obj)
+        await notify("获取京豆变化失败", JSON.stringify(obj))
+        return beansMap
+      }
 
-    // 已读取完所有页
-    if (!obj.code || !obj.jingDetailList || obj.jingDetailList.length === 0) {
-      !isQL && console.log("已读取完所有页，返回")
-      break
-    }
-
-    // 计数
-    for (let item of obj.jingDetailList) {
-      // 提取 日期、京豆变化量
-      let mdate = item.date.substring(0, item.date.indexOf(" "))
-      // 如果该日期超出了指定的天数内，就可以停止继续获取京豆变化量了
-      if (mdate <= expiration) {
+      // 已读取完所有页
+      if (!obj.code || !obj.jingDetailList || obj.jingDetailList.length === 0) {
+        !isQL && console.log("已读取完所有页，返回")
         break
       }
 
-      // 不计算支出的京豆
-      if (Number(item.amount) < 0) {
-        continue
-      }
-      let num = Number(item.amount) + (beansMap.get(mdate) || 0)
-      beansMap.set(mdate, num)
-    }
+      // 计数
+      for (let item of obj.jingDetailList) {
+        // 提取 日期、京豆变化量
+        let mdate = item.date.substring(0, item.date.indexOf(" "))
+        // 如果该日期超出了指定的天数内，就可以停止继续获取京豆变化量了
+        if (mdate < expiration) {
+          break getter
+        }
 
-    // 继续下一页
-    !isQL && console.log(`已获取第 ${page} 页，继续获取下一页`)
-    page++
-  }
+        // 不计算支出的京豆
+        if (Number(item.amount) < 0) {
+          continue
+        }
+        let num = Number(item.amount) + (beansMap.get(mdate) || 0)
+        beansMap.set(mdate, num)
+      }
+
+      // 继续下一页
+      !isQL && console.log(`已获取第 ${page} 页，继续获取下一页`)
+      page++
+    }
 
   // 如果某日没有增加京豆，依然创建日期并设值为 0
   for (let d = 0; d < day; d++) {
