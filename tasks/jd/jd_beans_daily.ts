@@ -114,6 +114,7 @@ const getBeansInDay = async (day: number): Promise<Map<string, number>> => {
 const printBeans = async (day?: number) => {
   if (!jdCookie) {
     console.log("Cookie 为空，无法获取京豆变化量")
+    await sendNotify("[青龙] 京豆变化", "Cookie 已失效")
     return
   }
 
