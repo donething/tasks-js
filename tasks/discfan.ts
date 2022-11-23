@@ -8,17 +8,22 @@ const TAG = "[PT站H知堂]"
 
 // 是否为青龙环境
 const isQL = !!process.env.cmd_ql
-const fs = require("fs")
 const axios = require('axios')
 const {sendNotify} = require(isQL ? "./utils/sendNotify" : "../utils/sendNotify")
+
+const headers = {
+  "host": "https://discfan.net",
+  "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) " +
+    "Chrome/107.0.0.0 Safari/537.36",
+  "accept": "text/html"
+}
 
 /**
  * 检测是否开放注册
  */
 const check = async () => {
-  let resp = await axios.get("https://discfan.net/signup.php")
+  let resp = await axios.get("https://discfan.net/signup.php", {headers: headers})
   let text: string = await resp.data
-  fs.writeFileSync("./discfan.txt", text)
 
   if (text.indexOf("自由註冊當前關閉") >= 0) {
     console.log(TAG, "还未开放注册")
