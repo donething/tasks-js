@@ -8,7 +8,7 @@ const TAG = "[PT站H知堂]"
 
 // 是否为青龙环境
 const isQL = !!process.env.cmd_ql
-
+const fs = require("fs")
 const axios = require('axios')
 const {sendNotify} = require(isQL ? "./utils/sendNotify" : "../utils/sendNotify")
 
@@ -18,6 +18,7 @@ const {sendNotify} = require(isQL ? "./utils/sendNotify" : "../utils/sendNotify"
 const check = async () => {
   let resp = await axios.get("https://discfan.net/signup.php")
   let text: string = await resp.data
+  fs.writeFileSync("./discfan.txt", text)
 
   if (text.indexOf("自由註冊當前關閉") >= 0) {
     console.log(TAG, "还未开放注册")
