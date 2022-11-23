@@ -11,19 +11,12 @@ const isQL = !!process.env.cmd_ql
 const axios = require('axios')
 const {sendNotify} = require(isQL ? "./utils/sendNotify" : "../utils/sendNotify")
 
-const headers = {
-  // 请求头不能含有 host ，否则目标网站会返回SSL错误
-  // "host": "https://discfan.net",
-  "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) " +
-    "Chrome/107.0.0.0 Safari/537.36",
-  "accept": "text/html"
-}
 
 /**
  * 检测是否开放注册
  */
 const check = async () => {
-  let resp = await axios.get("https://discfan.net/signup.php", {headers: headers})
+  let resp = await axios.get("https://discfan.net/signup.php")
   let text: string = await resp.data
 
   if (text.indexOf("自由註冊當前關閉") >= 0) {
