@@ -10,23 +10,11 @@ const isQL = !!process.env.cmd_ql
 
 const axios = require('axios')
 // 根据是否是青龙环境，选择 require 路径
-const {date, USERAGENT_IOS} = require(isQL ? "./utils/utils" : "../utils/utils")
-const {sendNotify} = require(isQL ? "./utils/sendNotify" : "../utils/sendNotify")
+const {date, USERAGENT_IOS} = require(isQL ? "./utils/utils" : "../../utils/utils")
+const {sendNotify} = require(isQL ? "./utils/sendNotify" : "../../utils/sendNotify")
 
-// cookie
-const jdCookie: string = process.env.JD_COOKIE || ""
 // 指定获取最近几天内，每日京东的变化量，不指定时为 7 天内
 const jdBeansRecentDay: number = Number(process.env.JD_BEANS_RECENT_DAY) || 7
-
-const headers = {
-  "accept": "application/json, text/javascript, */*; q=0.01",
-  "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-  "cookie": jdCookie,
-  "origin": "https://bean.m.jd.com",
-  "referer": "https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean",
-  "user-agent": USERAGENT_IOS,
-  "x-requested-with": "XMLHttpRequest"
-}
 
 // 获取京豆详细的响应内容
 interface BeanDetail {
@@ -43,7 +31,17 @@ interface JingDetailList {
 }
 
 // 获取过去几天内，每日京东的变化量，默认 30 天内。不包含支出的京豆
-const getBeansInDay = async (day: number): Promise<Map<string, number>> => {
+const getBeansInDay = async (ck: string, day: number): Promise<Map<string, number>> => {
+  const headers = {
+    "accept": "application/json, text/javascript, */*; q=0.01",
+    "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+    "cookie": ck,
+    "origin": "https://bean.m.jd.com",
+    "referer": "https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean",
+    "user-agent": USERAGENT_IOS,
+    "x-requested-with": "XMLHttpRequest"
+  }
+
   // 计算截止日期
   let expirationDate = new Date()
   expirationDate.setDate(expirationDate.getDate() - day + 1)
@@ -111,14 +109,14 @@ const getBeansInDay = async (day: number): Promise<Map<string, number>> => {
 }
 
 // 展示数据
-const printBeans = async (day?: number) => {
-  if (!jdCookie) {
+const printBeans = async (ck: string, day?: number) => {
+  if (!ck) {
     console.log("Cookie 为空，无法获取京豆变化量")
     await sendNotify("[青龙] 京豆变化", "Cookie 为空或已因失效被禁用")
     return
   }
 
-  let beans = await getBeansInDay(day || jdBeansRecentDay)
+  let beans = await getBeansInDay(ck, day || jdBeansRecentDay)
   let total = 0
   let msg = ""
 
@@ -136,4 +134,4 @@ const printBeans = async (day?: number) => {
   }
 }
 
-printBeans()
+printBeans(process.env.JD_COOKIE || "")
