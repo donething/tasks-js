@@ -59,7 +59,6 @@ const getBeansInDay = async (ck: string, day: number): Promise<Map<string, numbe
       let resp = await axios.post("https://bean.m.jd.com/beanDetail/detail.json",
         `page=${page}`, {headers: headers})
       let obj: BeanDetail = resp.data
-      console.log(obj)
 
       if (obj.code && obj.code !== "0") {
         console.warn("获取京豆变化的详细信息失败：", obj)
