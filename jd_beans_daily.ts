@@ -5,13 +5,9 @@
  * cron 5 13,22 * * *
  */
 
-// 是否为青龙环境
-const isQL = !!process.env.cmd_ql
+import {date, UserAgents, isQL} from "./utils/utils"
 
-const axios = require('axios')
-// 根据是否是青龙环境，选择 require 路径
-const {date, USERAGENT_IOS} = require(isQL ? "./utils/utils" : "../../utils/utils")
-const {sendNotify} = require(isQL ? "./utils/sendNotify" : "../../utils/sendNotify")
+const {sendNotify} = require("./utils/sendNotify")
 
 // 指定获取最近几天内，每日京东的变化量，不指定时为 7 天内
 const jdBeansRecentDay: number = Number(process.env.JD_BEANS_RECENT_DAY) || 7
@@ -38,7 +34,7 @@ const getBeansInDay = async (ck: string, day: number): Promise<Map<string, numbe
     "cookie": ck,
     "origin": "https://bean.m.jd.com",
     "referer": "https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean",
-    "user-agent": USERAGENT_IOS,
+    "user-agent": UserAgents.iOS,
     "x-requested-with": "XMLHttpRequest"
   }
 
@@ -56,9 +52,10 @@ const getBeansInDay = async (ck: string, day: number): Promise<Map<string, numbe
   let page = 1
   getter:
     while (true) {
-      let resp = await axios.post("https://bean.m.jd.com/beanDetail/detail.json",
-        `page=${page}`, {headers: headers})
-      let obj: BeanDetail = resp.data
+      const body = `page=${page}`
+      const method = "POST"
+      const resp = await fetch("https://bean.m.jd.com/beanDetail/detail.json", {body, headers, method})
+      const obj: BeanDetail = await resp.json()
 
       if (obj.code && obj.code !== "0") {
         console.warn("获取京豆变化的详细信息失败：", obj)
@@ -135,3 +132,5 @@ const printBeans = async (ck: string, day?: number) => {
 }
 
 printBeans(process.env.JD_COOKIE || "")
+
+export {}
