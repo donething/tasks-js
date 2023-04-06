@@ -38,15 +38,13 @@ const reply = async (tid: string) => {
   const topicResp = await fetchCookie(topicURL, {headers})
   const hashText = await topicResp.text()
   if (hashText.includes("您需要登录后才可以回帖")) {
-    console.log(TAG, "需要登录后才可以回帖")
     throw `${TAG} 需要登录后才可以回帖`
   }
 
   const reg = /<input.+?name="formhash"\s+value="(?<formhash>.+?)".+?<span\s+id="secqaa_(?<hashid>\S+)">/s
   const match = hashText.match(reg)
   if (!match || !match.groups) {
-    console.log(TAG, "提取 formhash、hashid 失败：", hashText)
-    throw `${TAG} 提取 formhash、hashid 失败`
+    throw `${TAG} 提取 formhash、hashid 失败：` + hashText
   }
   const {formhash, hashid} = match.groups
 
@@ -63,8 +61,7 @@ const reply = async (tid: string) => {
   const replyResp = await fetchCookie(replyURL, {body, headers})
   const replyText = await replyResp.text()
   if (!replyText.includes("回复发布成功")) {
-    console.log(TAG, "回复失败：", replyText)
-    throw `${TAG} 回复失败`
+    throw `${TAG} 回复失败：` + replyText
   }
 
   console.log(`回复帖子(${tid})成功`)
@@ -85,8 +82,7 @@ const getSecqaa = async (hashid: string): Promise<number> => {
   const text = await resp.text()
   const match = text.match(/class="vm"\s\/><\/span>'.+?'(?<expression>.+?)=/s)
   if (!match || !match.groups) {
-    console.log(TAG, "提取验证回答失败：", text)
-    throw `${TAG} 提取验证回答失败`
+    throw `${TAG} 提取验证回答失败：` + text
   }
 
   const {expression} = match.groups
