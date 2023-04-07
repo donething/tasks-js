@@ -9,5 +9,6 @@ export const readJSON = <T>(path: string): T => {
 }
 
 export const writeJSON = (path: string, data: any) => {
+  fs.mkdirSync(path.substring(0, path.lastIndexOf("/")))
   fs.writeFileSync(path, JSON.stringify(data), {flag: "w"})
 }

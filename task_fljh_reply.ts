@@ -44,14 +44,14 @@ const start = async (cookie: string) => {
     }
 
     const err = await reply(tid)
-    if (!err) {
+    if (err) {
       console.log(`回帖(${tid})出错：\n${err}`)
       continue
     }
 
     data.tids.push(tid)
     // 默认要等待 15 秒
-    !isQL && console.log("等待几秒后继续回复…")
+    console.log("等待几秒后继续回复…")
     await sleep(18000)
   }
 
