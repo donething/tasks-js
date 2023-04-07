@@ -6,7 +6,7 @@
 
 import * as cheerio from 'cheerio'
 import makeFetchCookie from 'fetch-cookie'
-import {UserAgents, isQL, calStr, fillInitCookies, sleep} from "./utils/utils"
+import {UserAgents, isQL, calStr, fillInitCookies, sleep, random} from "./utils/utils"
 import {readJSON, writeJSON} from "./utils/file"
 
 const {sendNotify, Env} = require("./utils/sendNotify")
@@ -53,18 +53,31 @@ const start = async (cookie: string) => {
       continue
     }
 
+    // 回帖、处理回帖的响应
     const err = await reply(tid)
+
+    // 限制回帖次数。需要立即停止回复剩下的帖子
+    if (err && err.message.includes("所在的用户组每小时限制发回帖")) {
+      // 用 break 不用 return ，是为了退出循环后，保存数据
+      break
+    }
+
+    // 其它错误
     if (err) {
       console.log(`回帖出错(${tid})：\n${err}`)
       await sendNotify(TAG, `回帖出错(${tid})`)
       continue
     }
 
+    // 回帖成功
+    console.log(`回帖成功(${tid})\n`)
     data.tids.push(tid)
-    // 默认要等待 15 秒
+
+    // 默认要等待 15 秒，再继续回帖
     if (index !== tids.length - 1) {
-      console.log("等待几秒后继续回复…")
-      await sleep(18000)
+      const sec = random(20, 60)
+      console.log(`随机等待 ${sec} 秒后继续回复……\n`)
+      await sleep(sec * 1000)
     }
   }
 
@@ -110,11 +123,20 @@ const reply = async (tid: string): Promise<Error | null> => {
   const method = "POST"
   const replyResp = await fetchCookie(replyURL, {body, headers: replyHeaders, method})
   const replyText = await replyResp.text()
+
+  // 解析响应
+  // 回帖太频繁。等待一些秒数后再回复
+  if (replyText.includes("两次发表间隔少于")) {
+    await sleep(random(20, 60))
+    return await reply(tid)
+  }
+
+  // 回帖失败的其它原因
   if (!replyText.includes("回复发布成功")) {
     return new Error(`回帖失败：${replyText}`)
   }
 
-  console.log(`回帖(${tid})成功`)
+  // 回帖成功
   return null
 }
 
