@@ -3,9 +3,14 @@
  * 回复帖子。该站已墙
  * cron * * * * *
  */
+
+import * as cheerio from 'cheerio'
 import makeFetchCookie from 'fetch-cookie'
 import {UserAgents, isQL, calStr, fillInitCookies, sleep} from "./utils/utils"
 import {readJSON, writeJSON} from "./utils/file"
+
+const {sendNotify, Env} = require("./utils/sendNotify")
+new Env("福利江湖回帖")
 
 // 保存到文件的数据
 type FData = {
@@ -14,6 +19,8 @@ type FData = {
 }
 // 保存数据的文件路径
 const FLJH_FILE = "./db/fljh.json"
+
+const TAG = "[FLJH]"
 
 // 标签
 // 回复的内容
@@ -24,20 +31,23 @@ const jar = new makeFetchCookie.toughCookie.CookieJar()
 const fetchCookie = makeFetchCookie(fetch, jar)
 
 const start = async (cookie: string) => {
+  // 注入初始 Cookie
   if (!cookie) {
     console.log("请先设置环境变量 Cookie，名为'FLJH_COOKIE'")
     return
   }
-
   await fillInitCookies(jar, cookie, "https://fulijianghu.org/")
 
-  const tids = ["57106", "57093"]
+  // 获取帖子列表（ID列表）
+  const tids = await getIndexTids()
+  // 读取已回复的帖子列表（ID列表）
   const data = readJSON<FData>(FLJH_FILE)
   if (!data.tids) {
     data.tids = []
   }
 
-  for (let tid of tids) {
+  // 依次回复主题
+  for (const [index, tid] of tids.entries()) {
     if (data.tids.includes(tid)) {
       !isQL && console.log(`已回复过该贴(${tid})，跳过`)
       continue
@@ -45,14 +55,17 @@ const start = async (cookie: string) => {
 
     const err = await reply(tid)
     if (err) {
-      console.log(`回帖(${tid})出错：\n${err}`)
+      console.log(`回帖出错(${tid})：\n${err}`)
+      await sendNotify(TAG, `回帖出错(${tid})`)
       continue
     }
 
     data.tids.push(tid)
     // 默认要等待 15 秒
-    console.log("等待几秒后继续回复…")
-    await sleep(18000)
+    if (index !== tids.length - 1) {
+      console.log("等待几秒后继续回复…")
+      await sleep(18000)
+    }
   }
 
   writeJSON(FLJH_FILE, data)
@@ -103,6 +116,36 @@ const reply = async (tid: string): Promise<Error | null> => {
 
   console.log(`回帖(${tid})成功`)
   return null
+}
+
+/**
+ * 获取某栏目首页的帖子列表（id 列表）
+ */
+const getIndexTids = async (): Promise<string[]> => {
+  const tids: string[] = []
+
+  const headers = {
+    "referer": "https://fulijianghu.org",
+    "user-agent": UserAgents.Win
+  }
+  const url = `https://fulijianghu.org/forum.php?mod=forumdisplay&fid=63&filter=sortall&sortall=1`
+  const resp = await fetchCookie(url, {headers})
+  const text = await resp.text()
+
+  // 解析
+  const $ = cheerio.load(text)
+  for (let item of $("table#threadlisttableid tbody[id^='normalthread']")) {
+    const idStr = $(item).attr("id")
+    if (!idStr) {
+      console.log("无法获取元素的属性 id：", $(item).text())
+      continue
+    }
+
+    const id = idStr.substring(idStr.indexOf("_") + 1)
+    tids.push(id)
+  }
+
+  return tids
 }
 
 /**

@@ -986,6 +986,7 @@ function pushPlusNotify(text, desp) {
 module.exports = {
   sendNotify,
   BARK_PUSH,
+  Env
 };
 
 // prettier-ignore

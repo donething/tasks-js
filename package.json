@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@types/node": "^17.0.25",
+    "cheerio": "^1.0.0-rc.12",
     "fetch-cookie": "^2.1.0"
   }
 }
