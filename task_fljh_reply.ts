@@ -5,6 +5,15 @@
  */
 import makeFetchCookie from 'fetch-cookie'
 import {UserAgents, isQL, calStr, fillInitCookies} from "./utils/utils"
+import {readJSON} from "./utils/file"
+
+// 保存到文件的数据
+type FData = {
+  // 已回复过的帖子（ID）的列表
+  tids?: string[]
+}
+// 保存数据的文件路径
+const FLJH_FILE = "./db/fljh.json"
 
 // 标签
 // 回复的内容
@@ -22,7 +31,16 @@ const start = async (cookie: string) => {
 
   await fillInitCookies(jar, cookie, "https://fulijianghu.org/")
 
-  await reply("57099").catch(err => console.log(`回帖(57099)出错：\n${err}`))
+  const tids = ["57099", "57110"]
+  const history = readJSON<FData>(FLJH_FILE)
+  for (let tid of tids) {
+    if (history.tids?.includes(tid)) {
+      !isQL && console.log(`已回复过该贴(${tid})，跳过`)
+      continue
+    }
+
+    await reply(tid).catch(err => console.log(`回帖(${tid})出错：\n${err}`))
+  }
 }
 
 const reply = async (tid: string) => {
@@ -94,7 +112,6 @@ const getSecqaa = async (hashid: string): Promise<number> => {
 
   return calStr(expression)
 }
-
 
 //
 // 执行
