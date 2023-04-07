@@ -1,16 +1,15 @@
 /**
- * 福利江湖
- * 回复帖子。该站已墙
- * cron * * * * *
+ * 福利江湖 回复帖子
+ * 该站已墙
  */
+// cron * * * * *
 
 import * as cheerio from 'cheerio'
 import makeFetchCookie from 'fetch-cookie'
 import {UserAgents, isQL, calStr, fillInitCookies, sleep, random} from "./utils/utils"
 import {readJSON, writeJSON} from "./utils/file"
 
-const {sendNotify, Env} = require("./utils/sendNotify")
-new Env("福利江湖回帖")
+const {sendNotify} = require("./utils/sendNotify")
 
 // 保存到文件的数据
 type FData = {
@@ -33,7 +32,7 @@ const fetchCookie = makeFetchCookie(fetch, jar)
 const start = async (cookie: string) => {
   // 注入初始 Cookie
   if (!cookie) {
-    console.log("请先设置环境变量 Cookie，名为'FLJH_COOKIE'")
+    console.log("请先设置环境变量 Cookie，名为'FLJH_COOKIE'\n")
     return
   }
   await fillInitCookies(jar, cookie, "https://fulijianghu.org/")
@@ -49,7 +48,7 @@ const start = async (cookie: string) => {
   // 依次回复主题
   for (const [index, tid] of tids.entries()) {
     if (data.tids.includes(tid)) {
-      !isQL && console.log(`已回复过该贴(${tid})，跳过`)
+      console.log(`已回复过该贴(${tid})，跳过\n`)
       continue
     }
 
@@ -59,7 +58,7 @@ const start = async (cookie: string) => {
     // 限制回帖次数。需要立即停止回复剩下的帖子
     if (err && err.message.includes("所在的用户组每小时限制发回帖")) {
       // 用 break 不用 return ，是为了退出循环后，保存数据
-      console.log("限制每小时限制发回帖的次数，退出本次回帖")
+      console.log(`限制每小时限制发回帖的次数，退出本次回帖：${err.message}\n`)
       break
     }
 
@@ -160,7 +159,7 @@ const getIndexTids = async (): Promise<string[]> => {
   for (let item of $("table#threadlisttableid tbody[id^='normalthread']")) {
     const idStr = $(item).attr("id")
     if (!idStr) {
-      console.log("无法获取元素的属性 id：", $(item).text())
+      console.log(`无法获取元素的属性 id：${$(item).text()}\n`)
       continue
     }
 
@@ -190,7 +189,6 @@ const getSecqaa = async (hashid: string): Promise<number> => {
   }
 
   const {expression} = match.groups
-  !isQL && console.log("验证回答的问题：", expression)
 
   return calStr(expression)
 }
