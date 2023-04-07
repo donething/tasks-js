@@ -58,7 +58,7 @@ const start = async (cookie: string) => {
     // 限制回帖次数。需要立即停止回复剩下的帖子
     if (err && err.message.includes("所在的用户组每小时限制发回帖")) {
       // 用 break 不用 return ，是为了退出循环后，保存数据
-      console.log(`限制每小时限制发回帖的次数，退出本次回帖：${err.message}\n`)
+      console.log(`限制每小时限制发回帖的次数，退出本次回帖：\n${err.message}\n`)
       break
     }
 
