@@ -7,7 +7,6 @@ import makeFetchCookie from 'fetch-cookie'
 import {UserAgents, isQL, calStr, fillInitCookies} from "./utils/utils"
 
 // 标签
-const TAG = "[FLJH]"
 // 回复的内容
 const content = encodeURIComponent("感谢分享！！")
 
@@ -15,56 +14,61 @@ const content = encodeURIComponent("感谢分享！！")
 const jar = new makeFetchCookie.toughCookie.CookieJar()
 const fetchCookie = makeFetchCookie(fetch, jar)
 
-const start = (cookie: string) => {
+const start = async (cookie: string) => {
   if (!cookie) {
-    console.log(TAG, "请先设置环境变量 Cookie，名为'FLJH_COOKIE'")
+    console.log("请先设置环境变量 Cookie，名为'FLJH_COOKIE'")
     return
   }
 
-  fillInitCookies(jar, cookie, "https://fulijianghu.org/")
+  await fillInitCookies(jar, cookie, "https://fulijianghu.org/")
 
-  reply("57099")
+  await reply("57099").catch(err => console.log(`回帖(57099)出错：\n${err}`))
 }
 
 const reply = async (tid: string) => {
-  const headers = {
-    "origin": "https://fulijianghu.org",
+  const topicheaders = {
     "referer": "https://fulijianghu.org",
     "user-agent": UserAgents.Win
   }
-
   // 获取验证回答需要的 hashid
   const topicURL = `https://fulijianghu.org/forum.php?mod=viewthread&tid=${tid}`
-  const topicResp = await fetchCookie(topicURL, {headers})
+  const topicResp = await fetchCookie(topicURL, {headers: topicheaders})
   const hashText = await topicResp.text()
   if (hashText.includes("您需要登录后才可以回帖")) {
-    throw `${TAG} 需要登录后才可以回帖`
+    throw `需要登录后才可以回帖`
   }
 
   const reg = /<input.+?name="formhash"\s+value="(?<formhash>.+?)".+?<span\s+id="secqaa_(?<hashid>\S+)">/s
   const match = hashText.match(reg)
   if (!match || !match.groups) {
-    throw `${TAG} 提取 formhash、hashid 失败：` + hashText
+    throw `提取 formhash、hashid 失败：` + hashText
   }
   const {formhash, hashid} = match.groups
 
   // 获取验证回答
   const qaa = await getSecqaa(hashid)
-  !isQL && console.log(TAG, `提取帖子(${tid})的信息 formhash: ${formhash} , hashid: ${hashid} , qaa: ${qaa}`)
+  !isQL && console.log(`提取帖子(${tid})的信息 formhash: ${formhash} , hashid: ${hashid} , qaa: ${qaa}`)
 
   // 回复
+  const replyHeaders = {
+    "origin": "https://fulijianghu.org",
+    "referer": "https://fulijianghu.org",
+    "content-type": "application/x-www-form-urlencoded",
+    "user-agent": UserAgents.Win
+  }
   const replyURL = "https://fulijianghu.org/forum.php?mod=post&action=reply&replysubmit=yes&" +
     "handlekey=fastpost&inajax=1&tid=" + tid
   const now = parseInt("" + Date.now() / 1000)
   const body = `message=${content}&secqaahash=${hashid}&secanswer=${qaa}&posttime=${now}&formhash=${formhash}` +
     "&usesig=1&subject=++"
-  const replyResp = await fetchCookie(replyURL, {body, headers})
+  const method = "POST"
+  const replyResp = await fetchCookie(replyURL, {body, headers: replyHeaders, method})
   const replyText = await replyResp.text()
   if (!replyText.includes("回复发布成功")) {
-    throw `${TAG} 回复失败：` + replyText
+    throw `回帖失败：` + replyText
   }
 
-  console.log(`回复帖子(${tid})成功`)
+  console.log(`回帖(${tid})成功`)
 }
 
 /**
@@ -82,11 +86,11 @@ const getSecqaa = async (hashid: string): Promise<number> => {
   const text = await resp.text()
   const match = text.match(/class="vm"\s\/><\/span>'.+?'(?<expression>.+?)=/s)
   if (!match || !match.groups) {
-    throw `${TAG} 提取验证回答失败：` + text
+    throw `提取验证回答失败：` + text
   }
 
   const {expression} = match.groups
-  !isQL && console.log(TAG, "验证回答的问题：", expression)
+  !isQL && console.log("验证回答的问题：", expression)
 
   return calStr(expression)
 }
