@@ -7,6 +7,7 @@ export const readJSON = <T>(path: string): T => {
 
   return JSON.parse(fs.readFileSync(path).toString() || "{}")
 }
+
 export const writeJSON = (path: string, data: any) => {
-  return fs.writeFileSync(path, JSON.stringify(data), {flag: "w"})
+  fs.writeFileSync(path, JSON.stringify(data), {flag: "w"})
 }

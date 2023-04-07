@@ -9,13 +9,10 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/axios": "^0.14.0",
     "https-proxy-agent": "^5.0.1"
   },
   "dependencies": {
     "@types/node": "^17.0.25",
-    "axios": "^0.26.1",
-    "do-utils": "^1.0.57",
     "fetch-cookie": "^2.1.0"
   }
 }

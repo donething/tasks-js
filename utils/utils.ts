@@ -61,3 +61,13 @@ export const fillInitCookies = async (jar: any, cookies: string, url: string) =>
     await jar.setCookie(item, url, {ignoreError: false})
   }
 }
+
+/**
+ * 等待毫秒
+ * @param ms 毫秒
+ */
+export const sleep = (ms: number) => {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms)
+  })
+}

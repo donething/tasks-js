@@ -4,8 +4,8 @@
  * cron * * * * *
  */
 import makeFetchCookie from 'fetch-cookie'
-import {UserAgents, isQL, calStr, fillInitCookies} from "./utils/utils"
-import {readJSON} from "./utils/file"
+import {UserAgents, isQL, calStr, fillInitCookies, sleep} from "./utils/utils"
+import {readJSON, writeJSON} from "./utils/file"
 
 // 保存到文件的数据
 type FData = {
@@ -31,19 +31,34 @@ const start = async (cookie: string) => {
 
   await fillInitCookies(jar, cookie, "https://fulijianghu.org/")
 
-  const tids = ["57099", "57110"]
-  const history = readJSON<FData>(FLJH_FILE)
+  const tids = ["57106", "57093"]
+  const data = readJSON<FData>(FLJH_FILE)
+  if (!data.tids) {
+    data.tids = []
+  }
+
   for (let tid of tids) {
-    if (history.tids?.includes(tid)) {
+    if (data.tids.includes(tid)) {
       !isQL && console.log(`已回复过该贴(${tid})，跳过`)
       continue
     }
 
-    await reply(tid).catch(err => console.log(`回帖(${tid})出错：\n${err}`))
+    const err = await reply(tid)
+    if (!err) {
+      console.log(`回帖(${tid})出错：\n${err}`)
+      continue
+    }
+
+    data.tids.push(tid)
+    // 默认要等待 15 秒
+    !isQL && console.log("等待几秒后继续回复…")
+    await sleep(18000)
   }
+
+  writeJSON(FLJH_FILE, data)
 }
 
-const reply = async (tid: string) => {
+const reply = async (tid: string): Promise<Error | null> => {
   const topicheaders = {
     "referer": "https://fulijianghu.org",
     "user-agent": UserAgents.Win
@@ -53,13 +68,13 @@ const reply = async (tid: string) => {
   const topicResp = await fetchCookie(topicURL, {headers: topicheaders})
   const hashText = await topicResp.text()
   if (hashText.includes("您需要登录后才可以回帖")) {
-    throw `需要登录后才可以回帖`
+    return new Error("需要登录后才可以回帖")
   }
 
   const reg = /<input.+?name="formhash"\s+value="(?<formhash>.+?)".+?<span\s+id="secqaa_(?<hashid>\S+)">/s
   const match = hashText.match(reg)
   if (!match || !match.groups) {
-    throw `提取 formhash、hashid 失败：` + hashText
+    return new Error(`提取 formhash、hashid 失败：${hashText}`)
   }
   const {formhash, hashid} = match.groups
 
@@ -83,10 +98,11 @@ const reply = async (tid: string) => {
   const replyResp = await fetchCookie(replyURL, {body, headers: replyHeaders, method})
   const replyText = await replyResp.text()
   if (!replyText.includes("回复发布成功")) {
-    throw `回帖失败：` + replyText
+    return new Error(`回帖失败：${replyText}`)
   }
 
   console.log(`回帖(${tid})成功`)
+  return null
 }
 
 /**
