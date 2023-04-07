@@ -2,7 +2,7 @@
  * 福利江湖 回复帖子
  * 该站已墙
  */
-// cron * * * * *
+// cron */10 * * * *
 
 import * as cheerio from 'cheerio'
 import makeFetchCookie from 'fetch-cookie'
