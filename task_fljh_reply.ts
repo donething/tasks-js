@@ -50,7 +50,7 @@ const start = async (cookie: string) => {
   // 依次回复主题
   for (const [index, tid] of tids.entries()) {
     if (data.tids.includes(tid)) {
-      console.log(`已回复过该贴(${tid})，跳过\n`)
+      console.log(`${index}. 已回复过该贴(${tid})，跳过\n`)
       continue
     }
 
@@ -60,19 +60,19 @@ const start = async (cookie: string) => {
     // 限制回帖次数。需要立即停止回复剩下的帖子
     if (err && err.message.includes("所在的用户组每小时限制发回帖")) {
       // 用 break 不用 return ，是为了退出循环后，保存数据
-      console.log(`限制每小时限制发回帖的次数，退出本次回帖：\n${err.message}\n`)
+      console.log(`${index}. 限制每小时限制发回帖的次数，退出本次回帖：\n${err.message}\n`)
       break
     }
 
     // 其它错误
     if (err) {
-      console.log(`回帖出错(${tid})：\n${err}`)
+      console.log(`${index}. 回帖出错(${tid})：\n${err}`)
       await sendNotify(TAG, `回帖出错(${tid})`)
       continue
     }
 
     // 回帖成功
-    console.log(`回帖成功(${tid})\n`)
+    console.log(`${index}. 回帖成功(${tid})\n`)
     data.tids.push(tid)
 
     // 默认要等待 15 秒，再继续回帖
