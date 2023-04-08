@@ -2,8 +2,10 @@
  * 京豆变化
  * 展示最近几天内京豆的变化
  * 可以指定环境变量"JD_BEANS_RECENT_DAY"，设置获取的最近天数。不指定时为 7
- * cron 5 13,22 * * *
  */
+
+// new Env('京豆变化')
+// cron: 5 13,22 * * *
 
 import {date, UserAgents, isQL} from "./utils/utils"
 

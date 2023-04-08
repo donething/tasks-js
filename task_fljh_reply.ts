@@ -1,8 +1,10 @@
 /**
- * 福利江湖 回复帖子
+ * 福利江湖 回帖
  * 该站已墙
  */
-// cron */10 * * * *
+
+// new Env('福利江湖 回帖')
+// cron: */10 * * * *
 
 import * as cheerio from 'cheerio'
 import makeFetchCookie from 'fetch-cookie'
