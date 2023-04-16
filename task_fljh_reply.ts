@@ -69,7 +69,8 @@ const start = async (cookie: string) => {
     if (err) {
       console.log(`${no}. 回帖出错(${tid})：\n${err}`)
       await sendNotify(TAG, `回帖出错(${tid})`)
-      continue
+      // 退出回帖，不用 return ，要保存数据
+      break
     }
 
     // 回帖成功
@@ -100,15 +101,25 @@ const reply = async (tid: string): Promise<Error | null> => {
     return new Error("需要登录后才可以回帖")
   }
 
-  const reg = /<input.+?name="formhash"\s+value="(?<formhash>.+?)".+?<span\s+id="secqaa_(?<hashid>\S+)">/s
-  const match = hashText.match(reg)
-  if (!match || !match.groups) {
-    return new Error(`提取 formhash、hashid 失败：${hashText}`)
+  let formhash = ""
+  let hashid = ""
+  let qaa = ""
+  const formReg = /<input.+?name="formhash"\s+value="(?<formhash>.+?)"/s
+  const formMatch = hashText.match(formReg)
+  if (!formMatch || !formMatch.groups) {
+    return new Error(`提取 formhas 失败：${hashText}`)
   }
-  const {formhash, hashid} = match.groups
+  formhash = formMatch.groups.formhash
 
-  // 获取验证回答
-  const qaa = await getSecqaa(hashid)
+  // 可能有验证回答，需要 hashid
+  const hashReg = /<span\s+id="secqaa_(?<hashid>\S+)">/s
+  const hashMatch = hashText.match(hashReg)
+  if (hashMatch && hashMatch.groups) {
+    hashid = hashMatch.groups.hashid
+    // 获取验证回答
+    qaa = await getSecqaa(hashid)
+  }
+
   !isQL && console.log(`提取帖子(${tid})的信息 formhash: ${formhash} , hashid: ${hashid} , qaa: ${qaa}`)
 
   // 回复
@@ -178,7 +189,7 @@ const getIndexTids = async (): Promise<string[]> => {
  * @param hashid 该验证的 ID。如"qSnm317v"，
  * 可以从回复页面的源码中获取：`<div class="mtm"><span id="secqaa_qSnm317v"></span>`
  */
-const getSecqaa = async (hashid: string): Promise<number> => {
+const getSecqaa = async (hashid: string): Promise<string> => {
   const headers = {
     "referer": "https://fulijianghu.org",
     "user-agent": UserAgents.Win
@@ -193,7 +204,7 @@ const getSecqaa = async (hashid: string): Promise<number> => {
 
   const {expression} = match.groups
 
-  return calStr(expression)
+  return String(calStr(expression))
 }
 
 //
