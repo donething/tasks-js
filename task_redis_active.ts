@@ -13,13 +13,21 @@ const active = async (url: string) => {
   }
 
   try {
-    const resp = await fetch(url)
-    if (resp.redirected) {
-      console.log("原来的 URL：", resp.url)
-      console.log("重定向到 URL：", resp.headers.get('Location'))
+    const resp = await fetch(url, {
+      // 配置fetch不自动处理重定向
+      redirect: 'manual',
+    })
+
+    // 检查重定向
+    if (resp.type === 'opaqueredirect') {
+      // 获取重定向后的URL
+      const redirectedUrl = resp.url
+      console.log("重定向后的 URL", redirectedUrl)
+    } else {
+      console.log("没有发生重定向", resp.url)
     }
   } catch (e) {
-    console.error("无法访问 URL：", e)
+    console.error("无法访问 URL", url, "：\n", e)
   }
 }
 
