@@ -20,14 +20,15 @@ const active = async (url: string) => {
 
     // 检查重定向
     const redirect = resp.headers.get('Location')
+
     if (redirect) {
       // 获取重定向后的URL
-      console.log("重定向后的 URL", redirect)
+      console.log("重定向后的 URL：", redirect)
     } else {
-      console.log("没有发生重定向", resp.url)
+      console.log("没有发生重定向：", resp.url)
     }
   } catch (e) {
-    console.error("无法访问 URL", url, "：\n", e)
+    console.error("无法访问 URL：", url, "：\n", e)
   }
 }
 
