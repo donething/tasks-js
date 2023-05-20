@@ -13,9 +13,7 @@ const active = async (url: string) => {
   }
 
   const resp = await fetch(url)
-  const text = await resp.text()
-
-  console.log("输出：", text)
+  console.log("重定向后的URL：", resp.url)
 }
 
 active(process.env.ROUTER_URL || "")
