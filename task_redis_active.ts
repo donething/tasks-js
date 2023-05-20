@@ -12,8 +12,15 @@ const active = async (url: string) => {
     return
   }
 
-  const resp = await fetch(url)
-  console.log("重定向后的URL：", resp.url)
+  try {
+    const resp = await fetch(url)
+    if (resp.redirected) {
+      console.log("原来的 URL：", resp.url)
+      console.log("重定向到 URL：", resp.headers.get('Location'))
+    }
+  } catch (e) {
+    console.error("无法访问 URL：", e)
+  }
 }
 
 active(process.env.ROUTER_URL || "")
