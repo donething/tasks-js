@@ -19,10 +19,10 @@ const active = async (url: string) => {
     })
 
     // 检查重定向
-    if (resp.type === 'opaqueredirect') {
+    const redirect = resp.headers.get('Location')
+    if (redirect) {
       // 获取重定向后的URL
-      const redirectedUrl = resp.url
-      console.log("重定向后的 URL", redirectedUrl)
+      console.log("重定向后的 URL", redirect)
     } else {
       console.log("没有发生重定向", resp.url)
     }
