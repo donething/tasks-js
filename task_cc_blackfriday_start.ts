@@ -3,7 +3,7 @@
  */
 
 // new Env('cloudcone黑五活动开启')
-// cron: */10 * * * * *
+// cron: 1 * * * *
 
 const {sendNotify} = require("./utils/sendNotify")
 
