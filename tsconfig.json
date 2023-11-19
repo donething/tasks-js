@@ -5,6 +5,5 @@
     "moduleResolution": "Node",
     "esModuleInterop": true,
     "strict": true,
-    "outDir": "dist"
   }
 }

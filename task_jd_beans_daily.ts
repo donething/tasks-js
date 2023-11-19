@@ -7,9 +7,9 @@
 // new Env('京豆变化')
 // cron: 5 13,22 * * *
 
-import {date, UserAgents, isQL} from "./utils/utils"
-
-const {sendNotify} = require("./utils/sendNotify")
+import {UserAgents, isQL} from "./utils/utils"
+import {date} from "do-utils"
+import {pushTextMsg} from "./utils/push"
 
 // 指定获取最近几天内，每日京东的变化量，不指定时为 7 天内
 const jdBeansRecentDay: number = Number(process.env.JD_BEANS_RECENT_DAY) || 7
@@ -61,7 +61,7 @@ const getBeansInDay = async (ck: string, day: number): Promise<Map<string, numbe
 
       if (obj.code && obj.code !== "0") {
         console.warn("获取京豆变化的详细信息失败：", obj)
-        await sendNotify("获取京豆变化失败", JSON.stringify(obj))
+        await pushTextMsg("[青龙] 京豆变化", `获取京豆变化失败：${JSON.stringify(obj)}`)
         return beansMap
       }
 
@@ -110,8 +110,8 @@ const getBeansInDay = async (ck: string, day: number): Promise<Map<string, numbe
 // 展示数据
 const printBeans = async (ck: string, day?: number) => {
   if (!ck) {
-    console.log("Cookie 为空，无法获取京豆变化量")
-    await sendNotify("[青龙] 京豆变化", "Cookie 为空或已因失效被禁用")
+    console.log("无法获取京豆变化量：Cookie 为空或因已失效被禁用")
+    await pushTextMsg("[青龙] 京豆变化", "Cookie 为空或因已失效被禁用")
     return
   }
 
@@ -127,7 +127,7 @@ const printBeans = async (ck: string, day?: number) => {
   if (beans.size > 0) {
     msg += `\n共 ${beans.size} 天，平均每天增加 ${Math.round(total / beans.size)} 个京豆\n`
     console.log(msg)
-    await sendNotify("[青龙] 京豆变化", msg)
+    await pushTextMsg("[青龙] 京豆变化", msg)
   } else {
     console.log("没有获取到京豆变化的信息")
   }

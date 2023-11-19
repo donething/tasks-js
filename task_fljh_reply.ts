@@ -8,10 +8,10 @@
 
 import * as cheerio from 'cheerio'
 import makeFetchCookie from 'fetch-cookie'
-import {UserAgents, isQL, calStr, fillInitCookies, sleep, random} from "./utils/utils"
+import {UserAgents, isQL, calStr, fillInitCookies} from "./utils/utils"
 import {readJSON, writeJSON} from "./utils/file"
-
-const {sendNotify} = require("./utils/sendNotify")
+import {random, sleep} from "do-utils"
+import {pushTextMsg} from "./utils/push"
 
 // 保存到文件的数据
 type FData = {
@@ -68,7 +68,7 @@ const start = async (cookie: string) => {
     // 其它错误
     if (err) {
       console.log(`${no}. 回帖出错(${tid})：\n${err}`)
-      await sendNotify(TAG, `回帖出错(${tid})`)
+      await pushTextMsg(TAG, `回帖出错(${tid})`)
       // 退出回帖，不用 return ，要保存数据
       break
     }
