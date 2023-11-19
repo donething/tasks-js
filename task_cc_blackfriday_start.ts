@@ -32,7 +32,7 @@ const check = async () => {
     return
   }
 
-  console.log("活动已开启：", data.message)
+  console.log("活动已开启：", JSON.stringify(data))
   await pushCardMsg("[青龙] CC黑五", "活动已开启！",
     "https://app.cloudcone.com/blackfriday", "点击访问")
 }
