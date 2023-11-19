@@ -28,7 +28,7 @@ const check = async () => {
 
   const data: CCResp = await response.json()
   if (data.status === 0) {
-    console.log("活动还未开启：", data.message)
+    console.log("活动还未开启：", JSON.stringify(data))
     return
   }
 
