@@ -26,7 +26,7 @@ const loginToMT = async (username: string, password: string): Promise<void> => {
   }
 
   const data = `username=${username}&password=${password}`
-  const resp = await request(loginUrl, data, {headers})
+  const resp = await request(loginUrl, data, {headers, credentials: "include"})
   const text = await resp.text()
 
   // 不包括用户名，登录失败
