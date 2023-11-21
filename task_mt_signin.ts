@@ -16,6 +16,7 @@ const host = "kp.m-team.cc"
 const addr = `https://${host}`
 const loginUrl = `${addr}/takelogin.php`
 
+// 签到
 const loginToMT = async (username: string, password: string): Promise<void> => {
   const headers = {
     "authority": host,
@@ -31,7 +32,7 @@ const loginToMT = async (username: string, password: string): Promise<void> => {
   // 不包括用户名，登录失败
   if (!text.includes(username)) {
     console.log("登录失败：\n", text.substring(text.indexOf("<body")))
-    await pushTextMsg(tag, "登录失败：可在脚本面板查看该脚本的执行日志")
+    await pushTextMsg(tag, "登录失败：可在面板查看该脚本的执行日志")
 
     return
   }
@@ -41,8 +42,7 @@ const loginToMT = async (username: string, password: string): Promise<void> => {
   await pushTextMsg(tag, `签到成功！`)
 }
 
-
-// 签到
+// 执行
 if (process.env.MT_USER_PWD) {
   const [username, password] = process.env.MT_USER_PWD.split("//")
   loginToMT(username, password)
