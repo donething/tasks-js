@@ -21,7 +21,7 @@ type FData = {
 // 保存数据的文件路径
 const FLJH_FILE = "./db/fljh.json"
 
-const TAG = "[FLJH]"
+const TAG = "福利江湖回帖"
 
 // 标签
 // 回复的内容
@@ -68,7 +68,7 @@ const start = async (cookie: string) => {
     // 其它错误
     if (err) {
       console.log(`${no}. 回帖出错(${tid})：\n${err}`)
-      await pushTextMsg(TAG, `回帖出错(${tid})`)
+      await pushTextMsg(`${TAG} 出错`, `帖子ID：${tid}\n\n${err}`)
       // 退出回帖，不用 return ，要保存数据
       break
     }

@@ -1,5 +1,7 @@
 import {WXQiYe} from "do-utils"
 
+const TAG = "[青龙]"
+
 // 微信推送实例
 let wxPush: WXQiYe | undefined = undefined
 // 消息频道 ID
@@ -29,7 +31,7 @@ export const pushCardMsg = async (title: string, description: string, url: strin
     return
   }
 
-  let error = await wxPush.pushCard(agentid, title, description, user, url, btnTxt)
+  let error = await wxPush.pushCard(agentid, `${TAG} ${title}`, description, user, url, btnTxt)
   if (error) {
     console.log("推送微信卡片消息失败", error)
     return
@@ -44,7 +46,7 @@ export const pushTextMsg = async (title: string, content: string) => {
     return
   }
 
-  let error = await wxPush.pushText(agentid, `${title}\n\n${content}`, user)
+  let error = await wxPush.pushText(agentid, `${TAG} ${title}\n\n${content}`, user)
   if (error) {
     console.log("推送微信文本消息失败", error)
     return

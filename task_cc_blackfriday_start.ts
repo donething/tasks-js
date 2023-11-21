@@ -7,6 +7,8 @@
 
 import {pushCardMsg, pushTextMsg} from "./utils/push"
 
+const TAG = "CC黑五活动"
+
 // API 的响应
 type CCResp = {
   status: number
@@ -19,13 +21,11 @@ type CCResp = {
   }
 }
 
-const tag = "[青龙] CC黑五"
-
 const check = async () => {
   const response = await fetch('https://app.cloudcone.com/blackfriday/offers')
   if (!response.ok) {
     console.log("获取活动状态的响应出错：", response.statusText)
-    await pushTextMsg(tag, `获取活动状态的响应出错：\n${response.statusText}`)
+    await pushTextMsg(`${TAG} 获取出错`, `响应码有误：\n\n${response.statusText}`)
     return
   }
 
@@ -36,7 +36,8 @@ const check = async () => {
   }
 
   console.log("活动已开启：", JSON.stringify(data))
-  await pushCardMsg(tag, "活动已开启！", "https://app.cloudcone.com/blackfriday", "点击访问")
+  await pushCardMsg(`${TAG} 已开始`, "活动已开始！",
+    "https://app.cloudcone.com/blackfriday", "点击访问")
 }
 
 check()
