@@ -11,7 +11,7 @@ let agentid = 0
 // 初始化微信推送实例
 const initWXPush = async (): Promise<boolean> => {
   if (!process.env.QYWX_KEY) {
-    console.log("😢 无法推送消息，企业微信的 KEY 为空。请先设置环境变量'QYWX_KEY'")
+    console.log("\n😢 无法推送消息，企业微信的 KEY 为空。请先设置环境变量'QYWX_KEY'")
     return false
   }
 
