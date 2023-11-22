@@ -3,7 +3,7 @@
  */
 
 // new Env('CC低价')
-// cron: 1 * * * *
+// cron: * * * * *
 
 import {request} from "do-utils"
 import * as cheerio from 'cheerio'
