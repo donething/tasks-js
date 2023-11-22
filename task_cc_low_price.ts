@@ -54,7 +54,7 @@ const scan = async () => {
     }
 
     console.log(`😊 通知新帖：`, t.title, "\n", url, "\n")
-    tips.push(`${i}.<a href=${url}>${t.title}</a>`)
+    tips.push(`${i}.<a href="${url}">${t.title}</a>`)
     data.tids.push(t.tid)
 
     i++
