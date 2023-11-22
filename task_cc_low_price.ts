@@ -40,12 +40,12 @@ const scan = async () => {
   for (const t of threads) {
     // 只匹配指定帖子
     if (!ccRegex.test(t.title)) {
-      console.log(`跳过帖子(${t.tid})：`, t.title)
+      console.log(`😒 跳过帖子(${t.tid})：`, t.title)
       continue
     }
     // 已通知过帖子
     if (data.tids.includes(t.tid)) {
-      console.log(`已通知过帖子(${t.tid})：`, t.title)
+      console.log(`😂 已通知过帖子(${t.tid})：`, t.title)
       continue
     }
 
@@ -54,7 +54,13 @@ const scan = async () => {
     i++
   }
 
-  await pushTextMsg(TAG, `新的低价CC的帖子列表：\n\n${tips.join("\n")}`)
+  // 没有新帖
+  if (tips.length === 0) {
+    console.log("😪 此次刷新没有相关的新帖")
+    return
+  }
+
+  await pushTextMsg(TAG, `😊 新的低价CC的帖子列表：\n\n${tips.join("\n")}`)
   writeJSON(FILE_CC_LOW_PRICE, data)
 }
 
