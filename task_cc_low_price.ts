@@ -44,16 +44,16 @@ const scan = async () => {
 
     // 只匹配指定帖子
     if (!ccRegex.test(t.title)) {
-      console.log(`😒 跳过帖子：`, t.title, "  ", url)
+      console.log(`😒 跳过帖子：`, t.title, "\n", url, "\n")
       continue
     }
     // 已通知过帖子
     if (data.tids.includes(t.tid)) {
-      console.log(`😂 已通知过：`, t.title, "  ", url)
+      console.log(`😂 已通知过：`, t.title, "\n", url, "\n")
       continue
     }
 
-    console.log(`😊 通知新帖：`, t.title, "  ", url)
+    console.log(`😊 通知新帖：`, t.title, "\n", url, "\n")
     tips.push(`${i}.<a href=${url}>${t.title}</a>`)
     data.tids.push(t.tid)
 
