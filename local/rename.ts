@@ -20,6 +20,6 @@ for (let f of files) {
 
   // let newName = f.replace(/\(.*?\)/g, "").replace(/[\-_\s]/g, "")
   let newName = f.replace("gg", "")
-  console.log("重命名：", p)
+  console.log("🤨 重命名：", p)
   fs.renameSync(p, path.join(DST, newName))
 }

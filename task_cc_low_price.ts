@@ -60,7 +60,7 @@ const scan = async () => {
     return
   }
 
-  await pushTextMsg(TAG, `😊 新的低价CC的帖子列表：\n\n${tips.join("\n")}`)
+  await pushTextMsg(TAG, `新的低价CC的帖子列表：\n\n${tips.join("\n")}`)
   writeJSON(FILE_CC_LOW_PRICE, data)
 }
 
@@ -84,12 +84,12 @@ const getIndexTids = async (): Promise<Thread[]> => {
 
     const path = t.attr("href")
     if (!path) {
-      console.log("获取帖子 ID 失败：路径 path 为空：", t.toString())
+      console.log("😢 获取帖子 ID 失败：路径 path 为空：", t.toString())
       continue
     }
     const m = path.match(/thread-(\d+)/)
     if (!m || m.length <= 1) {
-      console.log("获取帖子 ID 失败：没有匹配到帖子的 tid：", path)
+      console.log("😢 获取帖子 ID 失败：没有匹配到帖子的 tid：", path)
       continue
     }
     const id = m[1]

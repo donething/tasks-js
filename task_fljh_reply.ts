@@ -34,7 +34,7 @@ const fetchCookie = makeFetchCookie(fetch, jar)
 const start = async (cookie: string) => {
   // 注入初始 Cookie
   if (!cookie) {
-    console.log("请先设置环境变量 Cookie，名为'FLJH_COOKIE'\n")
+    console.log("😢 请先设置环境变量 Cookie，名为'FLJH_COOKIE'\n")
     return
   }
   await fillInitCookies(jar, cookie, "https://fulijianghu.org/")
@@ -51,7 +51,7 @@ const start = async (cookie: string) => {
   for (const [index, tid] of tids.entries()) {
     const no = index + 1
     if (data.tids.includes(tid)) {
-      console.log(`${no}. 已回复过该贴(${tid})，跳过\n`)
+      console.log(`😂 ${no}. 已回复过该贴(${tid})，跳过\n`)
       continue
     }
 
@@ -61,26 +61,26 @@ const start = async (cookie: string) => {
     // 限制回帖次数。需要立即停止回复剩下的帖子
     if (err && err.message.includes("所在的用户组每小时限制发回帖")) {
       // 用 break 不用 return ，是为了退出循环后，保存数据
-      console.log(`${no}. 限制每小时限制发回帖的次数，退出本次回帖：\n${err.message}\n`)
+      console.log(`😢 ${no}. 限制每小时限制发回帖的次数，退出本次回帖：\n${err.message}\n`)
       break
     }
 
     // 其它错误
     if (err) {
-      console.log(`${no}. 回帖出错(${tid})：\n${err}`)
+      console.log(`😱 ${no}. 回帖出错(${tid})：\n${err}`)
       await pushTextMsg(`${TAG} 出错`, `帖子ID：${tid}\n\n${err}`)
       // 退出回帖，不用 return ，要保存数据
       break
     }
 
     // 回帖成功
-    console.log(`${no}. 回帖成功(${tid})\n`)
+    console.log(`😊 ${no}. 回帖成功(${tid})\n`)
     data.tids.push(tid)
 
     // 默认要等待 15 秒，再继续回帖
     if (index !== tids.length - 1) {
       const sec = random(20, 60)
-      console.log(`随机等待 ${sec} 秒后继续回复……\n`)
+      console.log(`😪 随机等待 ${sec} 秒后继续回复……\n`)
       await sleep(sec * 1000)
     }
   }
@@ -120,7 +120,7 @@ const reply = async (tid: string): Promise<Error | null> => {
     qaa = await getSecqaa(hashid)
   }
 
-  !isQL && console.log(`提取帖子(${tid})的信息 formhash: ${formhash} , hashid: ${hashid} , qaa: ${qaa}`)
+  !isQL && console.log(`🤨 提取帖子(${tid})的信息 formhash: ${formhash} , hashid: ${hashid} , qaa: ${qaa}`)
 
   // 回复
   const replyHeaders = {
@@ -173,7 +173,7 @@ const getIndexTids = async (): Promise<string[]> => {
   for (let item of $("table#threadlisttableid tbody[id^='normalthread']")) {
     const idStr = $(item).attr("id")
     if (!idStr) {
-      console.log(`无法获取元素的属性 id：${$(item).text()}\n`)
+      console.log(`😢 无法获取元素的属性 id：${$(item).text()}\n`)
       continue
     }
 

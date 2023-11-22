@@ -46,8 +46,8 @@ const getBeansInDay = async (ck: string, day: number): Promise<Map<string, numbe
   let expirationDate = new Date()
   expirationDate.setDate(expirationDate.getDate() - day + 1)
   let expiration = date(expirationDate, "YYYY-mm-dd")
-  console.log(`展示最近${day}天内京豆的变化，查询截止日：${expiration}`)
-  console.log(`可设置环境变量"JD_BEANS_RECENT_DAY"来指定天数`)
+  console.log(`🤨 展示最近${day}天内京豆的变化，查询截止日：${expiration}`)
+  console.log(`🤨 可设置环境变量"JD_BEANS_RECENT_DAY"来指定天数`)
 
   // 按天保存京豆的变化量，如{"2022-04-18": 130, "2022-04-19": 152}
   let beansMap = new Map<string, number>()
@@ -69,7 +69,7 @@ const getBeansInDay = async (ck: string, day: number): Promise<Map<string, numbe
 
       // 已读取完所有页
       if (!obj.code || !obj.jingDetailList || obj.jingDetailList.length === 0) {
-        !isQL && console.log("已读取完所有页，返回")
+        !isQL && console.log("🤨 已读取完所有页，返回")
         break
       }
 
@@ -91,7 +91,7 @@ const getBeansInDay = async (ck: string, day: number): Promise<Map<string, numbe
       }
 
       // 继续下一页
-      !isQL && console.log(`已获取第 ${page} 页，继续获取下一页`)
+      !isQL && console.log(`🤨 已获取第 ${page} 页，继续获取下一页`)
       page++
     }
 
@@ -112,7 +112,7 @@ const getBeansInDay = async (ck: string, day: number): Promise<Map<string, numbe
 // 展示数据
 const printBeans = async (ck: string, day?: number) => {
   if (!ck) {
-    console.log("无法获取京豆变化量：Cookie 为空或因已失效被禁用")
+    console.log("😢 无法获取京豆变化量：Cookie 为空或因已失效被禁用")
     await pushTextMsg(TAG, "Cookie 为空或因已失效被禁用")
     return
   }
@@ -128,10 +128,10 @@ const printBeans = async (ck: string, day?: number) => {
 
   if (beans.size > 0) {
     msg += `\n共 ${beans.size} 天，平均每天增加 ${Math.round(total / beans.size)} 个京豆\n`
-    console.log(msg)
+    console.log("😊", msg)
     await pushTextMsg(TAG, msg)
   } else {
-    console.log("没有获取到京豆变化的信息")
+    console.log("😢 没有获取到京豆变化的信息")
   }
 }
 

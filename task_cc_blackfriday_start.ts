@@ -24,18 +24,18 @@ type CCResp = {
 const check = async () => {
   const response = await fetch('https://app.cloudcone.com/blackfriday/offers')
   if (!response.ok) {
-    console.log("获取活动状态的响应出错：", response.statusText)
+    console.log("😱 获取活动状态的响应出错：", response.statusText)
     await pushTextMsg(`${TAG} 获取出错`, `响应码有误：\n\n${response.statusText}`)
     return
   }
 
   const data: CCResp = await response.json()
   if (data.status === 0) {
-    console.log("活动还未开启：", JSON.stringify(data))
+    console.log("😪 活动还未开启：", JSON.stringify(data))
     return
   }
 
-  console.log("活动已开启：", JSON.stringify(data))
+  console.log("😊 活动已开启：", JSON.stringify(data))
   await pushCardMsg(`${TAG} 已开始`, "活动已开始！",
     "https://app.cloudcone.com/blackfriday", "点击访问")
 }
