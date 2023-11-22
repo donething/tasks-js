@@ -40,18 +40,19 @@ const scan = async () => {
   let tips: string[] = []
   let i = 1
   for (const t of threads) {
+    const url = `${addr}/thread-${t.tid}-1-1.html`
+
     // 只匹配指定帖子
     if (!ccRegex.test(t.title)) {
-      console.log(`😒 跳过帖子(${t.tid})：`, t.title)
+      console.log(`😒 跳过帖子：`, url, t.title)
       continue
     }
     // 已通知过帖子
     if (data.tids.includes(t.tid)) {
-      console.log(`😂 已通知过(${t.tid})：`, t.title)
+      console.log(`😂 已通知过：`, url, t.title)
       continue
     }
 
-    const url = `${addr}/thread-${t.tid}-1-1.html`
     console.log(`😊 通知新帖：`, url, t.title)
     tips.push(`${i}.<a href=${url}>${t.title}</a>`)
     data.tids.push(t.tid)
