@@ -16,7 +16,9 @@ const TAG = "CC低价"
 // 只匹配 cloudcone 有关的帖子
 const ccRegex = /(?!(ccs))(cc|cloudcone)/i
 
-const indexUrl = "https://hostloc.com/forum.php?mod=forumdisplay&fid=45&orderby=dateline"
+const host = "hostloc.com"
+const addr = `https://${host}`
+const indexUrl = `${addr}/forum.php?mod=forumdisplay&fid=45&orderby=dateline`
 
 // 保存数据的文件路径
 const FILE_CC_LOW_PRICE = "./db/cc_low_price.json"
@@ -45,12 +47,15 @@ const scan = async () => {
     }
     // 已通知过帖子
     if (data.tids.includes(t.tid)) {
-      console.log(`😂 已通知过帖子(${t.tid})：`, t.title)
+      console.log(`😂 已通知过(${t.tid})：`, t.title)
       continue
     }
 
-    tips.push(`<a href="https://hostloc.com/thread-${t.tid}-1-1.html">${i}.${t.title}</a>`)
+    const url = `${addr}/thread-${t.tid}-1-1.html`
+    console.log(`😊 通知新帖：`, url, t.title)
+    tips.push(`${i}.<a href=${url}>${t.title}</a>`)
     data.tids.push(t.tid)
+
     i++
   }
 
@@ -68,8 +73,8 @@ const scan = async () => {
 const getIndexTids = async (): Promise<Thread[]> => {
   const headers = {
     "User-Agent": UserAgents.Win,
-    "Host": "hostloc.com",
-    "Referer": "https://hostloc.com/forum.php"
+    "Host": host,
+    "Referer": addr
   }
 
   const resp = await request(indexUrl, undefined, {headers})
