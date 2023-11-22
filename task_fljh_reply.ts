@@ -19,7 +19,7 @@ type FData = {
   tids?: string[]
 }
 // 保存数据的文件路径
-const FLJH_FILE = "./db/fljh.json"
+const FILE_FLJH = "./db/fljh.json"
 
 const TAG = "福利江湖回帖"
 
@@ -42,7 +42,7 @@ const start = async (cookie: string) => {
   // 获取帖子列表（ID列表）
   const tids = await getIndexTids()
   // 读取已回复的帖子列表（ID列表）
-  const data = readJSON<FData>(FLJH_FILE)
+  const data = readJSON<FData>(FILE_FLJH)
   if (!data.tids) {
     data.tids = []
   }
@@ -85,7 +85,7 @@ const start = async (cookie: string) => {
     }
   }
 
-  writeJSON(FLJH_FILE, data)
+  writeJSON(FILE_FLJH, data)
 }
 
 const reply = async (tid: string): Promise<Error | null> => {
