@@ -37,8 +37,9 @@ const check = async () => {
     return
   }
 
-  console.log("😊 活动已开启：", JSON.stringify(data))
+  console.log("😊 活动已开启：", data.message)
   const cookie = process.env.CC_COOKIE
+
   if (!cookie) {
     console.log("Cookie 为空，无法自动下订单。只发送通知提醒。")
     await pushCardMsg(`${TAG} 已开始`, "活动已开始！",
@@ -54,7 +55,7 @@ const order = async (cookie: string) => {
   const htmlText = await response.text()
 
   // 使用正则表达式来从文本中提取 _token 的值
-  const tokenMatch = htmlText.match(/var\s+_token\s*=\s*"([^"]+)"/)
+  const tokenMatch = htmlText.match(/var\s+_token.+?"(.+?)"/)
   if (!tokenMatch || !tokenMatch[1]) {
     console.log("获取 token 失败，无法在网页中匹配到'_token'：", htmlText)
     return
@@ -72,7 +73,7 @@ const order = async (cookie: string) => {
     "Referrer-Policy": "strict-origin-when-cross-origin"
   }
   const orderResp = await request("https://app.cloudcone.com/ajax/vps", data, {headers})
-  const orderText = orderResp.text()
+  const orderText = await orderResp.text()
 
   console.log("自动下订单：", orderText)
 }
