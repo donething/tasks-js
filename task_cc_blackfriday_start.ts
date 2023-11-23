@@ -69,10 +69,17 @@ const order = async (cookie: string) => {
     console.log("😢 token 为空，将使用默认值")
     token = "3g787lYC"
   }
-  const data = `os=878&hostname=&contract=Y&coupon-apply=&coupon=&plan=138&method=provision&_token=${token}`
+  const data = new FormData()
+  data.append('os', "878")
+  data.append('hostname', '')
+  data.append('contract', 'Y')
+  data.append('coupon-apply', '')
+  data.append('coupon', '')
+  data.append('plan', '138')
+  data.append('method', 'provision')
+  data.append('_token', token)
   const headers = {
     "accept": "application/json, text/javascript, */*; q=0.01",
-    "content-type": "multipart/form-data;",
     "x-requested-with": "XMLHttpRequest",
     "cookie": cookie,
     "Referer": "https://app.cloudcone.com/",
