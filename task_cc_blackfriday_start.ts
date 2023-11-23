@@ -51,6 +51,7 @@ type VPSInfo = {
   order_url: string
 }
 
+// 检测
 const check = async () => {
   const response = await fetch(`${addr}/blackfriday/offers`)
   if (!response.ok) {
@@ -74,20 +75,22 @@ const check = async () => {
     return
   }
 
-  const vpsInfos = Object.keys(data.__data.vps_data)
-  if (vpsInfos.length === 0) {
+  if (Object.keys(data.__data.vps_data).length === 0) {
     console.log("😢 没有需要订购的 VPS：\n", JSON.stringify(data))
     return
   }
 
   // 订购
-  await order(cookie, data.__data.vps_data[vpsInfos[0]])
+  for (const info of Object.values(data.__data.vps_data)) {
+    order(cookie, info)
+  }
 }
 
 // 下订单
 const order = async (cookie: string, vpsInfo: VPSInfo) => {
+  const title = `【${vpsInfo.name}(${vpsInfo.id})】`
   const orderAddr = `${addr}/vps/${vpsInfo.id}/create?token=${vpsInfo.name}`
-  console.log(`🤨 开始订购 【${vpsInfo.name}(${vpsInfo.id})】：${orderAddr}`)
+  console.log(`🤨 开始订购 ${title}：${orderAddr}`)
   const response = await fetch(orderAddr)
   const htmlText = await response.text()
 
@@ -105,6 +108,7 @@ const order = async (cookie: string, vpsInfo: VPSInfo) => {
     console.log("😢 token 为空，将使用默认值")
     token = "3g787lYC"
   }
+
   const data = new FormData()
   data.append('os', "878")
   data.append('hostname', '')
@@ -124,7 +128,8 @@ const order = async (cookie: string, vpsInfo: VPSInfo) => {
   const orderResp = await request(`${addr}/ajax/vps`, data, {headers})
   const orderText = await orderResp.text()
 
-  console.log("🤨 自动下订单：", orderText)
+  console.log(`🤨 自动下单 ${title}：`, orderText)
 }
 
+// 开始
 check()
