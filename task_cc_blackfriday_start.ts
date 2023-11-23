@@ -66,6 +66,7 @@ const order = async (cookie: string) => {
   console.log(`🤨 提取到的 Token："${token}"`)
   // 发现 token 是固定值，没有获取到时（此时为 null）设置
   if (token === "null") {
+    console.log("😢 token 为空，将使用默认值")
     token = "3g787lYC"
   }
   const data = `os=878&hostname=&contract=Y&coupon-apply=&coupon=&plan=138&method=provision&_token=${token}`
@@ -74,7 +75,7 @@ const order = async (cookie: string) => {
     "content-type": "multipart/form-data;",
     "x-requested-with": "XMLHttpRequest",
     "cookie": cookie,
-    "Referer": "https://app.cloudcone.com/vps/138/create?token=bf-r-22-SP3Afw6821Zl",
+    "Referer": "https://app.cloudcone.com/",
     "Referrer-Policy": "strict-origin-when-cross-origin"
   }
   const orderResp = await request("https://app.cloudcone.com/ajax/vps", data, {headers})
