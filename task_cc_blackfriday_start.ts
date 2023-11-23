@@ -112,7 +112,7 @@ const order = async (cookie: string, token: string, vpsInfo: VPSInfo) => {
   const text = await resp.text()
 
   console.log(`🤨 自动下单 ${title} ${addr}${vpsInfo.order_url}：\n`,
-    ` 🤨 响应状态 ${resp.status}，内容：\n`, text)
+    `  🤨 响应状态 ${resp.status}，内容：\n`, text)
 }
 
 // 开始
