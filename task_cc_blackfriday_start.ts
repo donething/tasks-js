@@ -57,13 +57,17 @@ const order = async (cookie: string) => {
 
   // 使用正则表达式来从文本中提取 _token 的值
   const tokenMatch = htmlText.match(/var\s+_token.+?"(.+?)"/)
-  if (!tokenMatch || !tokenMatch.groups) {
+  if (!tokenMatch || !tokenMatch[1]) {
     console.log("😱 获取 token 失败，无法在网页中匹配到'_token'：", htmlText)
     return
   }
 
-  const token = tokenMatch.groups[1]
+  let token = tokenMatch[1]
   console.log(`🤨 提取到的 Token："${token}"`)
+  // 发现 token 是固定值，没有获取到时（此时为 null）设置
+  if (token === "null") {
+    token = "3g787lYC"
+  }
   const data = `os=878&hostname=&contract=Y&coupon-apply=&coupon=&plan=138&method=provision&_token=${token}`
   const headers = {
     "accept": "application/json, text/javascript, */*; q=0.01",
