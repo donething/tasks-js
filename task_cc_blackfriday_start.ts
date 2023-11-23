@@ -90,7 +90,7 @@ const check = async () => {
 
 // 下订单
 const order = async (cookie: string, token: string, vpsInfo: VPSInfo) => {
-  const title = `【${vpsInfo.name}(${vpsInfo.id})】`
+  const title = `[${vpsInfo.name}](${vpsInfo.id})`
 
   const data = new FormData()
   data.append('os', "878")
