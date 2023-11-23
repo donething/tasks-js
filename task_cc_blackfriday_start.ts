@@ -11,20 +11,33 @@ import {request} from "do-utils"
 
 const TAG = "CC黑五活动"
 
+const host = "app.cloudcone.com"
+const addr = `https://${host}`
+
 // API 的响应
 type CCResp = {
   status: number
   message: string
   __data: {
     html: string
-    ttr: number
-    vps_data: boolean
-    sc2_data: boolean
-  }
+    vps_data: Record<string, VPSInfo>
+    sc2_data: Record<string, VPSInfo>
+  };
+}
+
+type VPSInfo = {
+  id: number
+  name: string
+  cpu: number
+  ram: string
+  disk: number
+  bandwidth: string
+  usd_price: number
+  order_url: string
 }
 
 const check = async () => {
-  const response = await fetch('https://app.cloudcone.com/blackfriday/offers')
+  const response = await fetch(`${addr}/blackfriday/offers`)
   if (!response.ok) {
     console.log("😱 获取活动状态的响应出错：", response.statusText)
     await pushTextMsg(`${TAG} 获取出错`, `响应码有误：\n\n${response.statusText}`)
@@ -42,17 +55,24 @@ const check = async () => {
 
   if (!cookie) {
     console.log("😢 Cookie 为空，无法自动下订单。只发送通知提醒。")
-    await pushCardMsg(`${TAG} 已开始`, "活动已开始！",
-      "https://app.cloudcone.com/blackfriday", "点击访问")
+    await pushCardMsg(`${TAG} 已开始`, "活动已开始！", `${addr}/blackfriday`, "点击访问")
     return
   }
 
-  await order(cookie)
+  const vpsInfos = Object.keys(data.__data.vps_data)
+  if (vpsInfos.length === 0) {
+    console.log("😢 没有需要订购的 VPS：\n", JSON.stringify(data))
+    return
+  }
+
+  await order(cookie, data.__data.vps_data[vpsInfos[0]])
 }
 
 // 下订单
-const order = async (cookie: string) => {
-  const response = await fetch('https://app.cloudcone.com/vps/138/create?token=bf-r-22-SP3Afw6821Zl')
+const order = async (cookie: string, vpsInfo: VPSInfo) => {
+  const orderAddr = `${addr}/vps/${vpsInfo.id}/create?token=${vpsInfo.name}`
+  console.log(`🤨 开始订购 【${vpsInfo.name}】：${orderAddr}`)
+  const response = await fetch(orderAddr)
   const htmlText = await response.text()
 
   // 使用正则表达式来从文本中提取 _token 的值
@@ -82,10 +102,10 @@ const order = async (cookie: string) => {
     "accept": "application/json, text/javascript, */*; q=0.01",
     "x-requested-with": "XMLHttpRequest",
     "cookie": cookie,
-    "Referer": "https://app.cloudcone.com/",
+    "Referer": addr,
     "Referrer-Policy": "strict-origin-when-cross-origin"
   }
-  const orderResp = await request("https://app.cloudcone.com/ajax/vps", data, {headers})
+  const orderResp = await request(`${addr}/ajax/vps`, data, {headers})
   const orderText = await orderResp.text()
 
   console.log("🤨 自动下订单：", orderText)
