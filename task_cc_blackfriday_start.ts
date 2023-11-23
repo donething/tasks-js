@@ -4,7 +4,7 @@
  */
 
 // new Env('cloudcone黑五活动开启')
-// cron: * * * * * *
+// cron: */1 * * * * *
 
 import {pushCardMsg, pushTextMsg} from "./utils/push"
 import {request} from "do-utils"
