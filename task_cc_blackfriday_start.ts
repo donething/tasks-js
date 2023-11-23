@@ -1,6 +1,8 @@
 /**
  * cloudcone 黑色星期五活动是否已开启
- * 使用：需要设置环境变量"CC_COOKIE"值为 Cookie
+ * 使用：需要设置环境变量：
+ * "CC_COOKIE"值为 Cookie
+ * "CC_TOKEN" 值为 token。可在网页端登录后再控制台执行`window._token`获取（重新登录后旧token会失效）
  */
 
 // new Env('cloudcone黑五活动开启')
@@ -68,9 +70,9 @@ const check = async () => {
 
   console.log("😊 活动已开启：", data.message)
   const cookie = process.env.CC_COOKIE
-
-  if (!cookie) {
-    console.log("😢 Cookie 为空，无法自动下订单。只发送通知提醒。")
+  const token = process.env.CC_TOKEN
+  if (!cookie || !token) {
+    console.log("😢 Cookie、Token 为空，无法自动下订单。只发送通知提醒。")
     await pushCardMsg(`${TAG} 已开始`, "活动已开始！", `${addr}/blackfriday`, "点击访问")
     return
   }
@@ -82,32 +84,13 @@ const check = async () => {
 
   // 订购
   for (const info of Object.values(data.__data.vps_data)) {
-    order(cookie, info)
+    order(cookie, token, info)
   }
 }
 
 // 下订单
-const order = async (cookie: string, vpsInfo: VPSInfo) => {
+const order = async (cookie: string, token: string, vpsInfo: VPSInfo) => {
   const title = `【${vpsInfo.name}(${vpsInfo.id})】`
-  const orderAddr = `${addr}/vps/${vpsInfo.id}/create?token=${vpsInfo.name}`
-  console.log(`🤨 开始订购 ${title}：${orderAddr}`)
-  const response = await fetch(orderAddr)
-  const htmlText = await response.text()
-
-  // 使用正则表达式来从文本中提取 _token 的值
-  const tokenMatch = htmlText.match(/var\s+_token.+?"(.+?)"/)
-  if (!tokenMatch || !tokenMatch[1]) {
-    console.log("😱 获取 token 失败，无法在网页中匹配到'_token'：", htmlText)
-    return
-  }
-
-  let token = tokenMatch[1]
-  console.log(`🤨 提取到的 Token："${token}"`)
-  // 发现 token 是固定值，没有获取到时（此时为 null）设置
-  if (token === "null") {
-    console.log("😢 token 为空，将使用默认值")
-    token = "3g787lYC"
-  }
 
   const data = new FormData()
   data.append('os', "878")
@@ -125,10 +108,10 @@ const order = async (cookie: string, vpsInfo: VPSInfo) => {
     "Referer": addr,
     "Referrer-Policy": "strict-origin-when-cross-origin"
   }
-  const orderResp = await request(`${addr}/ajax/vps`, data, {headers})
-  const orderText = await orderResp.text()
+  const resp = await request(`${addr}/ajax/vps`, data, {headers})
+  const text = await resp.text()
 
-  console.log(`🤨 自动下单 ${title}：\n`, orderText)
+  console.log(`🤨 自动下单 ${title}：\n`, `响应状态：${resp.status}`, text)
 }
 
 // 开始
