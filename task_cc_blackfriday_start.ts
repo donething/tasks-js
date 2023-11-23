@@ -14,13 +14,21 @@ const TAG = "CC黑五活动"
 const host = "app.cloudcone.com"
 const addr = `https://${host}`
 
-// API 的响应
+// 活动开始信息 API 的响应
 type CCResp = {
+  // 为 1 表示活动已开始；为 0 表示还未开始
   status: number
+  // 消息
   message: string
+  // 具体数据（活动开始后）
   __data: {
+    // 被嵌入的 HTML
     html: string
+    // 等待时长
+    ttr: number
+    // VPS 数据
     vps_data: Record<string, VPSInfo>
+    // SC 数据
     sc2_data: Record<string, VPSInfo>
   };
 }
