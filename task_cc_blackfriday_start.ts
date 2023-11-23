@@ -41,7 +41,7 @@ const check = async () => {
   const cookie = process.env.CC_COOKIE
 
   if (!cookie) {
-    console.log("Cookie 为空，无法自动下订单。只发送通知提醒。")
+    console.log("😢 Cookie 为空，无法自动下订单。只发送通知提醒。")
     await pushCardMsg(`${TAG} 已开始`, "活动已开始！",
       "https://app.cloudcone.com/blackfriday", "点击访问")
     return
@@ -50,19 +50,20 @@ const check = async () => {
   await order(cookie)
 }
 
+// 下订单
 const order = async (cookie: string) => {
   const response = await fetch('https://app.cloudcone.com/vps/138/create?token=bf-r-22-SP3Afw6821Zl')
   const htmlText = await response.text()
 
   // 使用正则表达式来从文本中提取 _token 的值
   const tokenMatch = htmlText.match(/var\s+_token.+?"(.+?)"/)
-  if (!tokenMatch || !tokenMatch[1]) {
-    console.log("获取 token 失败，无法在网页中匹配到'_token'：", htmlText)
+  if (!tokenMatch || !tokenMatch.groups) {
+    console.log("😱 获取 token 失败，无法在网页中匹配到'_token'：", htmlText)
     return
   }
 
-  const token = tokenMatch[1]
-  console.log(`提取到的 Token："${token}"`)
+  const token = tokenMatch.groups[1]
+  console.log(`🤨 提取到的 Token："${token}"`)
   const data = `os=878&hostname=&contract=Y&coupon-apply=&coupon=&plan=138&method=provision&_token=${token}`
   const headers = {
     "accept": "application/json, text/javascript, */*; q=0.01",
@@ -75,7 +76,7 @@ const order = async (cookie: string) => {
   const orderResp = await request("https://app.cloudcone.com/ajax/vps", data, {headers})
   const orderText = await orderResp.text()
 
-  console.log("自动下订单：", orderText)
+  console.log("🤨 自动下订单：", orderText)
 }
 
 check()
