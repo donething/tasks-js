@@ -4,7 +4,7 @@
  */
 
 // new Env('cloudcone黑五活动开启')
-// cron: */10 * * * * *
+// cron: * * * * * *
 
 import {pushCardMsg, pushTextMsg} from "./utils/push"
 import {request} from "do-utils"
@@ -79,7 +79,7 @@ const check = async () => {
 // 下订单
 const order = async (cookie: string, vpsInfo: VPSInfo) => {
   const orderAddr = `${addr}/vps/${vpsInfo.id}/create?token=${vpsInfo.name}`
-  console.log(`🤨 开始订购 【${vpsInfo.name}】：${orderAddr}`)
+  console.log(`🤨 开始订购 【${vpsInfo.name}(${vpsInfo.id})】：${orderAddr}`)
   const response = await fetch(orderAddr)
   const htmlText = await response.text()
 
