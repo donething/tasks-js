@@ -1,11 +1,13 @@
 /**
  * cloudcone 黑色星期五活动是否已开启
+ * 使用：需要设置环境变量"CC_COOKIE"值为 Cookie
  */
 
 // new Env('cloudcone黑五活动开启')
 // cron: */10 * * * * *
 
 import {pushCardMsg, pushTextMsg} from "./utils/push"
+import {request} from "do-utils"
 
 const TAG = "CC黑五活动"
 
@@ -36,8 +38,43 @@ const check = async () => {
   }
 
   console.log("😊 活动已开启：", JSON.stringify(data))
-  await pushCardMsg(`${TAG} 已开始`, "活动已开始！",
-    "https://app.cloudcone.com/blackfriday", "点击访问")
+  const cookie = process.env.CC_COOKIE
+  if (!cookie) {
+    console.log("Cookie 为空，无法自动下订单。只发送通知提醒。")
+    await pushCardMsg(`${TAG} 已开始`, "活动已开始！",
+      "https://app.cloudcone.com/blackfriday", "点击访问")
+    return
+  }
+
+  await order(cookie)
+}
+
+const order = async (cookie: string) => {
+  const response = await fetch('https://app.cloudcone.com/vps/138/create?token=bf-r-22-SP3Afw6821Zl')
+  const htmlText = await response.text()
+
+  // 使用正则表达式来从文本中提取 _token 的值
+  const tokenMatch = htmlText.match(/var\s+_token\s*=\s*"([^"]+)"/)
+  if (!tokenMatch || !tokenMatch[1]) {
+    console.log("获取 token 失败，无法在网页中匹配到'_token'：", htmlText)
+    return
+  }
+
+  const token = tokenMatch[1]
+  console.log(`提取到的 Token："${token}"`)
+  const data = `os=878&hostname=&contract=Y&coupon-apply=&coupon=&plan=138&method=provision&_token=${token}`
+  const headers = {
+    "accept": "application/json, text/javascript, */*; q=0.01",
+    "content-type": "multipart/form-data;",
+    "x-requested-with": "XMLHttpRequest",
+    "cookie": cookie,
+    "Referer": "https://app.cloudcone.com/vps/138/create?token=bf-r-22-SP3Afw6821Zl",
+    "Referrer-Policy": "strict-origin-when-cross-origin"
+  }
+  const orderResp = await request("https://app.cloudcone.com/ajax/vps", data, {headers})
+  const orderText = orderResp.text()
+
+  console.log("自动下订单：", orderText)
 }
 
 check()
