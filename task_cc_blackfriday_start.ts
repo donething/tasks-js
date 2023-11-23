@@ -24,15 +24,22 @@ type CCResp = {
     sc2_data: Record<string, VPSInfo>
   };
 }
-
 type VPSInfo = {
+  // ID：142
   id: number
+  // "bf-r-22-wL13y32N3"
   name: string
+  // 数量：2
   cpu: number
+  // "1.25 GB"
   ram: string
+  // 磁盘（单位 GB）。60
   disk: number
+  // 流量。"2 TB"
   bandwidth: string
+  // 年费。10.92
   usd_price: number
+  // 和 id、name 对应："/vps/142/create?token=bf-r-22-wL13y32N3"
   order_url: string
 }
 
@@ -65,6 +72,7 @@ const check = async () => {
     return
   }
 
+  // 订购
   await order(cookie, data.__data.vps_data[vpsInfos[0]])
 }
 
@@ -95,7 +103,7 @@ const order = async (cookie: string, vpsInfo: VPSInfo) => {
   data.append('contract', 'Y')
   data.append('coupon-apply', '')
   data.append('coupon', '')
-  data.append('plan', '138')
+  data.append('plan', vpsInfo.id.toString())
   data.append('method', 'provision')
   data.append('_token', token)
   const headers = {
