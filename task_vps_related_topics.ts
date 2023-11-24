@@ -3,7 +3,7 @@
  */
 
 // new Env('VPS新帖')
-// cron: */2 * * * * *
+// cron: */2 * * * *
 
 import Parser from 'rss-parser'
 import {readJSON, writeJSON} from "./utils/file"
