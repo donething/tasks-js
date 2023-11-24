@@ -88,7 +88,7 @@ const getIndexTids = async (): Promise<Thread[]> => {
   // 解析
   const $ = cheerio.load(text)
   if (!$("title").text()) {
-    console.log("😢 解析不到标志元素。可能是被风控，导致获取的数据不正确：\n", " ", text)
+    console.log("😢 解析不到标志元素。可能是被风控，导致获取的数据不正确：\n", "  ", text)
     return []
   }
 
