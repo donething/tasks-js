@@ -8,7 +8,7 @@
 // new Env('cloudcone黑五活动开启')
 // cron: */1 * * * * *
 
-import {pushCardMsg, pushTextMsg} from "./utils/push"
+import {pushCardMsg, pushTextMsg} from "./utils/wxpush"
 import {request} from "do-utils"
 
 const TAG = "CC黑五活动"

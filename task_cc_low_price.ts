@@ -9,7 +9,7 @@ import {request} from "do-utils"
 import * as cheerio from 'cheerio'
 import {UserAgents} from "./utils/utils"
 import {readJSON, writeJSON} from "./utils/file"
-import {pushTextMsg} from "./utils/push"
+import {pushTextMsg} from "./utils/wxpush"
 
 const TAG = "CC低价"
 

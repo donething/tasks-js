@@ -14,9 +14,10 @@
 
 # 配置
 
-## 微信推送消息
+## 推送消息
 
-需要在青龙`环境变量`中添加键名`QYWX_KEY`，值为"id,secret,touser,agentid"，以英文逗号","分隔
+* 企业微信推送：`环境变量`中添加键`QYWX_KEY`，值为"id,secret,touser,agentid"，以英文逗号分隔
+* TG 消息推送：`环境变量`中添加键`TG_KEY`，值为"token,chatid"（以英文逗号分隔）
 
 # 编写新脚本
 

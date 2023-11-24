@@ -7,7 +7,7 @@
 // new Env('馒头签到')
 // cron: 1 9,21 * * *
 
-import {pushTextMsg} from "./utils/push"
+import {pushTextMsg} from "./utils/wxpush"
 import {UserAgents} from "./utils/utils"
 import axios from "axios"
 import {parseSetCookie} from "do-utils"

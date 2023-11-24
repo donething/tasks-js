@@ -9,7 +9,7 @@
 
 import {UserAgents, isQL} from "./utils/utils"
 import {date} from "do-utils"
-import {pushTextMsg} from "./utils/push"
+import {pushTextMsg} from "./utils/wxpush"
 
 const TAG = "京豆变化"
 

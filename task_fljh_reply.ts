@@ -11,7 +11,7 @@ import makeFetchCookie from 'fetch-cookie'
 import {UserAgents, isQL, calStr, fillInitCookies} from "./utils/utils"
 import {readJSON, writeJSON} from "./utils/file"
 import {random, sleep} from "do-utils"
-import {pushTextMsg} from "./utils/push"
+import {pushTextMsg} from "./utils/wxpush"
 
 // 保存到文件的数据
 type FData = {
