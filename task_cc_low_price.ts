@@ -14,7 +14,7 @@ import {pushTextMsg} from "./utils/push"
 const TAG = "CC低价"
 
 // 只匹配 cloudcone 有关的帖子
-const ccRegex = /(?!(ccs))(cc|cloudcone)/i
+const ccRegex = /\b(cc|cloudcone)\b/i
 
 const host = "hostloc.com"
 const addr = `https://${host}`
@@ -23,9 +23,12 @@ const indexUrl = `${addr}/forum.php?mod=forumdisplay&fid=45&orderby=dateline`
 // 保存数据的文件路径
 const FILE_CC_LOW_PRICE = "./db/cc_low_price.json"
 
-type Thread = {
-  title: string // 标题
-  tid: string    // 帖子ID。如"123"
+// 提取的主题关键信息
+interface Thread {
+  // 标题
+  title: string
+  // 帖子ID。如"123"
+  tid: string
 }
 
 const scan = async () => {
