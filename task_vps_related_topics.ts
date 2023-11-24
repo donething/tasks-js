@@ -8,6 +8,7 @@
 import Parser from 'rss-parser'
 import {readJSON, writeJSON} from "./utils/file"
 import {pushTGMsg} from "./utils/tgpush"
+import {TGSender} from "do-utils"
 
 const TAG = "VPS新帖"
 
@@ -93,7 +94,7 @@ const scan = async () => {
     }
 
     console.log(`😊 通知新帖：`, item.title, "\n  ", item.link, "\n")
-    tips.push(`${i}.[${item.title}](${item.link})`)
+    tips.push(`${i}\\.[${TGSender.escapeMk(item.title)}](${item.link})`)
     data.v2ex.push(tid)
 
     i++
