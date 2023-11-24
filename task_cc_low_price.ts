@@ -18,7 +18,7 @@ const ccRegex = /\b(cc|cloudcone)\b/i
 
 const host = "hostloc.com"
 const addr = `https://${host}`
-const indexUrl = `${addr}/forum.php?mod=forumdisplay&fid=45&orderby=dateline`
+const indexUrl = `${addr}/forum.php?mod=forumdisplay&fid=45&orderby=dateline&mobile=1`
 
 // 保存数据的文件路径
 const FILE_CC_LOW_PRICE = "./db/cc_low_price.json"
@@ -34,6 +34,7 @@ interface Thread {
 const scan = async () => {
   // 读取帖子列表
   const threads = await getIndexTids()
+
   // 读取已提示的帖子列表（ID列表）
   const data = readJSON<{ tids: string[] }>(FILE_CC_LOW_PRICE)
   if (!data.tids) {
@@ -76,17 +77,21 @@ const scan = async () => {
 // 获取首页帖子
 const getIndexTids = async (): Promise<Thread[]> => {
   const headers = {
-    "User-Agent": UserAgents.Win,
-    "Host": host,
-    "Referer": addr
+    "Referer": addr,
+    "User-Agent": UserAgents.Win
   }
 
   const resp = await request(indexUrl, undefined, {headers})
   const text = await resp.text()
 
+  const tids: Thread[] = []
   // 解析
   const $ = cheerio.load(text)
-  const tids: Thread[] = []
+  if (!$("title").text()) {
+    console.log("😢 解析不到标志元素。可能是被风控，导致获取的数据不正确：\n", " ", text)
+    return []
+  }
+
   for (let item of $("table#threadlisttableid tbody[id^='normalthread'] th.new a.xst")) {
     const t = $(item)
     const title = t.text().trim()
