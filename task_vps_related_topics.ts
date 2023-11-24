@@ -94,7 +94,7 @@ const scan = async () => {
     }
 
     console.log(`😊 通知新帖：`, item.title, "\n  ", item.link, "\n")
-    tips.push(`${i}\\.[${TGSender.escapeMk(item.title)}](${item.link})`)
+    tips.push(`${i}\\. [${TGSender.escapeMk(item.title)}](${item.link})`)
     data.v2ex.push(tid)
 
     i++

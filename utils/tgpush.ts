@@ -34,7 +34,6 @@ export const pushTGMsg = async (text: string) => {
 
   const response = await push.sendMessage(chatid, text)
 
-  console.log("响应：", response)
   if (!response.ok) {
     console.log("😱 推送 TG 消息失败：", response.error_code, response.description)
     return
