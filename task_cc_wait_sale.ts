@@ -2,7 +2,7 @@
  * 当有人出低价 CC VPS 时，发送通知
  */
 
-// new Env('CC低价')
+// new Env('CC出价')
 // cron: */30 * * * * *
 
 import {request} from "do-utils"
@@ -11,7 +11,7 @@ import {UserAgents} from "./utils/utils"
 import {readJSON, writeJSON} from "./utils/file"
 import {pushTextMsg} from "./utils/wxpush"
 
-const TAG = "CC低价"
+const TAG = "CC出价"
 
 // 只匹配 cloudcone 有关的帖子
 const ccRegex = /\b(cc|cloudcone)\b/i
