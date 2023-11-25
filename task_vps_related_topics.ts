@@ -13,7 +13,7 @@ import {TGSender} from "do-utils"
 const TAG = "VPS新帖"
 
 // 只匹配 cloudcone 有关的帖子
-const vpsRegex = /(\bBard\b)/i
+const vpsRegex = /(\bvps\b)/i
 
 const FILE_VPS_RELATED = "./db/vps_related_topics.json"
 
