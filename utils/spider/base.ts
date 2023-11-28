@@ -1,6 +1,5 @@
 import {mAxios} from "../http"
 import * as cheerio from "cheerio"
-import {pushTGMsg} from "../tgpush"
 import {Topic, UrlInfo} from "./types"
 
 /**
