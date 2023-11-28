@@ -6,7 +6,6 @@
 // cron: */30 * * * * *
 
 import notifyTopics, {TaskInfo} from "./utils/topicsFile"
-import Nodeseek from "./utils/spider/nodeseek"
 import Hostloc from "./utils/spider/hostloc"
 
 // 任务信息
@@ -18,11 +17,11 @@ const taskInfo: TaskInfo = {
       // VPS综合讨论区
       node: "45"
     },
-    {
-      Site: Nodeseek,
-      // （首页）所有新帖
-      node: ""
-    }
+    // {
+    //   Site: Nodeseek,
+    //   // （首页）所有新帖
+    //   node: ""
+    // }
   ],
 
   // 只匹配 cloudcone 有关的帖子
