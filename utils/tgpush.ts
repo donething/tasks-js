@@ -4,6 +4,7 @@
  */
 
 import {TGSender} from "do-utils"
+import {pushTextMsg} from "./wxpush"
 
 // TG 的 Token、频道 ID
 interface TGKey {
@@ -45,6 +46,7 @@ const push = async (text: string, chatid: string) => {
 
   if (!response.ok) {
     console.log("😱 推送 TG 消息失败：", response.error_code, response.description)
+    pushTextMsg("推送 TG 消息失败", `${response.error_code}：${response.description}`)
     return
   }
 
@@ -58,10 +60,13 @@ export const pushTGMsg = async (text: string) => {
 
 // 推送新帖的 TG 消息
 export const pushTGTopic = async (tag: string, topics: string[]) => {
-  return push(`#${tag} 新帖\n\n${topics.join("\n")}\n`, tgKey.chatTopic)
+  return push(`#${tag} 新帖\n\n${topics.join("\n")}\n`
+    , tgKey.chatTopic)
 }
 
 // 推送签到的 TG 消息
 export const pushTGSign = async (tag: string, result: string, tips: string) => {
-  return push(`#${tag} ${result}\n${tips}`, tgKey.chatSign)
+  return push(
+    `#${tag} ${result}\n${tips}`
+    , tgKey.chatSign)
 }
