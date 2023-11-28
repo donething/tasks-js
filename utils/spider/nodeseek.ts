@@ -19,7 +19,7 @@ const Nodeseek: TopicSite = {
    */
   getTids: async (categories: string): Promise<Topic[]> => {
     const path = !categories ? "/" : `/categories/${categories}`
-    const url = addr + path
+    const url = addr + path + "?sortBy=postTime"
     const headers = {
       "Referer": addr,
       "User-Agent": UserAgents.Win
