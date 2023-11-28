@@ -3,7 +3,7 @@
  */
 
 // new Env('CC有售')
-// cron: */30 * * * * *
+// cron: 1 * * * * *
 
 import notifyTopics, {TaskInfo} from "./utils/topicsFile"
 import Hostloc from "./utils/spider/hostloc"
