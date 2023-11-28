@@ -12,31 +12,32 @@ interface TGKey {
   chatNo: string
   // 新帖的通知
   chatTopic: string
+  // 签到的通知
+  chatSign: string
 }
 
+// TG 消息的键
+let tgKey: TGKey = JSON.parse(process.env.TG_KEY || "{}")
 // TG 推送实例
 let tg: TGSender | undefined = undefined
-// TG 消息的键
-let tgKey: TGKey
 
 // 初始化 TG 推送实例
-const init = async (): Promise<boolean> => {
+const init = async (): Promise<void> => {
   if (!process.env.TG_KEY) {
     console.log("😢 无法推送 TG 消息，请先设置环境变量'TG_KEY'")
-    return false
+    return
   }
 
   if (!push) {
-    tgKey = JSON.parse(process.env.TG_KEY)
     tg = new TGSender(tgKey.token)
+    console.log("🤨 已初始化 TG 消息推送")
   }
-
-  return true
 }
 
 // 推送消息（可 Markdown 格式）
 const push = async (text: string, chatid: string) => {
-  if (!(await init()) || !tg) {
+  await init()
+  if (!tg) {
     return
   }
 
@@ -56,6 +57,11 @@ export const pushTGMsg = async (text: string) => {
 }
 
 // 推送新帖的 TG 消息
-export const pushTopicMsg = async (tag: string, topics: string[]) => {
+export const pushTGTopic = async (tag: string, topics: string[]) => {
   return push(`#${tag} 新帖\n\n${topics.join("\n")}\n`, tgKey.chatTopic)
+}
+
+// 推送签到的 TG 消息
+export const pushTGSign = async (tag: string, result: string, tips: string) => {
+  return push(`#${tag} ${result}\n${tips}`, tgKey.chatSign)
 }

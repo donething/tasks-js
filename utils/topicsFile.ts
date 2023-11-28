@@ -3,7 +3,7 @@
  */
 import {Topic, TopicTaskInfo} from "./spider/types"
 import {readJSON, writeJSON} from "./file"
-import {pushTGMsg, pushTopicMsg} from "./tgpush"
+import {pushTGTopic} from "./tgpush"
 
 // 需要保存到文件的数据结构
 export interface TopicsFile {
@@ -67,7 +67,7 @@ const notifyTopics = async (taskInfo: TaskInfo) => {
     return
   }
 
-  await pushTopicMsg(taskInfo.tag, topicStrList)
+  await pushTGTopic(taskInfo.tag, topicStrList)
   writeJSON(taskInfo.filepath, data)
 }
 

@@ -7,10 +7,9 @@
 // new Env('馒头签到')
 // cron: 1 9,21 * * *
 
-import {pushTextMsg} from "./utils/wxpush"
 import {mAxios, UserAgents} from "./utils/http"
-import axios from "axios"
 import {parseSetCookie} from "do-utils"
+import {pushTGSign} from "./utils/tgpush"
 
 const TAG = "馒头签到"
 
@@ -42,7 +41,7 @@ const loginToMT = async (username: string, password: string): Promise<void> => {
 
   if (!setCookies) {
     console.log("😢 签到失败：响应头中没有'set-cookie'值")
-    await pushTextMsg(`${TAG} 失败`, `响应头中没有'set-cookie'值`)
+    await pushTGSign(TAG, "签到失败", "响应头中没有'set-cookie'值")
     return
   }
   // console.log("🤨 Set-Cookie:", setCookies)
@@ -52,7 +51,7 @@ const loginToMT = async (username: string, password: string): Promise<void> => {
   const flashMsg = cookies["flash_msg"]
   if (flashMsg) {
     console.log("😢 签到失败：", "返回的消息：", flashMsg)
-    await pushTextMsg(`${TAG} 失败`, `返回的消息：${flashMsg}`)
+    await pushTGSign(TAG, "签到失败", `返回的消息：${flashMsg}`)
     return
   }
 
@@ -60,7 +59,7 @@ const loginToMT = async (username: string, password: string): Promise<void> => {
   const redirect = loginResp.headers["location"]
   if (!redirect) {
     console.log('😢 签到失败，重定向的地址为空：\n', loginResp.headers, "\n", loginResp.data)
-    await pushTextMsg(`${TAG} 失败`, `重定向的地址为空`)
+    await pushTGSign(TAG, "签到失败", "重定向的地址为空")
     return
   }
 
@@ -78,14 +77,14 @@ const loginToMT = async (username: string, password: string): Promise<void> => {
   // 不包括用户名，登录失败
   if (!text.includes(username)) {
     console.log("😢 登录失败：\n", text.substring(text.indexOf("<body")))
-    await pushTextMsg(`${TAG} 失败`, "登录失败：可在面板查看该脚本的执行日志")
+    await pushTGSign(TAG, "签到失败", "登录失败：可在面板查看该脚本的执行日志")
 
     return
   }
 
   // 登录成功
   console.log('😊 签到成功！')
-  await pushTextMsg(`${TAG} 成功`, `签到成功！`)
+  await pushTGSign(TAG, "签到成功", `签到成功！`)
 }
 
 // 执行
@@ -94,5 +93,5 @@ if (process.env.MT_USER_PWD) {
   loginToMT(username, password)
 } else {
   console.log("😢 签到失败：环境变量'MT_USER_PWD'为空！")
-  pushTextMsg(`${TAG} 失败`, `环境变量'MT_USER_PWD'为空！`)
+  pushTGSign(TAG, "签到失败", "环境变量'MT_USER_PWD'为空")
 }

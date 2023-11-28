@@ -7,7 +7,7 @@
 
 import Parser from 'rss-parser'
 import {readJSON, writeJSON} from "./utils/file"
-import {pushTGMsg, pushTopicMsg} from "./utils/tgpush"
+import {pushTGTopic} from "./utils/tgpush"
 import {TGSender} from "do-utils"
 
 const TAG = "V2exVPS"
@@ -106,7 +106,7 @@ const scan = async () => {
     return
   }
 
-  await pushTopicMsg(TAG, tips)
+  await pushTGTopic(TAG, tips)
   writeJSON(FILE_DATA, data)
 }
 

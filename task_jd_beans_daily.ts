@@ -9,8 +9,8 @@
 
 import {isQL} from "./utils/utils"
 import {date} from "do-utils"
-import {pushTextMsg} from "./utils/wxpush"
 import {UserAgents} from "./utils/http"
+import {pushTGSign} from "./utils/tgpush"
 
 const TAG = "京豆变化"
 
@@ -63,8 +63,8 @@ const getBeansInDay = async (ck: string, day: number): Promise<Map<string, numbe
       const obj: BeanDetail = await resp.json()
 
       if (obj.code && obj.code !== "0") {
-        console.warn("获取京豆变化的详细信息失败：", obj)
-        await pushTextMsg("京豆变化", `获取京豆变化失败：${JSON.stringify(obj)}`)
+        console.log("😢 获取京豆变化失败失败：", obj)
+        await pushTGSign(TAG, "获取京豆变化失败", JSON.stringify(obj))
         return beansMap
       }
 
@@ -113,8 +113,8 @@ const getBeansInDay = async (ck: string, day: number): Promise<Map<string, numbe
 // 展示数据
 const printBeans = async (ck: string, day?: number) => {
   if (!ck) {
-    console.log("😢 无法获取京豆变化量：Cookie 为空或因已失效被禁用")
-    await pushTextMsg(TAG, "Cookie 为空或因已失效被禁用")
+    console.log("😢 无法获取京豆变化量：Cookie 为空或因失效已被禁用")
+    await pushTGSign(TAG, "获取失败", "Cookie 为空或因失效已被禁用")
     return
   }
 
@@ -130,7 +130,7 @@ const printBeans = async (ck: string, day?: number) => {
   if (beans.size > 0) {
     msg += `\n共 ${beans.size} 天，平均每天增加 ${Math.round(total / beans.size)} 个京豆\n`
     console.log("😊", msg)
-    await pushTextMsg(TAG, msg)
+    await pushTGSign(TAG, "结果", msg)
   } else {
     console.log("😢 没有获取到京豆变化的信息")
   }
