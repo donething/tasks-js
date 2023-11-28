@@ -9,15 +9,15 @@ export const getTopics = async (urlInfo: UrlInfo): Promise<Topic[]> => {
   const resp = await mAxios.get(urlInfo.url, {headers: urlInfo.headers})
   const text: string = await resp.data
 
-  // 解析
-  const $ = cheerio.load(text)
   if (!text.includes(urlInfo.check)) {
     console.log(`😢 获取帖子失败：解析不到标志"${urlInfo.check}"。可能被风控：${urlInfo.url}\n`, "  ", text)
     // await pushTGMsg(`获取帖子失败：解析不到标志"${urlInfo.check}"。可能被风控：\n${urlInfo.url}`)
     return []
   }
 
+  // 解析
   const tids: Topic[] = []
+  const $ = cheerio.load(text)
   for (let item of $(urlInfo.selector)) {
     const t = $(item)
     // 标题

@@ -9,6 +9,7 @@ const addr = `https://${host}`
 // 提取网页中的信息
 const selector = "table#threadlisttableid tbody[id^='normalthread'] th.new a.xst"
 const tidReg = /thread-(\d+)/
+const check = "全球主机交流论坛"
 
 // Hostloc
 const Hostloc: TopicSite = {
@@ -22,7 +23,6 @@ const Hostloc: TopicSite = {
       "Referer": addr,
       "User-Agent": UserAgents.Win
     }
-    const check = `fid=${fid}`
 
     return getTopics({url, headers, check, selector, tidReg, name})
   }
