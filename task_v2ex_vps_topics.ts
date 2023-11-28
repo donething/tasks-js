@@ -1,21 +1,21 @@
 /**
- * 当出现和 VPS 有关的新帖时，发送通知
+ * 当有人在 v2ex 发表和 vps 有关的主题时，发送通知
  */
 
-// new Env('VPS新帖')
+// new Env('V2exVPS新帖')
 // cron: */2 * * * *
 
 import Parser from 'rss-parser'
 import {readJSON, writeJSON} from "./utils/file"
-import {pushTGMsg} from "./utils/tgpush"
+import {pushTGMsg, pushTopicMsg} from "./utils/tgpush"
 import {TGSender} from "do-utils"
 
-const TAG = "VPS新帖"
+const TAG = "V2exVPS"
 
 // 只匹配 cloudcone 有关的帖子
 const vpsRegex = /(\bvps\b)/i
 
-const FILE_VPS_RELATED = "./db/vps_related_topics.json"
+const FILE_DATA = "./db/v2ex_vps_topics.json"
 
 const parser = new Parser<Feed, Item>()
 
@@ -65,7 +65,7 @@ const scan = async () => {
   let feed = await parser.parseURL("https://www.v2ex.com/index.xml")
 
   // 读取已提示的帖子列表（ID列表）
-  const data = readJSON<Data>(FILE_VPS_RELATED)
+  const data = readJSON<Data>(FILE_DATA)
   if (!data.v2ex) {
     data.v2ex = []
   }
@@ -106,8 +106,8 @@ const scan = async () => {
     return
   }
 
-  await pushTGMsg(`*VPS*相关的新帖列表：\n\n${tips.join("\n")}`)
-  writeJSON(FILE_VPS_RELATED, data)
+  await pushTopicMsg(TAG, tips)
+  writeJSON(FILE_DATA, data)
 }
 
 // 执行

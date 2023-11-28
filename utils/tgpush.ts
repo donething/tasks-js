@@ -5,10 +5,19 @@
 
 import {TGSender} from "do-utils"
 
+// TG 的 Token
+interface TGKey {
+  token: string
+  // 标准通知
+  chatNo: string
+  // 新帖的通知
+  chatTopic: string
+}
+
 // TG 推送实例
-let push: TGSender | undefined = undefined
+let tg: TGSender | undefined = undefined
 // 通知频道的 ID
-let chatid: string = ""
+let tgKey: TGKey
 
 // 初始化 TG 推送实例
 const init = async (): Promise<boolean> => {
@@ -18,21 +27,20 @@ const init = async (): Promise<boolean> => {
   }
 
   if (!push) {
-    const [token, msgchatid] = process.env.TG_KEY.split(",")
-    push = new TGSender(token)
-    chatid = msgchatid
+    tgKey = JSON.parse(process.env.TG_KEY)
+    tg = new TGSender(tgKey.token)
   }
 
   return true
 }
 
-// 推送 TG 消息（可 Markdown 格式）
-export const pushTGMsg = async (text: string) => {
-  if (!(await init()) || !push) {
+// 推送消息（可 Markdown 格式）
+const push = async (text: string, chatid: string) => {
+  if (!(await init()) || !tg) {
     return
   }
 
-  const response = await push.sendMessage(chatid, text)
+  const response = await tg.sendMessage(text, chatid)
 
   if (!response.ok) {
     console.log("😱 推送 TG 消息失败：", response.error_code, response.description)
@@ -40,4 +48,14 @@ export const pushTGMsg = async (text: string) => {
   }
 
   console.log("😊 推送 TG 消息成功")
+}
+
+// 推送通用 TG 消息
+export const pushTGMsg = async (text: string) => {
+  return push(text, tgKey.chatNo)
+}
+
+// 推送新帖的 TG 消息
+export const pushTopicMsg = async (tag: string, topics: string[]) => {
+  return push(`#${tag} 新帖\n\n${topics.join("\n")}\n`, tgKey.chatTopic)
 }

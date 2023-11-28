@@ -8,7 +8,7 @@
 // cron: 1 9,21 * * *
 
 import {pushTextMsg} from "./utils/wxpush"
-import {UserAgents} from "./utils/utils"
+import {mAxios, UserAgents} from "./utils/http"
 import axios from "axios"
 import {parseSetCookie} from "do-utils"
 
@@ -17,15 +17,6 @@ const TAG = "馒头签到"
 const host = "kp.m-team.cc"
 const addr = `https://${host}`
 const loginUrl = `${addr}/takelogin.php`
-
-// axios 的自定义的实例，不将 302 跳转视为错误
-const axiosInstance = axios.create({
-  withCredentials: true,
-  validateStatus: status => {
-    // 只将状态码为 200 到 399 视为成功，其他状态码视为失败
-    return status >= 200 && status < 400
-  }
-})
 
 // 签到
 // 当登录失败时，要获取 set-cookie 中的消息；成功时需要获取 set-cookie 设置的"tp"键值，再次请求时携带该 cookie
@@ -41,7 +32,7 @@ const loginToMT = async (username: string, password: string): Promise<void> => {
   }
 
   // 不重定向、携带cookie
-  const loginResp = await axiosInstance.post(loginUrl, data, {
+  const loginResp = await mAxios.post(loginUrl, data, {
     headers,
     maxRedirects: 0,
   })
@@ -78,7 +69,7 @@ const loginToMT = async (username: string, password: string): Promise<void> => {
     "host": host,
     "Cookie": `tp=${cookies["tp"]}`
   }
-  const redirectResp = await axiosInstance.get(redirect, {
+  const redirectResp = await mAxios.get(redirect, {
     headers: redirectHeaders,
     maxRedirects: 20,
   })

@@ -7,9 +7,10 @@
 // new Env('京豆变化')
 // cron: 5 13,22 * * *
 
-import {UserAgents, isQL} from "./utils/utils"
+import {isQL} from "./utils/utils"
 import {date} from "do-utils"
 import {pushTextMsg} from "./utils/wxpush"
+import {UserAgents} from "./utils/http"
 
 const TAG = "京豆变化"
 

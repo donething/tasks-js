@@ -8,10 +8,11 @@
 
 import * as cheerio from 'cheerio'
 import makeFetchCookie from 'fetch-cookie'
-import {UserAgents, isQL, calStr, fillInitCookies} from "./utils/utils"
+import { isQL, calStr, fillInitCookies} from "./utils/utils"
 import {readJSON, writeJSON} from "./utils/file"
 import {random, sleep} from "do-utils"
 import {pushTextMsg} from "./utils/wxpush"
+import {UserAgents} from "./utils/http"
 
 // 保存到文件的数据
 type FData = {
