@@ -5,7 +5,7 @@
 
 import {TGSender} from "do-utils"
 
-// TG 的 Token
+// TG 的 Token、频道 ID
 interface TGKey {
   token: string
   // 标准通知
@@ -16,7 +16,7 @@ interface TGKey {
 
 // TG 推送实例
 let tg: TGSender | undefined = undefined
-// 通知频道的 ID
+// TG 消息的键
 let tgKey: TGKey
 
 // 初始化 TG 推送实例
