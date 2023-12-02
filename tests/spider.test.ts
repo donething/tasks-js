@@ -1,6 +1,6 @@
 import {expect} from "chai"
-import Hostloc from "../utils/spider/hostloc"
-import Nodeseek from "../utils/spider/nodeseek"
+import Hostloc from "../utils/spider/hostloc/hostloc"
+import Nodeseek from "../utils/spider/nodeseek/nodeseek"
 
 describe('getXXTids function test', () => {
   it('getHostlocTids "45" should not null', async () => {

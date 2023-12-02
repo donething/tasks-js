@@ -8,7 +8,7 @@
 // cron: 1 9,21 * * *
 
 import {mAxios, UserAgents} from "./utils/http"
-import {parseSetCookie} from "do-utils"
+import {parseSetCookie, TGSender} from "do-utils"
 import {pushTGSign} from "./utils/tgpush"
 
 const TAG = "馒头签到"
@@ -51,7 +51,7 @@ const loginToMT = async (username: string, password: string): Promise<void> => {
   const flashMsg = cookies["flash_msg"]
   if (flashMsg) {
     console.log("😢 签到失败：", "返回的消息：", flashMsg)
-    await pushTGSign(TAG, "签到失败", `返回的消息：${flashMsg}`)
+    await pushTGSign(TAG, "签到失败", `返回的消息：${TGSender.escapeMk(flashMsg.toString())}`)
     return
   }
 

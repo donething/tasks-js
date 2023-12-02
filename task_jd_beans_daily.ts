@@ -8,7 +8,7 @@
 // cron: 5 13,22 * * *
 
 import {isQL} from "./utils/utils"
-import {date} from "do-utils"
+import {date, TGSender} from "do-utils"
 import {UserAgents} from "./utils/http"
 import {pushTGSign} from "./utils/tgpush"
 
@@ -130,7 +130,7 @@ const printBeans = async (ck: string, day?: number) => {
   if (beans.size > 0) {
     msg += `\n共 ${beans.size} 天，平均每天增加 ${Math.round(total / beans.size)} 个京豆\n`
     console.log("😊", msg)
-    await pushTGSign(TAG, "结果", msg)
+    await pushTGSign(TAG, "结果", TGSender.escapeMk(msg))
   } else {
     console.log("😢 没有获取到京豆变化的信息")
   }

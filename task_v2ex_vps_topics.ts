@@ -1,114 +1,31 @@
 /**
- * 当有人在 v2ex 发表和 vps 有关的主题时，发送通知
+ * 当 v2ex 有 vps 相关的主题时，发送通知
  */
 
 // new Env('V2exVPS新帖')
 // cron: */2 * * * *
 
-import Parser from 'rss-parser'
-import {readJSON, writeJSON} from "./utils/file"
-import {pushTGTopic} from "./utils/tgpush"
-import {TGSender} from "do-utils"
+import notifyTopics, {TaskInfo} from "./utils/topicsFile"
+import parseV2exRss from "./utils/spider/v2ex/v2ex"
 
-const TAG = "V2exVPS"
-
-// 只匹配 cloudcone 有关的帖子
-const vpsRegex = /(\bvps\b)/i
-
-const FILE_DATA = "./db/v2ex_vps_topics.json"
-
-const parser = new Parser<Feed, Item>()
-
-// RSS 总概括信息
-interface Feed {
-  // V2EX
-  title: string
-  // way to explore
-  subtitle: string
-  // https://www.v2ex.com/
-  link: string
-  // https://www.v2ex.com/
-  id: string
-  // 2023-11-24T06:54:11Z
-  updated: string
-}
-
-// RSS 主题信息
-interface Item {
-  // [宽带症候群] 安卓 TV 哪个免费 IPTV 播放器好用？
-  title: string
-  // https://www.v2ex.com/t/994843#reply0
-  link: string
-  // tag:www.v2ex.com,2023-11-24:/t/994843
-  id: string
-  // 2023-11-24T06:50:17Z
-  published: string
-  // 2023-11-24T06:50:17Z
-  updated: string
-  author: {
-    // jgh004
-    name: string
-    // https://www.v2ex.com/member/jgh004
-    uri: string
-  }
-  // <p>看到 windows</p>
-  content: string
-}
-
-// 存储到文件的数据结构
-interface Data {
-  v2ex?: string[]
-}
-
-// 扫描帖子
-const scan = async () => {
-  let feed = await parser.parseURL("https://www.v2ex.com/index.xml")
-
-  // 读取已提示的帖子列表（ID列表）
-  const data = readJSON<Data>(FILE_DATA)
-  if (!data.v2ex) {
-    data.v2ex = []
-  }
-
-  let tips: string[] = []
-  let i = 1
-  for (let item of feed.items) {
-    // 帖子的 ID。如"12345"
-    const idResult = item.id.match(/\/t\/(\d+)$/)
-    if (!idResult || !idResult[1]) {
-      console.log(`😢 没有匹配到帖子的 ID："${item.id}"`)
-      continue
+// 任务信息
+const taskInfo: TaskInfo = {
+  // 需要扫描帖子的网址及节点
+  topicTaskInfos: [
+    {
+      fun: parseV2exRss,
+      node: ""
     }
-    const tid = idResult[1]
+  ],
 
-    // 只匹配指定帖子
-    if (!vpsRegex.test(item.title)) {
-      console.log(`😒 跳过帖子：`, item.title, "\n  ", item.link, "\n")
-      continue
-    }
+  // 只匹配 VPS 有关的帖子
+  reg: /\b(vps)\b/i,
 
-    // 已通知过帖子
-    if (data.v2ex.includes(tid)) {
-      console.log(`😂 已通知过：`, item.title, "\n  ", item.link, "\n")
-      continue
-    }
+  // 保存数据的文件路径
+  filepath: "./db/v2ex_vps_topics.json",
 
-    console.log(`😊 通知新帖：`, item.title, "\n  ", item.link, "\n")
-    tips.push(`${i}\\. [${TGSender.escapeMk(item.title)}](${item.link})`)
-    data.v2ex.push(tid)
-
-    i++
-  }
-
-  // 没有新帖
-  if (tips.length === 0) {
-    console.log("\n😪 此次刷新没有相关的新帖")
-    return
-  }
-
-  await pushTGTopic(TAG, tips)
-  writeJSON(FILE_DATA, data)
+  // 发送通知时的提示文本
+  tag: "V2exVPS"
 }
 
-// 执行
-scan()
+notifyTopics(taskInfo)

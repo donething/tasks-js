@@ -14,6 +14,15 @@ export interface Topic {
 
   // URL
   url: string
+
+  // 作者
+  author: string
+
+  // 前几百个字符的内容
+  content: string
+
+  // 发布时间
+  pub: string
 }
 
 // 请求头
@@ -35,17 +44,11 @@ export interface UrlInfo {
 }
 
 // 需要获取帖子的网站（即需要调用的函数）
-export interface TopicSite {
-  /**
-   * 获取帖子列表
-   * @param node 指定的节点/分区/分区号。如 "tech"、"45"
-   */
-  getTids: (node: string) => Promise<Topic[]>
-}
+export type TopicFunc = (...args: any[]) => Promise<Topic[]>
 
 // 需要获取帖子的任务信息
 export type TopicTaskInfo = {
-  Site: TopicSite
+  fun: TopicFunc
   // TopicSite.getTids 需要指定的节点/分区/分区号。如 "tech"、"45"
   node: string
 }

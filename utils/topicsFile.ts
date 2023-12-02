@@ -3,7 +3,8 @@
  */
 import {Topic, TopicTaskInfo} from "./spider/types"
 import {readJSON, writeJSON} from "./file"
-import {pushTGTopic} from "./tgpush"
+import {pushTGTopics} from "./tgpush"
+import {TGSender} from "do-utils"
 
 // 需要保存到文件的数据结构
 export interface TopicsFile {
@@ -39,7 +40,7 @@ const notifyTopics = async (taskInfo: TaskInfo) => {
   // 读取帖子列表
   let i = 1
   for (const task of taskInfo.topicTaskInfos) {
-    const topics = await task.Site.getTids(task.node)
+    const topics = await task.fun(task.node)
 
     for (const t of topics) {
       // 只匹配指定帖子
@@ -54,7 +55,7 @@ const notifyTopics = async (taskInfo: TaskInfo) => {
       }
 
       console.log(`😊 通知新帖：`, t.title, "\n  ", t.url, "\n")
-      topicStrList.push(`${i}.<a href="${t.url}">${t.title}</a>`)
+      topicStrList.push(`${i}\\.[${TGSender.escapeMk(t.title)}](${TGSender.escapeMk(t.url)})\n\n${TGSender.escapeMk(t.content)}\n\n#${t.name} #${TGSender.escapeMk(t.author)} ${t.pub}`)
       data.topics.push(t)
 
       i++
@@ -67,7 +68,8 @@ const notifyTopics = async (taskInfo: TaskInfo) => {
     return
   }
 
-  await pushTGTopic(taskInfo.tag, topicStrList)
+  await pushTGTopics(taskInfo.tag, topicStrList)
+
   writeJSON(taskInfo.filepath, data)
 }
 

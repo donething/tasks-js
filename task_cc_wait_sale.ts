@@ -6,22 +6,23 @@
 // cron: 1 * * * * *
 
 import notifyTopics, {TaskInfo} from "./utils/topicsFile"
-import Hostloc from "./utils/spider/hostloc"
+import parseLocRss from "./utils/spider/hostloc/hostloc"
+import parseNSRss from "./utils/spider/nodeseek/nodeseek"
 
 // 任务信息
 const taskInfo: TaskInfo = {
   // 需要扫描帖子的网址及节点
   topicTaskInfos: [
     {
-      Site: Hostloc,
-      // VPS综合讨论区
+      fun: parseLocRss,
+      // VPS 综合讨论区
       node: "45"
     },
-    // {
-    //   Site: Nodeseek,
-    //   // （首页）所有新帖
-    //   node: ""
-    // }
+    {
+      fun: parseNSRss,
+      // （首页）所有新帖
+      node: ""
+    }
   ],
 
   // 只匹配 cloudcone 有关的帖子

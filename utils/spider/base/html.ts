@@ -1,11 +1,15 @@
-import {mAxios} from "../http"
+/**
+ * 提取 HTML 格式的帖子。如 Discuz!
+ */
+
+import {mAxios} from "../../http"
 import * as cheerio from "cheerio"
-import {Topic, UrlInfo} from "./types"
+import {Topic, UrlInfo} from "../types"
 
 /**
- * 获取页面的帖子
+ * 获取 HTML 页面的帖子
  */
-export const getTopics = async (urlInfo: UrlInfo): Promise<Topic[]> => {
+export const getHTMLTopics = async (urlInfo: UrlInfo): Promise<Topic[]> => {
   const resp = await mAxios.get(urlInfo.url, {headers: urlInfo.headers})
   const text: string = await resp.data
 
@@ -51,7 +55,7 @@ export const getTopics = async (urlInfo: UrlInfo): Promise<Topic[]> => {
 
     const name = urlInfo.name
 
-    tids.push({title, tid, url, name})
+    tids.push({author: "", content: "", pub: "", title, tid, url, name})
   }
 
   return tids

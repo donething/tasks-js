@@ -10,7 +10,7 @@ import * as cheerio from 'cheerio'
 import makeFetchCookie from 'fetch-cookie'
 import {isQL, calStr, fillInitCookies} from "./utils/utils"
 import {readJSON, writeJSON} from "./utils/file"
-import {random, sleep} from "do-utils"
+import {random, sleep, TGSender} from "do-utils"
 import {UserAgents} from "./utils/http"
 import {pushTGMsg} from "./utils/tgpush"
 
@@ -69,7 +69,7 @@ const start = async (cookie: string) => {
     // 其它错误
     if (err) {
       console.log(`😱 ${no}. 回帖出错(${tid})：\n${err}`)
-      await pushTGMsg(`${TAG} 出错。帖子ID：${tid}\n\n${err}`)
+      await pushTGMsg(`${TAG} 出错。帖子ID：${tid}\n\n${TGSender.escapeMk(err.message)}`)
       // 退出回帖，不用 return ，要保存数据
       break
     }
