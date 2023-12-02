@@ -36,10 +36,10 @@ const init = async (): Promise<void> => {
 }
 
 // 推送消息（可 Markdown 格式）
-const push = async (text: string, chatid: string) => {
+const push = async (text: string, chatid: string): Promise<boolean> => {
   await init()
   if (!tg) {
-    return
+    return false
   }
 
   const response = await tg.sendMessage(text, chatid)
@@ -47,10 +47,11 @@ const push = async (text: string, chatid: string) => {
   if (!response.ok) {
     console.log("😱 推送 TG 消息失败：", response.error_code, response.description)
     await pushTextMsg("推送 TG 消息失败", `${response.error_code}：${response.description}`)
-    return
+    return false
   }
 
   console.log("😊 推送 TG 消息成功")
+  return true
 }
 
 // 推送通用 TG 消息

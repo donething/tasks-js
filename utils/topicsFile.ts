@@ -68,7 +68,10 @@ const notifyTopics = async (taskInfo: TaskInfo) => {
     return
   }
 
-  await pushTGTopics(taskInfo.tag, topicStrList)
+  const ok = await pushTGTopics(taskInfo.tag, topicStrList)
+  if (!ok) {
+    return
+  }
 
   writeJSON(taskInfo.filepath, data)
 }

@@ -29,10 +29,10 @@ const parseV2exRss = async (): Promise<Topic[]> => {
     const tid = m[1]
     const title = item.title
     const url = item.link
-    const author = item.author.name
+    const author = item.author
     // xmlparser 将 description 解析到了 content 变量
     const content = truncate4tg(item.content || "")
-    const pub = date(new Date(item.published), TOPIC_TIME)
+    const pub = date(new Date(item.pubDate), TOPIC_TIME)
 
     topics.push({name, tid, title, url, author, content, pub})
   }
