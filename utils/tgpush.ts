@@ -33,7 +33,7 @@ const push = async (text: string, t: Token): Promise<boolean> => {
 
   const tg = new TGSender(t.token)
 
-  const response = await tg.sendMessage(t.chatID, TGSender.legalMk(text))
+  const response = await tg.sendMessage(t.chatID, text)
 
   if (!response.ok) {
     console.log("😱 推送 TG 消息失败：", response.error_code, response.description, "：\n", text)
@@ -52,10 +52,10 @@ export const pushTGMsg = async (text: string) => {
 
 // 推送新帖的 TG 消息
 export const pushTGTopics = async (tag: string, topics: string[]) => {
-  return push(`#${tag} 新帖\n\n${topics.join("\n\n")}\n`, tgKey.freshPost)
+  return push(`\\#${tag} 新帖\n\n${topics.join("\n\n")}\n`, tgKey.freshPost)
 }
 
 // 推送每日签到的 TG 消息
 export const pushTGSign = async (tag: string, result: string, tips: string) => {
-  return push(`#${tag} ${result}\n\n${tips}`, tgKey.signBot)
+  return push(`\\#${tag} ${result}\n\n${tips}`, tgKey.signBot)
 }
