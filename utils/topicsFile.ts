@@ -35,7 +35,7 @@ const notifyTopics = async (taskInfo: TaskInfo) => {
   }
 
   // 临时保存，需要发送通知，每一项表示一个主题
-  let topicStrList: string[] = []
+  let topicStrList: Topic[] = []
 
   // 读取帖子列表
   let i = 1
@@ -55,7 +55,7 @@ const notifyTopics = async (taskInfo: TaskInfo) => {
       }
 
       console.log(`😊 通知新帖：`, t.title, "\n  ", t.url, "\n")
-      topicStrList.push(`${i}\\. *[${TGSender.escapeMk(t.title)}](${TGSender.escapeMk(t.url)})*\n\n_${TGSender.escapeMk(t.content)}_\n\n#${TGSender.escapeMk(t.name)} #${TGSender.escapeMk(t.author)} _${TGSender.escapeMk(t.pub)}_`)
+      topicStrList.push(t)
       data.topics.push(t)
 
       i++

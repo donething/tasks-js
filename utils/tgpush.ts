@@ -5,6 +5,7 @@
 
 import {pushTextMsg} from "./wxpush"
 import {TGSender} from "do-utils"
+import {Topic} from "./spider/types"
 
 interface Token {
   token: string
@@ -51,7 +52,8 @@ export const pushTGMsg = async (text: string) => {
 }
 
 // 推送新帖的 TG 消息
-export const pushTGTopics = async (tag: string, topics: string[]) => {
+export const pushTGTopics = async (tag: string, topics: Topic[]) => {
+  const str = topics.map((t, i) => `${i}\\. *[${TGSender.escapeMk(t.title)}](${TGSender.escapeMk(t.url)})*\n\n_${TGSender.escapeMk(t.content)}_\n\n\\#${TGSender.escapeMk(t.name)} \\#${TGSender.escapeMk(t.author)} _${TGSender.escapeMk(t.pub)}_`)
   return push(`\\#${tag} 新帖\n\n${topics.join("\n\n")}\n`, tgKey.freshPost)
 }
 
