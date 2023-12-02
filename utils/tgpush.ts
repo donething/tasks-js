@@ -53,7 +53,7 @@ export const pushTGMsg = async (text: string) => {
 
 // 推送新帖的 TG 消息
 export const pushTGTopics = async (tag: string, topics: Topic[]) => {
-  const strs = topics.map((t, i) => `${i + 1}\\. *[${TGSender.escapeMk(t.title)}](${TGSender.escapeMk(t.url)})*\n_${TGSender.escapeMk(t.content)}_\n\\#${TGSender.escapeMk(t.name)} \\#${TGSender.escapeMk(t.author)} _${TGSender.escapeMk(t.pub)}_`)
+  const strs = topics.map((t, i) => `${i + 1}\\. *[${TGSender.escapeMk(t.title)}](${TGSender.escapeMk(t.url)})*\n\n_${TGSender.escapeMk(t.content)}_\n\\#${TGSender.escapeMk(t.name)} \\#${TGSender.escapeMk(t.author)} _${TGSender.escapeMk(t.pub)}_`)
   return push(`\\#${tag} 新帖\n\n${strs.join("\n\n")}\n`, tgKey.freshPost)
 }
 
