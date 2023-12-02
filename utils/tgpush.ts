@@ -6,43 +6,34 @@
 import {TGSender} from "do-utils"
 import {pushTextMsg} from "./wxpush"
 
-// TG 的 Token、频道 ID
-interface TGKey {
+interface Token {
   token: string
+  chatID: string
+}
+
+// TG 的 Token、频道 ID
+interface TGKeys {
   // 标准通知
-  chatNo: string
+  main: Token,
   // 新帖的通知
-  chatTopic: string
+  signBot: Token,
   // 签到的通知
-  chatSign: string
+  freshPost: Token
 }
 
 // TG 消息的键
-let tgKey: TGKey = JSON.parse(process.env.TG_KEY || "{}")
-// TG 推送实例
-let tg: TGSender | undefined = undefined
-
-// 初始化 TG 推送实例
-const init = async (): Promise<void> => {
-  if (!process.env.TG_KEY) {
-    console.log("😢 无法推送 TG 消息，请先设置环境变量'TG_KEY'")
-    return
-  }
-
-  if (!push) {
-    tg = new TGSender(tgKey.token)
-    console.log("🤨 已初始化 TG 消息推送")
-  }
-}
+let tgKey: TGKeys = JSON.parse(process.env.TG_KEY!!)
 
 // 推送消息（可 Markdown 格式）
-const push = async (text: string, chatid: string): Promise<boolean> => {
-  await init()
-  if (!tg) {
+const push = async (text: string, t: Token): Promise<boolean> => {
+  if (!process.env.TG_KEY) {
+    console.log("😢 无法推送 TG 消息，请先设置环境变量'TG_KEY'")
     return false
   }
 
-  const response = await tg.sendMessage(text, chatid)
+  const tg = new TGSender(t.token)
+
+  const response = await tg.sendMessage(text, t.chatID)
 
   if (!response.ok) {
     console.log("😱 推送 TG 消息失败：", response.error_code, response.description)
@@ -56,15 +47,15 @@ const push = async (text: string, chatid: string): Promise<boolean> => {
 
 // 推送通用 TG 消息
 export const pushTGMsg = async (text: string) => {
-  return push(text, tgKey.chatNo)
+  return push(text, tgKey.main)
 }
 
 // 推送新帖的 TG 消息
 export const pushTGTopics = async (tag: string, topics: string[]) => {
-  return push(`#${tag} 新帖\n\n${topics.join("\n\n")}\n`, tgKey.chatTopic)
+  return push(`#${tag} 新帖\n\n${topics.join("\n\n")}\n`, tgKey.freshPost)
 }
 
-// 推送签到的 TG 消息
+// 推送每日签到的 TG 消息
 export const pushTGSign = async (tag: string, result: string, tips: string) => {
-  return push(`#${tag} ${result}\n${tips}`, tgKey.chatSign)
+  return push(`#${tag} ${result}\n${tips}`, tgKey.signBot)
 }
