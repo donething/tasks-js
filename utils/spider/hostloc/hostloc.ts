@@ -45,7 +45,6 @@ const parseLocRss = async (fid = ""): Promise<Topic[]> => {
     topics.push({name, tid, title, url, author, content, pub})
   }
 
-  console.log(topics)
   return topics
 }
 
