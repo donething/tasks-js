@@ -3,8 +3,8 @@
  * 注意：在环境变量中添加键`TG_KEY`，值为"token,chatid"（以英文逗号分隔）
  */
 
-import {TGSender} from "do-utils"
 import {pushTextMsg} from "./wxpush"
+import {TGSender} from "do-utils"
 
 interface Token {
   token: string
@@ -33,7 +33,7 @@ const push = async (text: string, t: Token): Promise<boolean> => {
 
   const tg = new TGSender(t.token)
 
-  const response = await tg.sendMessage(text, t.chatID)
+  const response = await tg.sendMessage(t.chatID, text)
 
   if (!response.ok) {
     console.log("😱 推送 TG 消息失败：", response.error_code, response.description, "：\n", text)

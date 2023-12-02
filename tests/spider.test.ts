@@ -1,21 +1,25 @@
 import {expect} from "chai"
 import Hostloc from "../utils/spider/hostloc/hostloc"
 import Nodeseek from "../utils/spider/nodeseek/nodeseek"
+import parseLocRss from "../utils/spider/hostloc/hostloc"
+import parseNSRss from "../utils/spider/nodeseek/nodeseek"
+import parseV2exRss from "../utils/spider/v2ex/v2ex"
 
-describe('getXXTids function test', () => {
-  it('getHostlocTids "45" should not null', async () => {
-    const topics = await Hostloc.getTids("45")
+describe('parseLocRss function test', () => {
+  it('parseLocRss "45" should not null', async () => {
+    const topics = await parseLocRss("45")
     console.log(topics)
     expect(topics).to.be.not.empty
   }).timeout(0)
 
-  it('getNodeseekTids "Index" should not null', async () => {
-    const topics = await Nodeseek.getTids("")
+  it('parseNSRss "Index" should not null', async () => {
+    const topics = await parseNSRss()
     console.log(topics)
     expect(topics).to.be.not.empty
   }).timeout(0)
-  it('getNodeseekTids "Tech" should not null', async () => {
-    const topics = await Nodeseek.getTids("tech")
+
+  it('parseV2exRss should not null', async () => {
+    const topics = await parseV2exRss()
     console.log(topics)
     expect(topics).to.be.not.empty
   }).timeout(0)
