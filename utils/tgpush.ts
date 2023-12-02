@@ -36,7 +36,7 @@ const push = async (text: string, t: Token): Promise<boolean> => {
   const response = await tg.sendMessage(text, t.chatID)
 
   if (!response.ok) {
-    console.log("😱 推送 TG 消息失败：", response.error_code, response.description)
+    console.log("😱 推送 TG 消息失败：", response.error_code, response.description, "：\n", text)
     await pushTextMsg("推送 TG 消息失败", `${response.error_code}：${response.description}`)
     return false
   }
