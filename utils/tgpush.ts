@@ -52,10 +52,10 @@ export const pushTGMsg = async (text: string) => {
 
 // 推送新帖的 TG 消息
 export const pushTGTopics = async (tag: string, topics: string[]) => {
-  return push(`\\#${tag} 新帖\n\n${topics.join("\n\n")}\n`, tgKey.freshPost)
+  return push(`#${tag} 新帖\n\n${topics.join("\n\n")}\n`, tgKey.freshPost)
 }
 
 // 推送每日签到的 TG 消息
 export const pushTGSign = async (tag: string, result: string, tips: string) => {
-  return push(`\\#${tag} ${result}\n${tips}`, tgKey.signBot)
+  return push(`#${tag} ${result}\n\n${tips}`, tgKey.signBot)
 }
