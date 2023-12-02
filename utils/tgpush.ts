@@ -22,7 +22,7 @@ interface TGKeys {
 }
 
 // TG 消息的键
-let tgKey: TGKeys = JSON.parse(process.env.TG_KEY!!)
+let tgKey: TGKeys = JSON.parse(process.env.TG_KEY || "{}")
 
 // 推送消息（可 Markdown 格式）
 const push = async (text: string, t: Token): Promise<boolean> => {
