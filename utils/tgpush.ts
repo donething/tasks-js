@@ -33,7 +33,7 @@ const push = async (text: string, t: Token): Promise<boolean> => {
 
   const tg = new TGSender(t.token)
 
-  const response = await tg.sendMessage(t.chatID, text)
+  const response = await tg.sendMessage(t.chatID, TGSender.legalMk(text))
 
   if (!response.ok) {
     console.log("😱 推送 TG 消息失败：", response.error_code, response.description, "：\n", text)
