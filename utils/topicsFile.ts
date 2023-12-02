@@ -55,7 +55,7 @@ const notifyTopics = async (taskInfo: TaskInfo) => {
       }
 
       console.log(`😊 通知新帖：`, t.title, "\n  ", t.url, "\n")
-      topicStrList.push(`${i}\\.[${TGSender.escapeMk(t.title)}](${TGSender.escapeMk(t.url)})\n\n${TGSender.escapeMk(t.content)}\n\n#${TGSender.escapeMk(t.name)} #${TGSender.escapeMk(t.author)} ${TGSender.escapeMk(t.pub)}`)
+      topicStrList.push(`${i}\\. *[${TGSender.escapeMk(t.title)}](${TGSender.escapeMk(t.url)})*\n\n_${TGSender.escapeMk(t.content)}_\n\n#${TGSender.escapeMk(t.name)} #${TGSender.escapeMk(t.author)} _${TGSender.escapeMk(t.pub)}_`)
       data.topics.push(t)
 
       i++

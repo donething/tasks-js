@@ -6,5 +6,5 @@ const TOPIC_MAX = 100
 export const truncate4tg = (content: string) => {
   const str = content.trim()
 
-  return str.length > TOPIC_MAX ? str.substring(0, TOPIC_MAX) + "..." : str
+  return str.length > TOPIC_MAX ? str.substring(0, TOPIC_MAX) + "\n..." : str
 }
