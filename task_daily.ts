@@ -16,14 +16,14 @@ const TAG = "Daily"
 const startTask = async () => {
   let msg = ""
 
-  msg += `*${tagHostloc}*\n`
+  msg += `*${tagHostloc}*:\n`
   let tmp: string
   try {
     const loc = await startLocTask()
     tmp = `${loc}`
   } catch (e) {
     console.log("😢", tagHostloc, "执行任务出错：", e)
-    tmp = `执行出错：${e}`
+    tmp = `执行任务出错：${e}`
   }
   msg += TGSender.escapeMk(tmp)
 
