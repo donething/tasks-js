@@ -16,7 +16,7 @@ const TAG = "Daily"
 const startTask = async () => {
   let msg = ""
 
-  msg += `> ${tagHostloc}\n`
+  msg += `*${tagHostloc}*\n`
   let tmp: string
   try {
     const loc = await startLocTask()
