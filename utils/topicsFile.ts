@@ -4,7 +4,6 @@
 import {Topic, TopicTaskInfo} from "./spider/types"
 import {readJSON, writeJSON} from "./file"
 import {pushTGTopics} from "./tgpush"
-import {TGSender} from "do-utils"
 
 // 需要保存到文件的数据结构
 export interface TopicsFile {
