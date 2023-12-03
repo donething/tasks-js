@@ -58,6 +58,8 @@ console.log("测试！")
 
 然后，在脚本中只使用`puppeteer-core`，指定启动路径参数`executablePath`
 
+参考：[How to install chromium in alpine docker to use html.render() from requests_html?](https://stackoverflow.com/a/74078290/8179418)
+
 ## 测试
 
 使用`TypeScript`编写的脚本，可以通过`ts-node`直接执行
