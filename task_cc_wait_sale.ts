@@ -29,7 +29,7 @@ const taskInfo: TaskInfo = {
   reg: /(\b(\w*cc(?!s)\w*)\b)|(\b\w*cloudcone\w*\b)/i,
 
   // 保存数据的文件路径
-  filepath: "./db/cc_low_price.json",
+  filepath: "./db/cc_wait_sale.json",
 
   // 发送通知时的提示文本
   tag: "CC有售",
