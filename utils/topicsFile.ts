@@ -55,7 +55,10 @@ const notifyTopics = async (taskInfo: TaskInfo) => {
 
       console.log(`😊 通知新帖：`, t.title, "\n  ", t.url, "\n")
       topicStrList.push(t)
-      data.topics.push(t)
+      // 保存到文件时，不记录 content 属性
+      const tNoContent = Object.assign({}, t)
+      tNoContent.content = ""
+      data.topics.push(tNoContent)
 
       i++
     }
