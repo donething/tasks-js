@@ -47,5 +47,4 @@ const parseLocRss = async (fid = ""): Promise<Topic[]> => {
   return topics
 }
 
-parseLocRss().then(result => console.log(result))
 export default parseLocRss
