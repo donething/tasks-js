@@ -5,7 +5,7 @@
 import puppeteer, {Page} from "puppeteer-core"
 import {PupOptions, waitForNavNoThrow} from "../base/puppeteer"
 
-const TAG = "Hostloc"
+export const tagHostloc = "hostloc"
 
 // 需要访问空间的用户 uid
 const uids = ["66244", "61525", "62920", "61253", "62278", "29148",
@@ -16,12 +16,12 @@ const SPACE_NUM = 10
 // 执行 hostloc 的任务
 const startLocTask = async (): Promise<string> => {
   if (!process.env.LOC_KEY) {
-    throw Error(`${TAG} 先在环境变量中添加登录信息"LOC_KEY"，值以英文逗号分隔用户名和密码`)
+    throw Error(`先在环境变量中添加登录信息"LOC_KEY"，值以英文逗号分隔用户名和密码`)
   }
 
   const [username, password] = process.env.LOC_KEY.split(",")
   // 完成任务发送的通知
-  let msg = `> ${TAG}\n`
+  let msg = ""
 
   // Launch the browser and open a new blank page
   const browser = await puppeteer.launch(PupOptions)
@@ -30,12 +30,12 @@ const startLocTask = async (): Promise<string> => {
 
   page.setDefaultTimeout(5000)
 
-  console.log("🤨", TAG, "开始执行任务")
+  console.log("🤨", tagHostloc, "开始执行任务")
 
   // 登录
   await login(username, password, page)
 
-  console.log("😊", TAG, "登录成功")
+  console.log("😊", tagHostloc, "登录成功")
 
   // 访问空间
   let spaceSuccess = 0
@@ -48,7 +48,7 @@ const startLocTask = async (): Promise<string> => {
   }
 
   msg += spaceSuccess >= SPACE_NUM ? "已完成 访问空间的任务" : `未完成 访问空间的任务，已访问 ${spaceSuccess} 次`
-  console.log("🤨", TAG, `已访问空间 ${spaceSuccess} 次`)
+  console.log("🤨", tagHostloc, `已访问空间 ${spaceSuccess} 次`)
 
 
   // 已完成所有任务，关闭浏览器
