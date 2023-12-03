@@ -26,7 +26,7 @@ const taskInfo: TaskInfo = {
   ],
 
   // 只匹配 cloudcone 有关的帖子
-  reg: /(\b(cc(?!s)\w*)\b)|(\bcloudcone\w*\b)/i,
+  reg: /(\b(\w*cc(?!s)\w*)\b)|(\b\w*cloudcone\w*\b)/i,
 
   // 保存数据的文件路径
   filepath: "./db/cc_low_price.json",
