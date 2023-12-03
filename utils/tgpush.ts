@@ -53,11 +53,16 @@ export const pushTGMsg = async (title: string, content: string, tag = "") => {
 
 // 推送新帖的 TG 消息
 export const pushTGTopics = async (tag: string, topics: Topic[]) => {
-  const strs = topics.map((t, i) => `${i + 1}\\. *[${TGSender.escapeMk(t.title)}](${TGSender.escapeMk(t.url)})*\n\n_${TGSender.escapeMk(t.content)}_\n\\#${TGSender.escapeMk(t.name)} \\#${TGSender.escapeMk(t.author)} _${TGSender.escapeMk(t.pub)}_`)
+  const strs = topics.map(t => `> *[${TGSender.escapeMk(t.title)}](${TGSender.escapeMk(t.url)})*\n\n_${TGSender.escapeMk(t.content)}_\n\n\\#${TGSender.escapeMk(t.name)} \\#${TGSender.escapeMk(t.author)} _${TGSender.escapeMk(t.pub)}_`)
   return push(`\\#${tag} 新帖\n\n${strs.join("\n\n")}\n`, tgKey.freshPost)
 }
 
-// 推送每日签到的 TG 消息
+/**
+ * 推送每日签到的 TG 消息
+ * @param tag 标签。如 "daily"
+ * @param result 成功或失败。如 "签到失败"
+ * @param tips 消息内容
+ */
 export const pushTGSign = async (tag: string, result: string, tips: string) => {
   return push(`\\#${tag} ${result}\n\n${tips}`, tgKey.signBot)
 }

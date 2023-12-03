@@ -8,7 +8,8 @@ import Parser from "rss-parser"
 import {Item, NSRss} from "./types"
 import {Topic} from "../types"
 import {date} from "do-utils"
-import {PupOptions, TOPIC_TIME, truncate4tg} from "../base/comm"
+import {TOPIC_TIME, truncate4tg} from "../base/comm"
+import {PupOptions} from "../base/puppeteer"
 
 // 匹配 Rss 地址的正则
 const rssReg = /\.xml$/i
