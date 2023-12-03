@@ -7,7 +7,8 @@
 // cron: 10 9,21 * * *
 
 import startLocTask, {tagHostloc} from "./utils/spider/hostloc/award"
-import {pushTGMsg, pushTGSign} from "./utils/tgpush"
+import {pushTGSign} from "./utils/tgpush"
+import {TGSender} from "do-utils"
 
 const TAG = "Daily"
 
@@ -15,15 +16,16 @@ const TAG = "Daily"
 const startTask = async () => {
   let msg = ""
 
+  msg += `> ${tagHostloc}\n`
+  let tmp: string
   try {
-    msg += `> ${tagHostloc}\n`
-
     const loc = await startLocTask()
-    msg += `${loc}\n`
+    tmp = `${loc}`
   } catch (e) {
     console.log("😢", tagHostloc, "执行任务出错：", e)
-    msg += `执行任务出错：${e}\n`
+    tmp = `执行出错：${e}`
   }
+  msg += TGSender.escapeMk(tmp)
 
   await pushTGSign(TAG, "每日任务", msg)
 }
