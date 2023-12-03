@@ -3,12 +3,12 @@
  * 因为 cloudflare 限制，需要通过无头浏览器 puppeteer 完成
  */
 
-import puppeteer, {PuppeteerLaunchOptions} from "puppeteer"
+import puppeteer from "puppeteer-core"
 import Parser from "rss-parser"
 import {Item, NSRss} from "./types"
 import {Topic} from "../types"
 import {date} from "do-utils"
-import {TOPIC_TIME, truncate4tg} from "../base/comm"
+import {PupOptions, TOPIC_TIME, truncate4tg} from "../base/comm"
 
 // 匹配 Rss 地址的正则
 const rssReg = /\.xml$/i
@@ -17,13 +17,6 @@ const name = "nodeseek"
 const rssUrl = "https://www.nodeseek.com/rss.xml"
 const ua = "Mozilla/5.0 (Windows NT 5.1; rv:5.0) Gecko/20100101 Firefox/5.0"
 
-// 选项
-const options: PuppeteerLaunchOptions = {
-  headless: "new",
-  defaultViewport: {width: 1920, height: 1080},
-  args: ["--no-sandbox", "--disabled-setupid-sandbox"]
-}
-
 const parser = new Parser<NSRss, Item>()
 
 /**
@@ -31,7 +24,7 @@ const parser = new Parser<NSRss, Item>()
  */
 const getRssContent = async (): Promise<string | null> => {
   // Launch the browser and open a new blank page
-  const browser = await puppeteer.launch(options)
+  const browser = await puppeteer.launch(PupOptions)
 
   const page = await browser.newPage()
 

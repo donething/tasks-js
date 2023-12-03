@@ -18,7 +18,7 @@
     "do-utils": "^1.0.85",
     "fetch-cookie": "^2.1.0",
     "mocha": "^10.2.0",
-    "puppeteer": "^21.5.2",
+    "puppeteer-core": "^21.5.2",
     "rss-parser": "^3.13.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.3.2"
