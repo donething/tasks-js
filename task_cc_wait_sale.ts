@@ -8,6 +8,9 @@
 import notifyTopics, {TaskInfo} from "./utils/topicsFile"
 import parseLocRss from "./utils/spider/hostloc/hostloc"
 import parseNSRss from "./utils/spider/nodeseek/nodeseek"
+import {pushTGMsg} from "./utils/tgpush"
+
+const TAG = "CC有售"
 
 // 任务信息
 const taskInfo: TaskInfo = {
@@ -32,7 +35,10 @@ const taskInfo: TaskInfo = {
   filepath: "./db/cc_wait_sale.json",
 
   // 发送通知时的提示文本
-  tag: "CC有售",
+  tag: TAG,
 }
 
-notifyTopics(taskInfo)
+notifyTopics(taskInfo).catch(err => {
+  console.log(TAG, "通知帖子出错：", err)
+  pushTGMsg("通知帖子出错", err, TAG)
+})

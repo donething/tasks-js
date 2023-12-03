@@ -8,8 +8,8 @@
 // new Env('cloudcone黑五活动开启')
 // cron: */1 * * * * *
 
-import {pushCardMsg, pushTextMsg} from "./utils/wxpush"
 import {request} from "do-utils"
+import {pushTGMsg} from "./utils/tgpush"
 
 const TAG = "CC黑五活动"
 
@@ -57,9 +57,7 @@ type VPSInfo = {
 const check = async () => {
   const response = await fetch(`${addr}/blackfriday/offers`)
   if (!response.ok) {
-    console.log("😱 获取活动状态的响应出错：", response.statusText)
-    await pushTextMsg(`${TAG} 获取出错`, `响应码有误：\n\n${response.statusText}`)
-    return
+    throw Error(`获取活动状态的响应出错：${response.statusText}`)
   }
 
   const data: CCResp = await response.json()
@@ -73,7 +71,7 @@ const check = async () => {
   const token = process.env.CC_TOKEN
   if (!cookie || !token) {
     console.log("😢 Cookie、Token 为空，无法自动下订单。只发送通知提醒。")
-    await pushCardMsg(`${TAG} 已开始`, "活动已开始！", `${addr}/blackfriday`, "点击访问")
+    await pushTGMsg("活动已开始", `${addr}/blackfriday`, TAG)
     return
   }
 
@@ -84,6 +82,7 @@ const check = async () => {
 
   // 订购
   for (const info of Object.values(data.__data.vps_data)) {
+    // 同时下单，不同步等待
     order(cookie, token, info)
   }
 }
@@ -111,9 +110,11 @@ const order = async (cookie: string, token: string, vpsInfo: VPSInfo) => {
   const resp = await request(`${addr}/ajax/vps`, data, {headers})
   const text = await resp.text()
 
-  console.log(`🤨 自动下单 ${title} ${addr}${vpsInfo.order_url}\n`,
-    `  🤨 响应状态 ${resp.status}，内容：\n`, text)
+  console.log(`🤨 自动下单 ${title} ${addr}${vpsInfo.order_url}\n`, `  🤨 响应码 ${resp.status} 内容：\n`, text)
 }
 
 // 开始
-check()
+check().catch(err => {
+  console.log(TAG, "抢购出错：", err)
+  pushTGMsg("抢购出错", err, TAG)
+})

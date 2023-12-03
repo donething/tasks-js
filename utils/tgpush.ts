@@ -46,14 +46,14 @@ const push = async (text: string, t: Token): Promise<boolean> => {
   return true
 }
 
-// 推送通用 TG 消息
-export const pushTGMsg = async (text: string) => {
-  return push(text, tgKey.main)
+// 推送普通 TG 消息
+export const pushTGMsg = async (title: string, content: string, tag = "") => {
+  return push(tag ? `\\#${tag} ` : "" + `${title}\n\n${content}`, tgKey.main)
 }
 
 // 推送新帖的 TG 消息
 export const pushTGTopics = async (tag: string, topics: Topic[]) => {
-  const strs = topics.map((t, i) => `${i + 1}\\. *[${TGSender.escapeMk(t.title)}](${TGSender.escapeMk(t.url)})*\n\n_${TGSender.escapeMk(t.content)}_\n\\#${TGSender.escapeMk(t.name)} \\#${TGSender.escapeMk(t.author)} _${TGSender.escapeMk(t.pub)}_`)
+  const strs = topics.map((t, i) => `${i + 1}\\.*[${TGSender.escapeMk(t.title)}](${TGSender.escapeMk(t.url)})*\n\n_${TGSender.escapeMk(t.content)}_\n\\#${TGSender.escapeMk(t.name)} \\#${TGSender.escapeMk(t.author)} _${TGSender.escapeMk(t.pub)}_`)
   return push(`\\#${tag} 新帖\n\n${strs.join("\n\n")}\n`, tgKey.freshPost)
 }
 

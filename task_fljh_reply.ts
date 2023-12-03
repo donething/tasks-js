@@ -69,7 +69,7 @@ const start = async (cookie: string) => {
     // 其它错误
     if (err) {
       console.log(`😱 ${no}. 回帖出错(${tid})：\n${err}`)
-      await pushTGMsg(`${TAG} 出错。帖子ID：${tid}\n\n${TGSender.escapeMk(err.message)}`)
+      await pushTGMsg(`回帖出错(${tid})`, TGSender.escapeMk(err.message), TAG)
       // 退出回帖，不用 return ，要保存数据
       break
     }
@@ -212,5 +212,3 @@ const getSecqaa = async (hashid: string): Promise<string> => {
 // 执行
 // 先设置环境变量 Cookie。如在本地 Powershell中：$env:FLJH_COOKIE="my cookie ..."
 start(process.env.FLJH_COOKIE || "")
-
-export {}

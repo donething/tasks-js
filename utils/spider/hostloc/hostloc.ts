@@ -30,8 +30,7 @@ const parseLocRss = async (fid = ""): Promise<Topic[]> => {
   for (let item of rss.items) {
     const m = item.link.match(tidReg)
     if (!m || m.length <= 1) {
-      console.log(`无法解析帖子的 ID: '${item.link}'`)
-      return []
+      throw Error(`无法解析帖子的 ID: ${item.link}`)
     }
 
     const tid = m[1]

@@ -61,8 +61,7 @@ const getRssContent = async (): Promise<string | null> => {
 const parseNSRss = async (): Promise<Topic[]> => {
   const rssContent = await getRssContent()
   if (!rssContent) {
-    console.log("获取的 RSS 内容为空")
-    return []
+    throw Error("获取的 RSS 内容为空")
   }
 
   const rss = await parser.parseString(rssContent)

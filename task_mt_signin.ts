@@ -9,7 +9,7 @@
 
 import {mAxios, UserAgents} from "./utils/http"
 import {parseSetCookie, TGSender} from "do-utils"
-import {pushTGSign} from "./utils/tgpush"
+import {pushTGMsg, pushTGSign} from "./utils/tgpush"
 
 const TAG = "馒头签到"
 
@@ -40,27 +40,20 @@ const loginToMT = async (username: string, password: string): Promise<void> => {
   const setCookies = loginResp.headers["set-cookie"]
 
   if (!setCookies) {
-    console.log("😢 签到失败：响应头中没有'set-cookie'值")
-    await pushTGSign(TAG, "签到失败", "响应头中没有'set-cookie'值")
-    return
+    throw Error("响应头中没有'set-cookie'值")
   }
-  // console.log("🤨 Set-Cookie:", setCookies)
 
   // 登录失败时，消息会通过响应 set-cookie 中的字段 flash_msg 显示
   const cookies = parseSetCookie(setCookies)
   const flashMsg = cookies["flash_msg"]
   if (flashMsg) {
-    console.log("😢 签到失败：", "返回的消息：", flashMsg)
-    await pushTGSign(TAG, "签到失败", `返回的消息：${TGSender.escapeMk(flashMsg.toString())}`)
-    return
+    throw Error(`返回的消息 '${TGSender.escapeMk(flashMsg.toString())}'`)
   }
 
   // 登录成功
   const redirect = loginResp.headers["location"]
   if (!redirect) {
-    console.log('😢 签到失败，重定向的地址为空：\n', loginResp.headers, "\n", loginResp.data)
-    await pushTGSign(TAG, "签到失败", "重定向的地址为空")
-    return
+    throw Error(`重定向的地址为空`)
   }
 
   const redirectHeaders = {
@@ -76,10 +69,7 @@ const loginToMT = async (username: string, password: string): Promise<void> => {
 
   // 不包括用户名，登录失败
   if (!text.includes(username)) {
-    console.log("😢 登录失败：\n", text.substring(text.indexOf("<body")))
-    await pushTGSign(TAG, "签到失败", "登录失败：可在面板查看该脚本的执行日志")
-
-    return
+    throw Error(`其它原因：${text.substring(text.indexOf("<body"))}`)
   }
 
   // 登录成功
@@ -90,8 +80,10 @@ const loginToMT = async (username: string, password: string): Promise<void> => {
 // 执行
 if (process.env.MT_USER_PWD) {
   const [username, password] = process.env.MT_USER_PWD.split("//")
-  loginToMT(username, password)
+  loginToMT(username, password).catch(err => {
+    console.log(TAG, "签到出错：", err)
+    pushTGMsg("签到出错", err, TAG)
+  })
 } else {
   console.log("😢 签到失败：环境变量'MT_USER_PWD'为空！")
-  pushTGSign(TAG, "签到失败", "环境变量'MT_USER_PWD'为空")
 }

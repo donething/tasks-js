@@ -7,6 +7,9 @@
 
 import notifyTopics, {TaskInfo} from "./utils/topicsFile"
 import parseV2exRss from "./utils/spider/v2ex/v2ex"
+import {pushTGMsg} from "./utils/tgpush"
+
+const TAG = "V2exVPS"
 
 // 任务信息
 const taskInfo: TaskInfo = {
@@ -25,7 +28,10 @@ const taskInfo: TaskInfo = {
   filepath: "./db/v2ex_vps_topics.json",
 
   // 发送通知时的提示文本
-  tag: "V2exVPS"
+  tag: TAG
 }
 
-notifyTopics(taskInfo)
+notifyTopics(taskInfo).catch(err => {
+  console.log(TAG, "通知帖子出错：", err)
+  pushTGMsg(`通知帖子出错`, err, TAG)
+})
