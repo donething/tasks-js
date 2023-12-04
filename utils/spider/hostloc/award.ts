@@ -114,8 +114,11 @@ const accessSpace = async (uid: string, page: Page): Promise<boolean> => {
 
     // 成功访问空间
     if (tip.includes("访问别人空间")) {
+      console.log("😊", TAG, `已访问空间 ${page.url()}`)
       return true
     }
+
+    console.log("😢", TAG, `访问空间失败："${tip}"`)
   } catch (e) {
   }
 
