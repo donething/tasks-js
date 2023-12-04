@@ -4,6 +4,7 @@
 import {Topic, TopicTaskInfo} from "./spider/types"
 import {readJSON, writeJSON} from "./file"
 import {pushTGTopics} from "./tgpush"
+import {isQL} from "./utils"
 
 // 需要保存到文件的数据结构
 export interface TopicsFile {
@@ -40,6 +41,8 @@ const notifyTopics = async (taskInfo: TaskInfo) => {
   let i = 1
   for (const task of taskInfo.topicTaskInfos) {
     const topics = await task.fun(task.node)
+
+    !isQL && console.log(`获取的主题：\n`, topics)
 
     for (const t of topics) {
       // 只匹配指定帖子
