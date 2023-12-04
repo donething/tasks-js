@@ -48,7 +48,7 @@ const push = async (text: string, t: Token): Promise<boolean> => {
 
 // 推送普通 TG 消息
 export const pushTGMsg = async (title: string, content: string, tag = "") => {
-  return push(tag ? `\\#${tag} ` : "" + `${title}\n\n${content}`, tgKey.main)
+  return push((tag ? `\\#${tag} ` : "") + `${title}\n\n${content}`, tgKey.main)
 }
 
 // 推送新帖的 TG 消息
