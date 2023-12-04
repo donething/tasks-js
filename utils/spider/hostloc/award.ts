@@ -3,9 +3,10 @@
  * 环境变量中添加登录信息。键为 `LOC_KEY`，值以英文逗号分隔用户名和密码。如 "username,password"
  */
 import puppeteer, {Page} from "puppeteer-core"
-import {PupOptions, waitForNavNoThrow} from "../base/puppeteer"
+import {evalText, PupOptions, waitForNavNoThrow} from "../base/puppeteer"
+import {pushTGSign} from "../../tgpush"
 
-export const tagHostloc = "hostloc"
+export const TAG = "hostloc"
 
 // 需要访问空间的用户 uid
 const uids = ["66244", "61525", "62920", "61253", "62278", "29148",
@@ -14,14 +15,12 @@ const uids = ["66244", "61525", "62920", "61253", "62278", "29148",
 const SPACE_NUM = 10
 
 // 执行 hostloc 的任务
-const startLocTask = async (): Promise<string> => {
+const startLocTask = async () => {
   if (!process.env.LOC_KEY) {
     throw Error(`先在环境变量中添加登录信息"LOC_KEY"，值以英文逗号分隔用户名和密码`)
   }
 
   const [username, password] = process.env.LOC_KEY.split(",")
-  // 完成任务发送的通知
-  let msg = ""
 
   // Launch the browser and open a new blank page
   const browser = await puppeteer.launch(PupOptions)
@@ -30,12 +29,23 @@ const startLocTask = async (): Promise<string> => {
 
   page.setDefaultTimeout(5000)
 
-  console.log("🤨", tagHostloc, "开始执行任务")
+  console.log("🤨", TAG, "开始执行任务")
 
   // 登录
-  await login(username, password, page)
+  try {
+    await login(username, password, page)
+  } catch (e) {
+    console.log("😱", TAG, "登录失败：", e)
+    await pushTGSign(TAG, "登录失败", `${e}`)
 
-  console.log("😊", tagHostloc, "登录成功")
+    await browser.close()
+    return
+  }
+
+  console.log("😊", TAG, "登录成功")
+
+  // 完成任务发送的通知
+  let message = ""
 
   // 访问空间
   let spaceSuccess = 0
@@ -47,14 +57,14 @@ const startLocTask = async (): Promise<string> => {
     }
   }
 
-  msg += spaceSuccess >= SPACE_NUM ? "已完成 访问空间的任务" : `未完成 访问空间的任务，已访问 ${spaceSuccess} 次`
-  console.log("🤨", tagHostloc, `已访问空间 ${spaceSuccess} 次`)
-
+  // 消息
+  message += spaceSuccess >= SPACE_NUM ? "已完成 访问空间的任务" : `未完成 访问空间的任务，已访问 ${spaceSuccess} 次`
+  console.log("🤨", TAG, `已访问空间 ${spaceSuccess} 次`)
 
   // 已完成所有任务，关闭浏览器
   await browser.close()
 
-  return msg
+  await pushTGSign(TAG, "每日任务", message)
 }
 
 // 登录
@@ -82,12 +92,7 @@ const login = async (username: string, password: string, page: Page): Promise<bo
 
   // 可能登录成功
   // 获取用户名的元素来验证
-  const userElem = await page.$("div#um p strong a")
-  if (!userElem) {
-    throw Error("用户名元素不存在")
-  }
-
-  const name = await page.evaluate(el => el.textContent, userElem)
+  const name = await evalText(page, "div#um p strong a")
   if (name !== username) {
     throw Error("解析的用户名和登录的用户名不匹配")
   }
@@ -102,9 +107,19 @@ const accessSpace = async (uid: string, page: Page): Promise<boolean> => {
 
   await page.goto(url)
 
-  await waitForNavNoThrow(page)
+  try {
+    const selector = "div.pc_inner div#creditpromptdiv"
+    await page.waitForSelector(selector)
+    const tip = await evalText(page, selector)
 
-  return true
+    // 成功访问空间
+    if (tip.includes("访问别人空间")) {
+      return true
+    }
+  } catch (e) {
+  }
+
+  return false
 }
 
 export default startLocTask

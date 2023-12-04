@@ -68,7 +68,7 @@ const notifyTopics = async (taskInfo: TaskInfo) => {
   })
 
   // 等待所有任务执行完毕
-  await Promise.all(tasks)
+  await Promise.allSettled(tasks)
 
   if (hadSend.length === 0) {
     console.log("🤨 本次没有发送相关的新帖")

@@ -1,33 +1,23 @@
 /**
  * 执行每日任务
- * 先增加环境变量
+ * 注意设置 环境变量
  */
 
 // new Env('每日任务')
 // cron: 10 0,21 * * *
 
-import startLocTask, {tagHostloc} from "./utils/spider/hostloc/award"
-import {pushTGSign} from "./utils/tgpush"
-import {TGSender} from "do-utils"
+import startLocTask from "./utils/spider/hostloc/award"
 
-const TAG = "Daily"
+const TAG = "每日任务"
 
 // 开始每日任务
 const startTask = async () => {
-  let msg = ""
+  // 执行任务
+  console.log("🤨", TAG, "开始执行")
 
-  msg += `*${tagHostloc}*:\n`
-  let tmp: string
-  try {
-    const loc = await startLocTask()
-    tmp = `${loc}`
-  } catch (e) {
-    console.log("😢", tagHostloc, "执行任务出错：", e)
-    tmp = `执行任务出错：${e}`
-  }
-  msg += TGSender.escapeMk(tmp)
+  await startLocTask()
 
-  await pushTGSign(TAG, "每日任务", msg)
+  console.log("🤨", TAG, "已执行完毕")
 }
 
 startTask()
