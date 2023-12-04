@@ -4,7 +4,7 @@
  */
 
 // new Env('每日任务')
-// cron: 10 9,21 * * *
+// cron: 10 0,21 * * *
 
 import startLocTask, {tagHostloc} from "./utils/spider/hostloc/award"
 import {pushTGSign} from "./utils/tgpush"

@@ -52,9 +52,9 @@ export const pushTGMsg = async (title: string, content: string, tag = "") => {
 }
 
 // 推送新帖的 TG 消息
-export const pushTGTopics = async (tag: string, topics: Topic[]) => {
-  const strs = topics.map((t, i) => `${i + 1}\\. *[${TGSender.escapeMk(t.title)}](${TGSender.escapeMk(t.url)})*\n\n_${TGSender.escapeMk(t.content || "[内容为空或无法解析]")}_\n\n\\#${TGSender.escapeMk(t.name)} \\#${TGSender.escapeMk(t.author)} _${TGSender.escapeMk(t.pub)}_`)
-  return push(`\\#${tag} 新帖\n\n${strs.join("\n\n")}\n`, tgKey.freshPost)
+export const pushTGTopic = async (tag: string, t: Topic) => {
+  const str = `*[${TGSender.escapeMk(t.title)}](${TGSender.escapeMk(t.url)})*\n\n\\#${TGSender.escapeMk(t.name)} \\#${TGSender.escapeMk(t.author)} _${TGSender.escapeMk(t.pub)}_`
+  return push(str, tgKey.freshPost)
 }
 
 /**

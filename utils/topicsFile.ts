@@ -3,7 +3,7 @@
  */
 import {Topic, TopicTaskInfo} from "./spider/types"
 import {readJSON, writeJSON} from "./file"
-import {pushTGTopics} from "./tgpush"
+import {pushTGTopic} from "./tgpush"
 import {isQL} from "./utils"
 
 // 需要保存到文件的数据结构
@@ -28,18 +28,16 @@ export type TaskInfo = {
  * 扫描并通知有关的新帖
  */
 const notifyTopics = async (taskInfo: TaskInfo) => {
-  // 读取已提示的帖子列表（ID列表）
+  // 读取已提示的帖子列表（ID 列表）
   const data = readJSON<TopicsFile>(taskInfo.filepath)
   if (!data.topics) {
     data.topics = []
   }
 
-  // 临时保存，需要发送通知，每一项表示一个主题
-  let topicStrList: Topic[] = []
-
-  // 读取帖子列表
-  let i = 1
-  for (const task of taskInfo.topicTaskInfos) {
+  // 临时保存已发送的帖子
+  const hadSend: Topic[] = []
+  // 异步执行所有任务
+  const tasks = taskInfo.topicTaskInfos.map(async task => {
     const topics = await task.fun(task.node)
 
     !isQL && console.log(`获取的主题：\n`, topics)
@@ -50,35 +48,39 @@ const notifyTopics = async (taskInfo: TaskInfo) => {
         console.log(`😒 跳过帖子：`, t.title, "\n  ", t.url, "\n")
         continue
       }
+
       // 已通知过帖子
-      if (data.topics.find(item => item.name === t.name && item.tid === t.tid)) {
+      if (data.topics.find((item) => item.name === t.name && item.tid === t.tid)) {
         console.log(`😂 已通知过：`, t.title, "\n  ", t.url, "\n")
         continue
       }
 
       console.log(`😊 通知新帖：`, t.title, "\n  ", t.url, "\n")
-      topicStrList.push(t)
+      const ok = await pushTGTopic(taskInfo.tag, t)
+
+      if (!ok) {
+        continue
+      }
+
       // 保存到文件时，不记录 content 属性
-      const tNoContent = Object.assign({}, t)
-      tNoContent.content = ""
-      data.topics.push(tNoContent)
-
-      i++
+      const tNoContent = {...t, content: ""}
+      hadSend.push(tNoContent)
     }
-  }
+  })
 
-  // 没有新帖
-  if (topicStrList.length === 0) {
-    console.log("\n😪 此次刷新没有相关的新帖")
+  // 等待所有任务执行完毕
+  await Promise.all(tasks)
+
+  if (hadSend.length === 0) {
+    console.log("🤨 本次没有发送相关的新帖")
     return
   }
 
-  const ok = await pushTGTopics(taskInfo.tag, topicStrList)
-  if (!ok) {
-    return
-  }
-
+  // 保存文件
+  data.topics.push(...hadSend)
   writeJSON(taskInfo.filepath, data)
+
+  console.log("😊 已完成执行任务")
 }
 
 export default notifyTopics
