@@ -48,18 +48,18 @@ const startLocTask = async () => {
   let message = ""
 
   // 访问空间
-  let spaceSuccess = 0
+  let spaceAward = 0
   for (let uid of uids) {
     const ok = await accessSpace(uid, page)
-
     if (ok) {
-      spaceSuccess++
+      spaceAward++
     }
   }
 
   // 消息
-  message += spaceSuccess >= SPACE_NUM ? "已完成 访问空间的任务" : `未完成 访问空间的任务，已访问 ${spaceSuccess} 次`
-  console.log("🤨", TAG, `已访问空间 ${spaceSuccess} 次`)
+  const spaceMsg = `未完成 访问空间的任务。只成功领取 ${spaceAward}/${SPACE_NUM} 次奖励`
+  message += spaceAward >= SPACE_NUM ? "已完成 访问空间的任务" : spaceMsg
+  console.log("🤨", TAG, spaceMsg)
 
   // 已完成所有任务，关闭浏览器
   await browser.close()
@@ -120,6 +120,7 @@ const accessSpace = async (uid: string, page: Page): Promise<boolean> => {
 
     console.log("😢", TAG, `访问空间失败："${tip}"`)
   } catch (e) {
+    console.log("😢", TAG, "没有出现奖励提示。可能今日已访问过该用户的空间")
   }
 
   return false
