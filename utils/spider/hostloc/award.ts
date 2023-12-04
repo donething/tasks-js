@@ -118,9 +118,9 @@ const accessSpace = async (uid: string, page: Page): Promise<boolean> => {
       return true
     }
 
-    console.log("😢", TAG, `访问空间失败："${tip}"`)
+    console.log("😢", TAG, "访问空间失败", page.url(), `\n${tip}`)
   } catch (e) {
-    console.log("😢", TAG, "没有出现奖励提示。可能今日已访问过该用户的空间")
+    console.log("😢", TAG, "没有出现奖励提示。可能今日已访问过该用户的空间", page.url())
   }
 
   return false
