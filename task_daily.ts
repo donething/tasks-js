@@ -15,6 +15,7 @@ const startTask = async () => {
   // 执行任务
   console.log("🤨", TAG, "开始执行")
 
+  // await Promise.allSettled([startTask])
   await startLocTask()
 
   console.log("🤨", TAG, "已执行完毕")
