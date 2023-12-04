@@ -4,7 +4,7 @@
  */
 
 // new Env('每日任务')
-// cron: 10 0,21 * * *
+// cron: 10 0 * * *
 
 import startLocTask from "./utils/spider/hostloc/award"
 
