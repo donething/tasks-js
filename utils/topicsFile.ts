@@ -57,7 +57,6 @@ const notifyTopics = async (taskInfo: TaskInfo) => {
 
       console.log(`😊 通知新帖：`, t.title, "\n  ", t.url, "\n")
       const ok = await pushTGTopic(taskInfo.tag, t)
-
       if (!ok) {
         continue
       }

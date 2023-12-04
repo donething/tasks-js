@@ -37,7 +37,7 @@ export interface UrlInfo {
   headers: ReqHeaders
   // 是否成功获取的标志性文本。如 网站的标题
   check: string
-  // 获取帖子的超链接A的选择器。如 "table#threadlisttableid tbody[id^='normalthread'] th.new a.xst"
+  // 获取帖子的超链接 A 的选择器。如 "table#threadlisttableid tbody[id^='normalthread'] th.new a.xst"
   selector: string
   // 根据超链接URL，获取帖子的 ID。如 /thread-(\d+)/
   tidReg: RegExp

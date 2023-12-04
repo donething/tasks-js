@@ -14,9 +14,7 @@ export const getHTMLTopics = async (urlInfo: UrlInfo): Promise<Topic[]> => {
   const text: string = await resp.data
 
   if (!text.includes(urlInfo.check)) {
-    console.log(`😢 获取帖子失败：解析不到标志"${urlInfo.check}"。可能被风控：${urlInfo.url}\n`, "  ", text)
-    // await pushTGMsg(`获取帖子失败：解析不到标志"${urlInfo.check}"。可能被风控：\n${urlInfo.url}`)
-    return []
+    throw Error(`获取帖子失败。解析不到标志"${urlInfo.check}"，可能被风控："${urlInfo.url}"`)
   }
 
   // 解析
@@ -29,13 +27,12 @@ export const getHTMLTopics = async (urlInfo: UrlInfo): Promise<Topic[]> => {
 
     const path = t.attr("href")
     if (!path) {
-      console.log("😢 获取帖子 ID 失败：路径 path 为空：", t.toString())
-      continue
+      throw Error(`获取帖子 ID 失败。href 为空："${t}"`)
     }
+
     const m = path.match(urlInfo.tidReg)
     if (!m || m.length <= 1) {
-      console.log("😢 获取帖子 ID 失败：没有匹配到帖子的 tid：", path)
-      continue
+      throw Error(`获取帖子 ID 失败。没有匹配到帖子的 ID："${path}"`)
     }
 
     // 帖子 ID
