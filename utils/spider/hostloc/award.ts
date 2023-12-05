@@ -1,10 +1,12 @@
 /**
  * 执行 hostloc 任务
- * 环境变量中添加登录信息。键为 `LOC_KEY`，值以英文逗号分隔用户名和密码。如 "username,password"
  */
+
 import puppeteer, {Page} from "puppeteer-core"
 import {evalText, PupOptions, waitForNavNoThrow} from "../base/puppeteer"
 import {pushTGSign} from "../../tgpush"
+import {envTip} from "../base/comm"
+import {typeError} from "do-utils"
 
 export const TAG = "hostloc"
 
@@ -14,13 +16,17 @@ const uids = ["66244", "61525", "62920", "61253", "62278", "29148",
 // 访问空间有奖励的次数
 const SPACE_NUM = 10
 
+// 环境变量的键
+const ENV_KEY = "LOC_USER_PWD"
+
 // 执行 hostloc 的任务
 const startLocTask = async () => {
-  if (!process.env.LOC_KEY) {
-    throw Error(`先在环境变量中添加登录信息"LOC_KEY"，值以英文逗号分隔用户名和密码`)
+  if (!process.env[ENV_KEY]) {
+    console.log("😢", TAG, envTip(ENV_KEY))
+    return
   }
 
-  const [username, password] = process.env.LOC_KEY.split(",")
+  const [username, password] = process.env[ENV_KEY].split("//")
 
   // Launch the browser and open a new blank page
   const browser = await puppeteer.launch(PupOptions)
@@ -36,7 +42,7 @@ const startLocTask = async () => {
     await login(username, password, page)
   } catch (e) {
     console.log("😱", TAG, "登录失败：", e)
-    await pushTGSign(TAG, "登录失败", `${e}`)
+    await pushTGSign(TAG, "登录失败", `${typeError(e).message}`)
 
     await browser.close()
     return

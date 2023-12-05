@@ -9,3 +9,8 @@ export const truncate4tg = (content: string) => {
 
   return str.length > TOPIC_MAX ? str.substring(0, TOPIC_MAX) + "\n..." : str
 }
+
+// 在环境变量中增加变量的提示
+export const envTip = (keyName: string, split = "//"): string => {
+  return `先增加环境变量"${keyName}"，值用"${split}"来分隔。如"username${split}password"`
+}
