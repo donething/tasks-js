@@ -6,7 +6,7 @@ import puppeteer, {Page} from "puppeteer-core"
 import {evalText, PupOptions, waitForNavNoThrow} from "../base/puppeteer"
 import {pushTGSign} from "../../tgpush"
 import {envTip} from "../base/comm"
-import {typeError} from "do-utils"
+import {TGSender, typeError} from "do-utils"
 
 export const TAG = "hostloc"
 
@@ -42,7 +42,7 @@ const startLocTask = async () => {
     await login(username, password, page)
   } catch (e) {
     console.log("😱", TAG, "登录失败：", e)
-    await pushTGSign(TAG, "登录失败", `${typeError(e).message}`)
+    await pushTGSign(TAG, "登录失败", TGSender.escapeMk(`${typeError(e).message}`))
 
     await browser.close()
     return
@@ -70,7 +70,7 @@ const startLocTask = async () => {
   // 已完成所有任务，关闭浏览器
   await browser.close()
 
-  await pushTGSign(TAG, "每日任务", message)
+  await pushTGSign(TAG, "每日任务", TGSender.escapeMk(message))
 }
 
 // 登录
@@ -93,7 +93,11 @@ const login = async (username: string, password: string, page: Page): Promise<bo
   const pcInnerElem = await page.$("div.pc_inner")
   if (pcInnerElem) {
     const text = await page.evaluate(el => el.textContent, pcInnerElem)
-    throw new Error(`${text}`)
+    if (text?.includes("每天登录")) {
+      return true
+    }
+
+    throw new Error(`检查到未处理的提示文本：\n${text}`)
   }
 
   // 可能登录成功

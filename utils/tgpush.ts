@@ -46,7 +46,12 @@ const push = async (text: string, t: Token): Promise<boolean> => {
   return true
 }
 
-// 推送普通 TG 消息
+/**
+ * 推送普通 TG 消息。需要自行转义 Markdown v2
+ * @param title
+ * @param content
+ * @param tag
+ */
 export const pushTGMsg = async (title: string, content: string, tag = "") => {
   return push((tag ? `\\#${tag} ` : "") + `${title}\n\n${content}`, tgKey.main)
 }
@@ -58,7 +63,7 @@ export const pushTGTopic = async (tag: string, t: Topic) => {
 }
 
 /**
- * 推送每日签到的 TG 消息
+ * 推送每日签到的 TG 消息。需要自行转义 Markdown v2
  * @param tag 标签。如 "daily"
  * @param result 成功或失败。如 "签到失败"
  * @param tips 消息内容

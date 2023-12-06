@@ -61,8 +61,9 @@ const login = async (username: string, password: string): Promise<boolean> => {
     "content-type": "application/x-www-form-urlencoded"
   }
 
-  // 不重定向、携带cookie
-  const resp = await mAxios.post(loginUrl, data, {headers, maxRedirects: 0,})
+  // 因为登录失败时会在`set-cookie`中返回提示
+  // 所以不要重定向
+  const resp = await mAxios.post(loginUrl, data, {headers, maxRedirects: 0})
 
   // POST 登录后会返回 set-cookie
   const setCookies = resp.headers["set-cookie"]
@@ -77,17 +78,8 @@ const login = async (username: string, password: string): Promise<boolean> => {
     throw Error(decodeURIComponent(String(cookies["flash_msg"])))
   }
 
-  // 登录成功
-  const redirect = resp.headers["location"]
-  if (!redirect) {
-    throw Error(`重定向的地址为空`)
-  }
-
-  const redirectHeaders = {...headers, "Cookie": `tp=${cookies["tp"]}`}
-  const redirectResp = await mAxios.get(redirect, {
-    headers: redirectHeaders,
-    maxRedirects: 20,
-  })
+  // 应该登录成功，验证
+  const redirectResp = await mAxios.get(addr, {headers})
   const text = redirectResp.data
 
   // 不包括用户名，登录失败

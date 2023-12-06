@@ -1,5 +1,5 @@
 // 网站名
-export type SiteName = "v2ex" | "hostloc" | "nodeseek"
+export type SiteName = "v2ex" | "hostloc" | "nodeseek" | "fljh"
 
 // 提取的主题关键信息
 export interface Topic {

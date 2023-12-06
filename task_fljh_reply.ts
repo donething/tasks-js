@@ -6,42 +6,69 @@
 // new Env('福利江湖 回帖')
 // cron: */10 * * * *
 
-import * as cheerio from 'cheerio'
-import makeFetchCookie from 'fetch-cookie'
-import {isQL, calStr, fillInitCookies} from "./utils/utils"
+import {isQL, calStr} from "./utils/utils"
 import {readJSON, writeJSON} from "./utils/file"
 import {random, sleep, TGSender} from "do-utils"
-import {UserAgents} from "./utils/http"
+import {mAxios, UserAgents} from "./utils/http"
 import {pushTGMsg} from "./utils/tgpush"
+import {getHTMLTopics} from "./utils/spider/base/html"
+import {Topic, UrlInfo} from "./utils/spider/types"
+
+const TAG = "fljh"
+
+// 保存数据的文件路径
+const FILE_FLJH = "./db/fljh.json"
+
+// 标签
+// 回复的内容
+const content = encodeURIComponent("感谢分享！！")
+
+const host = "fulijianghu.org"
+const addr = `https://${host}`
+
+// 获取帖子时，需要传递的信息
+const urlInfo: UrlInfo = {
+  check: "登录",
+  headers: {
+    "referer": addr,
+    "user-agent": UserAgents.Win
+  },
+  name: TAG,
+  selector: "table#threadlisttableid tbody[id^='normalthread'] th.byg_th a.xst",
+  tidReg: /tid=(\d+)/i,
+  url: `${addr}/forum.php?mod=forumdisplay&fid=63&filter=sortall&sortall=1`
+}
+
+// 环境变量的键
+const ENV_KEY = "FLJH_COOKIE"
 
 // 保存到文件的数据
 type FData = {
   // 已回复过的帖子（ID）的列表
   tids?: string[]
 }
-// 保存数据的文件路径
-const FILE_FLJH = "./db/fljh.json"
 
-const TAG = "福利江湖回帖"
-
-// 标签
-// 回复的内容
-const content = encodeURIComponent("感谢分享！！")
-
-// Jar
-const jar = new makeFetchCookie.toughCookie.CookieJar()
-const fetchCookie = makeFetchCookie(fetch, jar)
-
+// 开始任务
 const start = async (cookie: string) => {
   // 注入初始 Cookie
   if (!cookie) {
-    console.log("😢 请先设置环境变量 Cookie，名为'FLJH_COOKIE'\n")
+    console.log(`😢 请先设置环境变量'${ENV_KEY}'`)
     return
   }
-  await fillInitCookies(jar, cookie, "https://fulijianghu.org/")
+
+  // 注入 Cookie
+  mAxios.setCookie(cookie, addr)
 
   // 获取帖子列表（ID列表）
-  const tids = await getIndexTids()
+  let topics: Topic[] = []
+  try {
+    topics = await getHTMLTopics(urlInfo)
+  } catch (e) {
+    console.log(TAG, "需检查 Cookie 是否已失效：", e)
+    await pushTGMsg("获取帖子出错", "需检查 Cookie 是否已失效", TAG)
+    return
+  }
+
   // 读取已回复的帖子列表（ID列表）
   const data = readJSON<FData>(FILE_FLJH)
   if (!data.tids) {
@@ -49,15 +76,15 @@ const start = async (cookie: string) => {
   }
 
   // 依次回复主题
-  for (const [index, tid] of tids.entries()) {
+  for (const [index, t] of topics.entries()) {
     const no = index + 1
-    if (data.tids.includes(tid)) {
-      console.log(`😂 ${no}. 已回复过该贴(${tid})，跳过\n`)
+    if (data.tids.includes(t.tid)) {
+      console.log(`😂 ${no}. 已回复过该贴(${t.tid})，跳过\n`)
       continue
     }
 
     // 回帖、处理回帖的响应
-    const err = await reply(tid)
+    const err = await reply(t.tid)
 
     // 限制回帖次数。需要立即停止回复剩下的帖子
     if (err && err.message.includes("所在的用户组每小时限制发回帖")) {
@@ -68,18 +95,18 @@ const start = async (cookie: string) => {
 
     // 其它错误
     if (err) {
-      console.log(`😱 ${no}. 回帖出错(${tid})：\n${err}`)
-      await pushTGMsg(`回帖出错(${tid})`, TGSender.escapeMk(err.message), TAG)
+      console.log(`😱 ${no}. 回帖出错(${t.tid})：\n${err}`)
+      await pushTGMsg(`回帖出错(${t.tid})`, TGSender.escapeMk(err.message), TAG)
       // 退出回帖，不用 return ，要保存数据
       break
     }
 
     // 回帖成功
-    console.log(`😊 ${no}. 回帖成功(${tid})\n`)
-    data.tids.push(tid)
+    console.log(`😊 ${no}. 回帖成功(${t.tid})\n`)
+    data.tids.push(t.tid)
 
     // 默认要等待 15 秒，再继续回帖
-    if (index !== tids.length - 1) {
+    if (index !== topics.length - 1) {
       const sec = random(20, 60)
       console.log(`😪 随机等待 ${sec} 秒后继续回复……\n`)
       await sleep(sec * 1000)
@@ -89,34 +116,36 @@ const start = async (cookie: string) => {
   writeJSON(FILE_FLJH, data)
 }
 
+// 回帖
 const reply = async (tid: string): Promise<Error | null> => {
   const topicheaders = {
-    "referer": "https://fulijianghu.org",
-    "user-agent": UserAgents.Win
+    "referer": addr,
+    "user-agent": UserAgents.Win,
   }
+
   // 获取验证回答需要的 hashid
-  const topicURL = `https://fulijianghu.org/forum.php?mod=viewthread&tid=${tid}`
-  const topicResp = await fetchCookie(topicURL, {headers: topicheaders})
-  const hashText = await topicResp.text()
+  const topicURL = `${addr}/forum.php?mod=viewthread&tid=${tid}`
+  const topicResp = await mAxios.get(topicURL, {headers: topicheaders})
+  const hashText: string = topicResp.data
   if (hashText.includes("您需要登录后才可以回帖")) {
-    return new Error("需要登录后才可以回帖")
+    return new Error("需要登录")
   }
 
   let formhash = ""
   let hashid = ""
   let qaa = ""
-  const formReg = /<input.+?name="formhash"\s+value="(?<formhash>.+?)"/s
+  const formReg = /<input.+?name="formhash"\s+value="(.+?)"/s
   const formMatch = hashText.match(formReg)
-  if (!formMatch || !formMatch.groups) {
+  if (!formMatch || formMatch.length <= 1) {
     return new Error(`提取 formhas 失败：${hashText}`)
   }
-  formhash = formMatch.groups.formhash
+  formhash = formMatch[1]
 
   // 可能有验证回答，需要 hashid
-  const hashReg = /<span\s+id="secqaa_(?<hashid>\S+)">/s
+  const hashReg = /<span\s+id="secqaa_(\S+)">/s
   const hashMatch = hashText.match(hashReg)
-  if (hashMatch && hashMatch.groups) {
-    hashid = hashMatch.groups.hashid
+  if (hashMatch && hashMatch.length >= 2) {
+    hashid = hashMatch[1]
     // 获取验证回答
     qaa = await getSecqaa(hashid)
   }
@@ -125,19 +154,16 @@ const reply = async (tid: string): Promise<Error | null> => {
 
   // 回复
   const replyHeaders = {
-    "origin": "https://fulijianghu.org",
-    "referer": "https://fulijianghu.org",
+    "origin": addr,
+    "referer": addr,
     "content-type": "application/x-www-form-urlencoded",
     "user-agent": UserAgents.Win
   }
-  const replyURL = "https://fulijianghu.org/forum.php?mod=post&action=reply&replysubmit=yes&" +
-    "handlekey=fastpost&inajax=1&tid=" + tid
+  const replyURL = `${addr}/forum.php?mod=post&action=reply&replysubmit=yes&handlekey=fastpost&inajax=1&tid=${tid}`
   const now = parseInt("" + Date.now() / 1000)
-  const body = `message=${content}&secqaahash=${hashid}&secanswer=${qaa}&posttime=${now}&formhash=${formhash}` +
-    "&usesig=1&subject=++"
-  const method = "POST"
-  const replyResp = await fetchCookie(replyURL, {body, headers: replyHeaders, method})
-  const replyText = await replyResp.text()
+  const body = `message=${content}&secqaahash=${hashid}&secanswer=${qaa}&posttime=${now}&formhash=${formhash}&usesig=1&subject=++`
+  const replyResp = await mAxios.post(replyURL, {body, headers: replyHeaders})
+  const replyText: string = await replyResp.data
 
   // 解析响应
   // 回帖太频繁。等待一些秒数后再回复
@@ -156,48 +182,19 @@ const reply = async (tid: string): Promise<Error | null> => {
 }
 
 /**
- * 获取某栏目首页的帖子列表（id 列表）
- */
-const getIndexTids = async (): Promise<string[]> => {
-  const tids: string[] = []
-
-  const headers = {
-    "referer": "https://fulijianghu.org",
-    "user-agent": UserAgents.Win
-  }
-  const url = `https://fulijianghu.org/forum.php?mod=forumdisplay&fid=63&filter=sortall&sortall=1`
-  const resp = await fetchCookie(url, {headers})
-  const text = await resp.text()
-
-  // 解析
-  const $ = cheerio.load(text)
-  for (let item of $("table#threadlisttableid tbody[id^='normalthread']")) {
-    const idStr = $(item).attr("id")
-    if (!idStr) {
-      console.log(`😢 无法获取元素的属性 id：${$(item).text()}\n`)
-      continue
-    }
-
-    const id = idStr.substring(idStr.indexOf("_") + 1)
-    tids.push(id)
-  }
-
-  return tids
-}
-
-/**
  * 获取验证回答
  * @param hashid 该验证的 ID。如"qSnm317v"，
  * 可以从回复页面的源码中获取：`<div class="mtm"><span id="secqaa_qSnm317v"></span>`
  */
 const getSecqaa = async (hashid: string): Promise<string> => {
   const headers = {
-    "referer": "https://fulijianghu.org",
+    "referer": addr,
     "user-agent": UserAgents.Win
   }
-  const url = `https://fulijianghu.org/misc.php?mod=secqaa&action=update&idhash=${hashid}&${Math.random()}`
-  const resp = await fetchCookie(url, {headers})
-  const text = await resp.text()
+  const url = `${addr}/misc.php?mod=secqaa&action=update&idhash=${hashid}&${Math.random()}`
+
+  const resp = await mAxios.get(url, {headers})
+  const text = resp.data
   const match = text.match(/class="vm"\s\/><\/span>'.+?'(?<expression>.+?)=/s)
   if (!match || !match.groups) {
     throw `提取验证回答失败：` + text
@@ -210,5 +207,5 @@ const getSecqaa = async (hashid: string): Promise<string> => {
 
 //
 // 执行
-// 先设置环境变量 Cookie。如在本地 Powershell中：$env:FLJH_COOKIE="my cookie ..."
-start(process.env.FLJH_COOKIE || "")
+// 先设置环境变量 Cookie。如在本地 Powershell中：$env:XX_KEY="my cookie ..."
+start(process.env[ENV_KEY] || "")
