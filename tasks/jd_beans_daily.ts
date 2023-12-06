@@ -7,10 +7,10 @@
 // new Env('京豆变化')
 // cron: 5 13,22 * * *
 
-import {isQL} from "./utils/utils"
+import {isQL} from "../utils/utils"
 import {date, TGSender} from "do-utils"
-import {UserAgents} from "./utils/http"
-import {pushTGMsg, pushTGSign} from "./utils/tgpush"
+import {UserAgents} from "../utils/http"
+import {pushTGMsg, pushTGSign} from "../utils/tgpush"
 
 const TAG = "京豆变化"
 

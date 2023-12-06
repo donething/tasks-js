@@ -6,8 +6,8 @@
 // new Env('每日任务')
 // cron: 10 0 * * *
 
-import startLocTask from "./utils/spider/hostloc/award"
-import startMtTask from "./utils/spider/mteam/mteam"
+import startLocTask from "../utils/spider/hostloc/award"
+import startMtTask from "../utils/spider/mteam/mteam"
 
 const TAG = "每日任务"
 

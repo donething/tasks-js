@@ -6,13 +6,13 @@
 // new Env('福利江湖 回帖')
 // cron: */10 * * * *
 
-import {isQL, calStr} from "./utils/utils"
-import {readJSON, writeJSON} from "./utils/file"
+import {isQL, calStr} from "../utils/utils"
+import {readJSON, writeJSON} from "../utils/file"
 import {random, sleep, TGSender} from "do-utils"
-import {mAxios, UserAgents} from "./utils/http"
-import {pushTGMsg} from "./utils/tgpush"
-import {getHTMLTopics} from "./utils/spider/base/html"
-import {Topic, UrlInfo} from "./utils/spider/types"
+import {mAxios, UserAgents} from "../utils/http"
+import {pushTGMsg} from "../utils/tgpush"
+import {getHTMLTopics} from "../utils/spider/base/html"
+import {Topic, UrlInfo} from "../utils/spider/types"
 
 const TAG = "fljh"
 

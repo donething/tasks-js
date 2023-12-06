@@ -9,7 +9,7 @@
 // cron: */1 * * * * *
 
 import {request, TGSender} from "do-utils"
-import {pushTGMsg} from "./utils/tgpush"
+import {pushTGMsg} from "../utils/tgpush"
 
 const TAG = "CC黑五活动"
 
