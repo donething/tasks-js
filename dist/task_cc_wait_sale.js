@@ -7,7 +7,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 // new Env('CC有售')
-// cron: */30 * * * * *
+// cron: */10 * * * * *
 const topicsFile_1 = __importDefault(require("./utils/topicsFile"));
 const hostloc_1 = __importDefault(require("./utils/spider/hostloc/hostloc"));
 const nodeseek_1 = __importDefault(require("./utils/spider/nodeseek/nodeseek"));

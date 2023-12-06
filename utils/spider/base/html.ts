@@ -14,7 +14,8 @@ export const getHTMLTopics = async (urlInfo: UrlInfo): Promise<Topic[]> => {
   const text: string = await resp.data
 
   if (!text.includes(urlInfo.check)) {
-    throw Error(`获取帖子失败。解析不到标志"${urlInfo.check}"，可能被风控："${urlInfo.url}"`)
+    console.log(`获取帖子失败。解析不到标志"${urlInfo.check}"，可能被风控 ${urlInfo.url} ：\n`, text)
+    throw Error(`获取帖子失败。解析不到标志"${urlInfo.check}"，可能被风控 ${urlInfo.url}`)
   }
 
   // 解析
