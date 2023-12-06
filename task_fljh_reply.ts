@@ -28,7 +28,7 @@ const addr = `https://${host}`
 
 // 获取帖子时，需要传递的信息
 const urlInfo: UrlInfo = {
-  check: "登录",
+  include: `title="暂不提醒"`,
   headers: {
     "referer": addr,
     "user-agent": UserAgents.Win

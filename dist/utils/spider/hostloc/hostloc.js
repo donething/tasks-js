@@ -51,7 +51,7 @@ exports.parseLocRss = parseLocRss;
  */
 const parseLocHtml = async (fid = "") => {
     const url = `https://hostloc.com/forum.php?mod=forumdisplay&fid=${fid}&orderby=dateline`;
-    const info = { check, headers, name, selector, tidReg, url };
+    const info = { include: check, headers, name, selector, tidReg, url };
     return await (0, html_1.getHTMLTopics)(info);
 };
 exports.default = parseLocHtml;

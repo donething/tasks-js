@@ -35,9 +35,9 @@ const cheerio = __importStar(require("cheerio"));
 const getHTMLTopics = async (urlInfo) => {
     const resp = await http_1.mAxios.get(urlInfo.url, { headers: urlInfo.headers });
     const text = await resp.data;
-    if (!text.includes(urlInfo.check)) {
-        console.log(`获取帖子失败。解析不到标志"${urlInfo.check}"，可能被风控 ${urlInfo.url} ：\n`, text);
-        throw Error(`获取帖子失败。解析不到标志"${urlInfo.check}"，可能被风控 ${urlInfo.url}`);
+    if (!text.includes(urlInfo.include)) {
+        console.log(`获取帖子失败。解析不到标志"${urlInfo.include}"，可能被风控 ${urlInfo.url} ：\n`, text);
+        throw Error(`获取帖子失败。解析不到标志"${urlInfo.include}"，可能被风控 ${urlInfo.url}`);
     }
     // 解析
     const tids = [];

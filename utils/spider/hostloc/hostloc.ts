@@ -56,7 +56,7 @@ export const parseLocRss = async (fid = ""): Promise<Topic[]> => {
  */
 const parseLocHtml = async (fid = ""): Promise<Topic[]> => {
   const url = `https://hostloc.com/forum.php?mod=forumdisplay&fid=${fid}&orderby=dateline`
-  const info: UrlInfo = {check, headers, name, selector, tidReg, url}
+  const info: UrlInfo = {include: check, headers, name, selector, tidReg, url}
 
   return await getHTMLTopics(info)
 }
