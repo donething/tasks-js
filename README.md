@@ -12,6 +12,18 @@
 * 😢 警告
 * 😱 错误
 
+# 拉取说明
+
+拉取命令：
+
+`ql repo https://github.com/donething/tasks-js.git "dist/task_" "" "dist/utils/"`
+
+因为拉取后会改变任务和依赖脚本的相对路径，需要在面板`拉取后执行的命令`输入框中，增加命令：
+
+```shell
+mv -f /相对路径/utils/* .
+```
+
 # 配置
 
 ## 推送消息
