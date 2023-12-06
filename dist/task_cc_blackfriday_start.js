@@ -9,7 +9,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // new Env('cloudcone黑五活动开启')
 // cron: */1 * * * * *
 const do_utils_1 = require("do-utils");
-const tgpush_1 = require("../utils/tgpush");
+const tgpush_1 = require("./utils/tgpush");
 const TAG = "CC黑五活动";
 const host = "app.cloudcone.com";
 const addr = `https://${host}`;

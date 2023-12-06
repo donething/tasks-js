@@ -8,9 +8,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 // new Env('V2exVPS新帖')
 // cron: */2 * * * *
-const topicsFile_1 = __importDefault(require("../utils/topicsFile"));
-const v2ex_1 = __importDefault(require("../utils/spider/v2ex/v2ex"));
-const tgpush_1 = require("../utils/tgpush");
+const topicsFile_1 = __importDefault(require("./utils/topicsFile"));
+const v2ex_1 = __importDefault(require("./utils/spider/v2ex/v2ex"));
+const tgpush_1 = require("./utils/tgpush");
 const do_utils_1 = require("do-utils");
 const TAG = "V2exVPS";
 // 任务信息

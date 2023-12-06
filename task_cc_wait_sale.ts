@@ -5,10 +5,10 @@
 // new Env('CC有售')
 // cron: */30 * * * * *
 
-import notifyTopics, {TaskInfo} from "../utils/topicsFile"
-import parseLocHtml from "../utils/spider/hostloc/hostloc"
-import parseNSRss from "../utils/spider/nodeseek/nodeseek"
-import {pushTGMsg} from "../utils/tgpush"
+import notifyTopics, {TaskInfo} from "./utils/topicsFile"
+import parseLocHtml from "./utils/spider/hostloc/hostloc"
+import parseNSRss from "./utils/spider/nodeseek/nodeseek"
+import {pushTGMsg} from "./utils/tgpush"
 import {TGSender} from "do-utils"
 
 const TAG = "CC有售"

@@ -8,10 +8,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 // new Env('CC有售')
 // cron: */30 * * * * *
-const topicsFile_1 = __importDefault(require("../utils/topicsFile"));
-const hostloc_1 = __importDefault(require("../utils/spider/hostloc/hostloc"));
-const nodeseek_1 = __importDefault(require("../utils/spider/nodeseek/nodeseek"));
-const tgpush_1 = require("../utils/tgpush");
+const topicsFile_1 = __importDefault(require("./utils/topicsFile"));
+const hostloc_1 = __importDefault(require("./utils/spider/hostloc/hostloc"));
+const nodeseek_1 = __importDefault(require("./utils/spider/nodeseek/nodeseek"));
+const tgpush_1 = require("./utils/tgpush");
 const do_utils_1 = require("do-utils");
 const TAG = "CC有售";
 // 任务信息

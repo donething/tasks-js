@@ -9,8 +9,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 // new Env('每日任务')
 // cron: 10 0 * * *
-const award_1 = __importDefault(require("../utils/spider/hostloc/award"));
-const mteam_1 = __importDefault(require("../utils/spider/mteam/mteam"));
+const award_1 = __importDefault(require("./utils/spider/hostloc/award"));
+const mteam_1 = __importDefault(require("./utils/spider/mteam/mteam"));
 const TAG = "每日任务";
 // 开始每日任务
 const startTask = async () => {

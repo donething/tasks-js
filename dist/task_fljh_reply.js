@@ -6,12 +6,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 // new Env('福利江湖 回帖')
 // cron: */10 * * * *
-const utils_1 = require("../utils/utils");
-const file_1 = require("../utils/file");
+const utils_1 = require("./utils/utils");
+const file_1 = require("./utils/file");
 const do_utils_1 = require("do-utils");
-const http_1 = require("../utils/http");
-const tgpush_1 = require("../utils/tgpush");
-const html_1 = require("../utils/spider/base/html");
+const http_1 = require("./utils/http");
+const tgpush_1 = require("./utils/tgpush");
+const html_1 = require("./utils/spider/base/html");
 const TAG = "fljh";
 // 保存数据的文件路径
 const FILE_FLJH = "./db/fljh.json";

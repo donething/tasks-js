@@ -7,10 +7,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 // new Env('京豆变化')
 // cron: 5 13,22 * * *
-const utils_1 = require("../utils/utils");
+const utils_1 = require("./utils/utils");
 const do_utils_1 = require("do-utils");
-const http_1 = require("../utils/http");
-const tgpush_1 = require("../utils/tgpush");
+const http_1 = require("./utils/http");
+const tgpush_1 = require("./utils/tgpush");
 const TAG = "京豆变化";
 // 指定获取最近几天内，每日京东的变化量，不指定时为 7 天内
 const jdBeansRecentDay = Number(process.env.JD_BEANS_RECENT_DAY) || 7;
