@@ -9,7 +9,6 @@ import notifyTopics, {TaskInfo} from "./utils/topicsFile"
 import parseLocHtml from "./utils/spider/hostloc/hostloc"
 import parseNSRss from "./utils/spider/nodeseek/nodeseek"
 import {pushTGMsg} from "./utils/tgpush"
-import {TGSender} from "do-utils"
 
 const TAG = "CC有售"
 
@@ -41,5 +40,5 @@ const taskInfo: TaskInfo = {
 
 notifyTopics(taskInfo).catch(err => {
   console.log(TAG, "通知帖子出错：", err)
-  pushTGMsg("通知帖子出错", TGSender.escapeMk(err), TAG)
+  pushTGMsg("通知帖子出错", err, TAG)
 })

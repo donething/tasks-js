@@ -75,8 +75,8 @@ const start = async (cookie) => {
         }
         // 其它错误
         if (err) {
-            console.log(`😱 ${no}. 回帖出错(${t.tid})：\n${err}`);
-            await (0, tgpush_1.pushTGMsg)(`回帖出错(${t.tid})`, do_utils_1.TGSender.escapeMk(err.message), TAG);
+            console.log(`😱 回帖出错，帖子ID ${t.tid}：\n\n`, err);
+            await (0, tgpush_1.pushTGMsg)("回帖出错", err.message, TAG);
             // 退出回帖，不用 return ，要保存数据
             break;
         }

@@ -8,7 +8,7 @@
 // new Env('cloudcone黑五活动开启')
 // cron: */1 * * * * *
 
-import {request, TGSender} from "do-utils"
+import {request} from "do-utils"
 import {pushTGMsg} from "./utils/tgpush"
 
 const TAG = "CC黑五活动"
@@ -71,7 +71,7 @@ const check = async () => {
   const token = process.env.CC_TOKEN
   if (!cookie || !token) {
     console.log("😢 Cookie、Token 为空，无法自动下订单。只发送通知提醒。")
-    await pushTGMsg("活动已开始", TGSender.escapeMk(`${addr}/blackfriday`), TAG)
+    await pushTGMsg("活动已开始", `${addr}/blackfriday`, TAG)
     return
   }
 
@@ -116,5 +116,5 @@ const order = async (cookie: string, token: string, vpsInfo: VPSInfo) => {
 // 开始
 check().catch(err => {
   console.log(TAG, "抢购出错：", err)
-  pushTGMsg("抢购出错", TGSender.escapeMk(err), TAG)
+  pushTGMsg("抢购出错", err, TAG)
 })

@@ -8,7 +8,7 @@
 
 import {isQL, calStr} from "./utils/utils"
 import {readJSON, writeJSON} from "./utils/file"
-import {random, sleep, TGSender} from "do-utils"
+import {random, sleep} from "do-utils"
 import {mAxios, UserAgents} from "./utils/http"
 import {pushTGMsg} from "./utils/tgpush"
 import {getHTMLTopics} from "./utils/spider/base/html"
@@ -95,8 +95,8 @@ const start = async (cookie: string) => {
 
     // 其它错误
     if (err) {
-      console.log(`😱 ${no}. 回帖出错(${t.tid})：\n${err}`)
-      await pushTGMsg(`回帖出错(${t.tid})`, TGSender.escapeMk(err.message), TAG)
+      console.log(`😱 回帖出错，帖子ID ${t.tid}：\n\n`, err)
+      await pushTGMsg("回帖出错", err.message, TAG)
       // 退出回帖，不用 return ，要保存数据
       break
     }

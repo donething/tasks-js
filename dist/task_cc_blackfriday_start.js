@@ -29,7 +29,7 @@ const check = async () => {
     const token = process.env.CC_TOKEN;
     if (!cookie || !token) {
         console.log("😢 Cookie、Token 为空，无法自动下订单。只发送通知提醒。");
-        await (0, tgpush_1.pushTGMsg)("活动已开始", do_utils_1.TGSender.escapeMk(`${addr}/blackfriday`), TAG);
+        await (0, tgpush_1.pushTGMsg)("活动已开始", `${addr}/blackfriday`, TAG);
         return;
     }
     if (Object.keys(data.__data.vps_data).length === 0) {
@@ -68,5 +68,5 @@ const order = async (cookie, token, vpsInfo) => {
 // 开始
 check().catch(err => {
     console.log(TAG, "抢购出错：", err);
-    (0, tgpush_1.pushTGMsg)("抢购出错", do_utils_1.TGSender.escapeMk(err), TAG);
+    (0, tgpush_1.pushTGMsg)("抢购出错", err, TAG);
 });

@@ -129,7 +129,7 @@ const printBeans = async (ck: string, day?: number) => {
 
   msg += `\n共 ${beans.size} 天，平均每天增加 ${Math.round(total / beans.size)} 个京豆\n`
   console.log("😊", msg)
-  await pushTGSign(TAG, "结果", TGSender.escapeMk(msg))
+  await pushTGSign(TAG, "结果", msg)
 }
 
 printBeans(process.env.JD_COOKIE || "").catch(err => {

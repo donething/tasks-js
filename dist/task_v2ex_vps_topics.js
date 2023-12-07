@@ -11,7 +11,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const topicsFile_1 = __importDefault(require("./utils/topicsFile"));
 const v2ex_1 = __importDefault(require("./utils/spider/v2ex/v2ex"));
 const tgpush_1 = require("./utils/tgpush");
-const do_utils_1 = require("do-utils");
 const TAG = "V2exVPS";
 // 任务信息
 const taskInfo = {
@@ -31,5 +30,5 @@ const taskInfo = {
 };
 (0, topicsFile_1.default)(taskInfo).catch(err => {
     console.log(TAG, "通知帖子出错：", err);
-    (0, tgpush_1.pushTGMsg)(`通知帖子出错`, do_utils_1.TGSender.escapeMk(err), TAG);
+    (0, tgpush_1.pushTGMsg)(`通知帖子出错`, err, TAG);
 });
