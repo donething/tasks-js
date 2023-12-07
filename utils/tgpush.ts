@@ -26,7 +26,7 @@ interface TGKeys {
 let tgKey: TGKeys = JSON.parse(process.env.TG_KEY || "{}")
 
 // 推送消息（可 Markdown 格式）
-const push = async (text: string, t: Token): Promise<boolean> => {
+const push = async (title: string, content: string, t: Token): Promise<boolean> => {
   if (!process.env.TG_KEY) {
     console.log("😢 无法推送 TG 消息，请先设置环境变量'TG_KEY'")
     return false
@@ -34,11 +34,11 @@ const push = async (text: string, t: Token): Promise<boolean> => {
 
   const tg = new TGSender(t.token)
 
-  const response = await tg.sendMessage(t.chatID, text)
+  const response = await tg.sendMessage(t.chatID, `${title}\n\n${content}`)
 
   if (!response.ok) {
-    console.log("😱 推送 TG 消息失败：", response.error_code, response.description, "：\n", text)
-    await pushTextMsg("推送 TG 消息失败", `${response.error_code}：${response.description}`)
+    console.log("😱 推送 TG 消息失败：", response.error_code, response.description, `\n\n${title}：\n${content}`)
+    await pushTextMsg("推送 TG 消息失败", `${response.error_code}：${response.description}\n\n"${title}"`)
     return false
   }
 
@@ -48,18 +48,23 @@ const push = async (text: string, t: Token): Promise<boolean> => {
 
 /**
  * 推送普通 TG 消息。需要自行转义 Markdown v2
- * @param title
- * @param content
- * @param tag
+ * @param title 标题。如 "京豆签到"
+ * @param content 消息
+ * @param tag 标签。用于 TG 中用井号分类。如 "jd"
  */
 export const pushTGMsg = async (title: string, content: string, tag = "") => {
-  return push((tag ? `\\#${tag} ` : "") + `${title}\n\n${content}`, tgKey.main)
+  const caption = (tag ? `\\#${TGSender.escapeMk(tag)} ` : "") + `${TGSender.escapeMk(title)}`
+  return push(caption, TGSender.escapeMk(content), tgKey.main)
 }
 
-// 推送新帖的 TG 消息
+/**
+ * 推送新帖的 TG 消息
+ * @param tag 标签。如 "v2ex"
+ * @param t 主题信息
+ */
 export const pushTGTopic = async (tag: string, t: Topic) => {
-  const str = `\\#${tag} 新帖\n\n*[${TGSender.escapeMk(t.title)}](${TGSender.escapeMk(t.url)})*\n\n\\#${TGSender.escapeMk(t.name)} \\#${TGSender.escapeMk(t.author|| "[作者未知]")} _${TGSender.escapeMk(t.pub || "[日期未知]")}_`
-  return push(str, tgKey.freshPost)
+  const topicStr = `*[${TGSender.escapeMk(t.title)}](${TGSender.escapeMk(t.url)})*\n\n\\#${TGSender.escapeMk(t.name)} \\#${TGSender.escapeMk(t.author || "[作者未知]")} _${TGSender.escapeMk(t.pub || "[日期未知]")}_`
+  return push(`\\#${TGSender.escapeMk(tag)} 新帖`, topicStr, tgKey.freshPost)
 }
 
 /**
@@ -69,5 +74,5 @@ export const pushTGTopic = async (tag: string, t: Topic) => {
  * @param tips 消息内容
  */
 export const pushTGSign = async (tag: string, result: string, tips: string) => {
-  return push(`\\#${tag} ${result}\n\n${tips}`, tgKey.signBot)
+  return push(`\\#${TGSender.escapeMk(tag)} ${TGSender.escapeMk(result)}`, TGSender.escapeMk(tips), tgKey.signBot)
 }
