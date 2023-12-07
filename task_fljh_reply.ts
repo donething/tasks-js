@@ -150,7 +150,7 @@ const reply = async (tid: string): Promise<Error | null> => {
     qaa = await getSecqaa(hashid)
   }
 
-   console.log(`🤨 提取帖子(${tid})的信息 formhash: ${formhash} , hashid: ${hashid} , qaa: ${qaa}`)
+  !isQL && console.log(`🤨 提取帖子(${tid})的信息 formhash: ${formhash} , hashid: ${hashid} , qaa: ${qaa}`)
 
   // 回复
   const replyHeaders = {
@@ -162,7 +162,7 @@ const reply = async (tid: string): Promise<Error | null> => {
   const replyURL = `${addr}/forum.php?mod=post&action=reply&replysubmit=yes&handlekey=fastpost&inajax=1&tid=${tid}`
   const now = parseInt("" + Date.now() / 1000)
   const body = `message=${content}&secqaahash=${hashid}&secanswer=${qaa}&posttime=${now}&formhash=${formhash}&usesig=1&subject=`
-  const replyResp = await mAxios.post(replyURL, {body, headers: replyHeaders})
+  const replyResp = await mAxios.post(replyURL, body, {headers: replyHeaders})
   const replyText: string = await replyResp.data
 
   // 解析响应
