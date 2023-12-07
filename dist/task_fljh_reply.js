@@ -76,7 +76,7 @@ const start = async (cookie) => {
         // 其它错误
         if (err) {
             console.log(`😱 回帖出错，帖子ID ${t.tid}：\n\n`, err);
-            await (0, tgpush_1.pushTGMsg)("回帖出错", err.message, TAG);
+            await (0, tgpush_1.pushTGMsg)(`回帖出错，帖子ID ${t.tid}`, err.message, TAG);
             // 退出回帖，不用 return ，要保存数据
             break;
         }
@@ -122,7 +122,7 @@ const reply = async (tid) => {
         // 获取验证回答
         qaa = await getSecqaa(hashid);
     }
-    !utils_1.isQL && console.log(`🤨 提取帖子(${tid})的信息 formhash: ${formhash} , hashid: ${hashid} , qaa: ${qaa}`);
+    console.log(`🤨 提取帖子(${tid})的信息 formhash: ${formhash} , hashid: ${hashid} , qaa: ${qaa}`);
     // 回复
     const replyHeaders = {
         "origin": addr,
@@ -132,7 +132,7 @@ const reply = async (tid) => {
     };
     const replyURL = `${addr}/forum.php?mod=post&action=reply&replysubmit=yes&handlekey=fastpost&inajax=1&tid=${tid}`;
     const now = parseInt("" + Date.now() / 1000);
-    const body = `message=${content}&secqaahash=${hashid}&secanswer=${qaa}&posttime=${now}&formhash=${formhash}&usesig=1&subject=++`;
+    const body = `message=${content}&secqaahash=${hashid}&secanswer=${qaa}&posttime=${now}&formhash=${formhash}&usesig=1&subject=`;
     const replyResp = await http_1.mAxios.post(replyURL, { body, headers: replyHeaders });
     const replyText = await replyResp.data;
     // 解析响应
