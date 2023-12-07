@@ -25,7 +25,7 @@ interface TGKeys {
 // TG 消息的键
 let tgKey: TGKeys = JSON.parse(process.env.TG_KEY || "{}")
 
-// 推送消息（可 Markdown 格式）
+// 推送消息。需要自行转义 Markdown v2
 const push = async (title: string, content: string, t: Token): Promise<boolean> => {
   if (!process.env.TG_KEY) {
     console.log("😢 无法推送 TG 消息，请先设置环境变量'TG_KEY'")
@@ -42,12 +42,12 @@ const push = async (title: string, content: string, t: Token): Promise<boolean> 
     return false
   }
 
-  console.log("😊 推送 TG 消息成功")
+  console.log(`😊 推送 TG 消息成功："${title}"`)
   return true
 }
 
 /**
- * 推送普通 TG 消息。需要自行转义 Markdown v2
+ * 推送普通 TG 消息
  * @param title 标题。如 "京豆签到"
  * @param content 消息
  * @param tag 标签。用于 TG 中用井号分类。如 "jd"

@@ -3,16 +3,16 @@
  */
 
 import puppeteer, {Page} from "puppeteer-core"
-import {evalText, PupOptions, waitForNavNoThrow} from "../base/puppeteer"
+import {evalText, PupOptions, waitForNavNoThrow} from "../base/puppeteer/puppeteer"
 import {pushTGSign} from "../../tgpush"
 import {envTip} from "../base/comm"
-import {TGSender, typeError} from "do-utils"
+import {sleep, TGSender, typeError} from "do-utils"
 
 export const TAG = "hostloc"
 
 // 需要访问空间的用户 uid
 const uids = ["66244", "61525", "62920", "61253", "62278", "29148",
-  "62445", "59122", "24752", "6382", "65872", "62181"]
+  "62445", "59122", "24752", "32049", "65872", "62181"]
 // 访问空间有奖励的次数
 const SPACE_NUM = 10
 
@@ -120,6 +120,7 @@ const accessSpace = async (uid: string, page: Page): Promise<boolean> => {
   try {
     const selector = "div.pc_inner div#creditpromptdiv"
     await page.waitForSelector(selector)
+    await sleep(1000)
     const tip = await evalText(page, selector)
 
     // 成功访问空间

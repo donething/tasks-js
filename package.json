@@ -17,6 +17,7 @@
     "@types/xml2js": "^0.4.14",
     "axios": "^1.6.2",
     "axios-cookiejar-support": "^4.0.7",
+    "canvas": "^2.11.2",
     "chai": "^4.3.10",
     "cheerio": "^1.0.0-rc.12",
     "do-utils": "^1.0.87",

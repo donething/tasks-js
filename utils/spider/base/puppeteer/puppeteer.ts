@@ -1,5 +1,5 @@
 import {Page, PuppeteerLaunchOptions, PuppeteerLifeCycleEvent} from "puppeteer-core"
-import {isQL} from "../../utils"
+import {isQL} from "../../../utils"
 
 // Puppeteer 选项
 export const PupOptions: PuppeteerLaunchOptions = {
@@ -7,7 +7,7 @@ export const PupOptions: PuppeteerLaunchOptions = {
   executablePath: isQL ? "/usr/bin/chromium-browser" : "C:/Program Files/Google/Chrome/Application/chrome.exe",
   headless: isQL ? "new" : false,
   defaultViewport: {width: 1920, height: 1080},
-  args: ["--no-sandbox", "--disabled-setupid-sandbox"]
+  args: ["--no-sandbox", "--disabled-setupid-sandbox", "--start-maximized"]
 }
 
 /**
@@ -39,3 +39,4 @@ export const evalText = async (page: Page, selector: string): Promise<string> =>
 
   return text || ""
 }
+
