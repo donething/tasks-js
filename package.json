@@ -21,6 +21,7 @@
     "chai": "^4.3.10",
     "cheerio": "^1.0.0-rc.12",
     "do-utils": "^1.0.87",
+    "dotenv": "^16.3.1",
     "mocha": "^10.2.0",
     "puppeteer-core": "^21.5.2",
     "rss-parser": "^3.13.0",
