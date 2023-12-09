@@ -54,8 +54,9 @@ const startLocTask = async () => {
         }
     }
     // 消息
-    const spaceMsg = `未完成 访问空间的任务。只成功领取 ${spaceAward}/${SPACE_NUM} 次奖励`;
-    message += spaceAward >= SPACE_NUM ? "已完成 访问空间的任务" : spaceMsg;
+    const spaceMsg = spaceAward >= SPACE_NUM ? "已完成 访问空间的任务" :
+        `未完成 访问空间的任务。只成功领取 ${spaceAward}/${SPACE_NUM} 次奖励`;
+    message += spaceMsg;
     console.log("🤨", exports.TAG, spaceMsg);
     // 已完成所有任务，关闭浏览器
     await browser.close();
