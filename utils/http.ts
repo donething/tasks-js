@@ -35,7 +35,10 @@ const client = axios.create({
   // httpsAgent: isQL ? false : new HttpsCookieAgent({}),
 
   // 自动处理 Cookie
-  jar: new CookieJar()
+  jar: new CookieJar(),
+
+  // 超时
+  timeout: 6000
 })
 
 /**
