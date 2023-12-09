@@ -28,7 +28,7 @@ const client = axios_1.default.create({
     // 自动处理 Cookie
     jar: new tough_cookie_1.CookieJar(),
     // 超时
-    timeout: 6000
+    timeout: 5000
 });
 /**
  * axios 可自动处理 Cookie

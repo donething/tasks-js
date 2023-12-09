@@ -3,8 +3,9 @@
  */
 import {Topic, TopicTaskInfo} from "./spider/types"
 import {readJSON, writeJSON} from "./file"
-import {pushTGTopic} from "./tgpush"
 import {isQL} from "./utils"
+import pushWxMsg from "./wxpush"
+import {TAG} from "./comm"
 
 // 需要保存到文件的数据结构
 export interface TopicsFile {
@@ -56,7 +57,8 @@ const notifyTopics = async (taskInfo: TaskInfo) => {
       }
 
       console.log(`😊 通知新帖：`, t.title, "\n  ", t.url, "\n")
-      const ok = await pushTGTopic(taskInfo.tag, t)
+      // const ok = await pushTGTopic(taskInfo.tag, t)
+      const ok = await pushWxMsg(`${TAG} ${taskInfo.tag}`, t.title, t.url)
       if (!ok) {
         continue
       }

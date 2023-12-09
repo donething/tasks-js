@@ -3,10 +3,13 @@
  * 推送 TG 消息
  * 注意：在环境变量中添加键`TG_KEY`，值为"token,chatid"（以英文逗号分隔）
  */
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.pushTGSign = exports.pushTGTopic = exports.pushTGMsg = void 0;
-const wxpush_1 = require("./wxpush");
 const do_utils_1 = require("do-utils");
+const wxpush_1 = __importDefault(require("./wxpush"));
 // TG 消息的键
 let tgKey = JSON.parse(process.env.TG_KEY || "{}");
 // 推送消息。需要自行转义 Markdown v2
@@ -19,7 +22,7 @@ const push = async (title, content, t) => {
     const response = await tg.sendMessage(t.chatID, `${title}\n\n${content}`);
     if (!response.ok) {
         console.log("😱 推送 TG 消息失败：", response.error_code, response.description, `\n\n${title}：\n\n${content}`);
-        await (0, wxpush_1.pushTextMsg)("推送 TG 消息失败", `${response.error_code}：${response.description}\n\n"${title}"`);
+        await (0, wxpush_1.default)(`${response.error_code}：${response.description}\n\n"${title}"`, "推送 TG 消息失败");
         return false;
     }
     console.log(`😊 推送 TG 消息成功："${title}"`);

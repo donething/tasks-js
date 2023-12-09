@@ -38,7 +38,7 @@ const client = axios.create({
   jar: new CookieJar(),
 
   // 超时
-  timeout: 6000
+  timeout: 5000
 })
 
 /**

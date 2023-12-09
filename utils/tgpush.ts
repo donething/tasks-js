@@ -3,9 +3,9 @@
  * 注意：在环境变量中添加键`TG_KEY`，值为"token,chatid"（以英文逗号分隔）
  */
 
-import {pushTextMsg} from "./wxpush"
 import {TGSender} from "do-utils"
 import {Topic} from "./spider/types"
+import pushWxMsg from "./wxpush"
 
 interface Token {
   token: string
@@ -38,7 +38,7 @@ const push = async (title: string, content: string, t: Token): Promise<boolean> 
 
   if (!response.ok) {
     console.log("😱 推送 TG 消息失败：", response.error_code, response.description, `\n\n${title}：\n\n${content}`)
-    await pushTextMsg("推送 TG 消息失败", `${response.error_code}：${response.description}\n\n"${title}"`)
+    await pushWxMsg(`${response.error_code}：${response.description}\n\n"${title}"`, "推送 TG 消息失败")
     return false
   }
 

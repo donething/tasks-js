@@ -1,8 +1,12 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const file_1 = require("./file");
-const tgpush_1 = require("./tgpush");
 const utils_1 = require("./utils");
+const wxpush_1 = __importDefault(require("./wxpush"));
+const comm_1 = require("./comm");
 /**
  * 扫描并通知有关的新帖
  */
@@ -30,7 +34,8 @@ const notifyTopics = async (taskInfo) => {
                 continue;
             }
             console.log(`😊 通知新帖：`, t.title, "\n  ", t.url, "\n");
-            const ok = await (0, tgpush_1.pushTGTopic)(taskInfo.tag, t);
+            // const ok = await pushTGTopic(taskInfo.tag, t)
+            const ok = await (0, wxpush_1.default)(`${comm_1.TAG} ${taskInfo.tag}`, t.title, t.url);
             if (!ok) {
                 continue;
             }

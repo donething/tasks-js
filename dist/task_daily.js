@@ -17,7 +17,12 @@ const startTask = async () => {
     // 执行任务
     console.log("🤨", TAG, "开始执行");
     // 注意调用返回 Promise，而不是传递函数的引用，否则不会运行
-    await Promise.allSettled([(0, mteam_1.default)(), (0, award_1.default)()]);
+    const results = await Promise.allSettled([(0, mteam_1.default)(), (0, award_1.default)()]);
+    for (let result of results) {
+        if (result.status === "rejected") {
+            console.log("😱 执行失败：", result.reason);
+        }
+    }
     console.log("🤨", TAG, "已执行完毕");
 };
 startTask();
