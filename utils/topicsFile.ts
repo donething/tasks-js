@@ -68,7 +68,12 @@ const notifyTopics = async (taskInfo: TaskInfo) => {
   })
 
   // 等待所有任务执行完毕
-  await Promise.allSettled(tasks)
+  const results = await Promise.allSettled(tasks)
+  for (let result of results) {
+    if (result.status === "rejected") {
+      console.log("😱 执行失败：", result.reason)
+    }
+  }
 
   if (hadSend.length === 0) {
     console.log("🤨 本次没有发送相关的新帖")
