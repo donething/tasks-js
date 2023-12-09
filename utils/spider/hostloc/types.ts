@@ -32,15 +32,16 @@ export interface LocRSS {
 }
 
 // https://hostloc.mjj.sale/
-export interface LocSaleLJ{
-  new_data:LocSaleLJItem[][]
+export interface LocSaleLJ {
+  new_data: LocSaleLJItem[][]
 }
-export interface LocSaleLJItem  {
+
+export interface LocSaleLJItem {
   主题ID: string
   主题: string
   发布者: string
   发布者链接: string
   发布时间: string
-  主题内容: string[]
+  主题内容: string[] | string
   主题链接: string
 }

@@ -60,8 +60,9 @@ const parseLocSaleLJ = async () => {
     const data = resp.data.new_data[0];
     const topics = [];
     for (let item of data) {
-        const m = item.主题链接.match(tidReg);
+        const m = item.主题链接.match(/(?:thread-|tid=)(\d+)/i);
         if (!m || m.length <= 1) {
+            console.log(item);
             throw Error(`无法解析帖子的 ID: ${item.主题链接}`);
         }
         const tid = m[1];
@@ -69,7 +70,7 @@ const parseLocSaleLJ = async () => {
         const url = item.主题链接;
         const author = item.发布者;
         // xmlparser 将 description 解析到了 content 变量
-        const content = (0, comm_1.truncate4tg)(item.主题内容.join("\n"));
+        const content = (0, comm_1.truncate4tg)(typeof item.主题内容 === "string" ? item.主题内容 : item.主题内容.join("\n"));
         const dStr = item.发布时间.trim().replaceAll("\\", "");
         const d = dStr.substring(0, dStr.lastIndexOf(" "));
         const pub = (0, do_utils_1.date)(new Date(d), comm_1.TOPIC_TIME);

@@ -4,7 +4,7 @@
 
 import {Topic, UrlInfo} from "../types"
 import Parser from "rss-parser"
-import {Item, LocRSS, LocSaleLJ, LocSaleLJItem} from "./types"
+import {Item, LocRSS, LocSaleLJItem} from "./types"
 import {TOPIC_TIME, truncate4tg} from "../base/comm"
 import {date} from "do-utils"
 import {mAxios, UserAgents} from "../../http"
@@ -68,8 +68,9 @@ export const parseLocSaleLJ = async () => {
 
   const topics: Topic[] = []
   for (let item of data) {
-    const m = item.主题链接.match(tidReg)
+    const m = item.主题链接.match(/(?:thread-|tid=)(\d+)/i)
     if (!m || m.length <= 1) {
+      console.log(item)
       throw Error(`无法解析帖子的 ID: ${item.主题链接}`)
     }
 
@@ -78,7 +79,7 @@ export const parseLocSaleLJ = async () => {
     const url = item.主题链接
     const author = item.发布者
     // xmlparser 将 description 解析到了 content 变量
-    const content = truncate4tg(item.主题内容.join("\n"))
+    const content = truncate4tg(typeof item.主题内容 === "string" ? item.主题内容 : item.主题内容.join("\n"))
 
     const dStr = item.发布时间.trim().replaceAll("\\", "")
     const d = dStr.substring(0, dStr.lastIndexOf(" "))
