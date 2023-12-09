@@ -1,5 +1,7 @@
 import {expect} from "chai"
 import pushWxMsg from "../utils/wxpush"
+// 加载 .env 文件中的环境变量
+require('dotenv').config()
 
 describe('pushWxMsg function test', () => {
   it('pushWxMsg card should be true', async () => {
@@ -15,7 +17,7 @@ describe('pushWxMsg function test', () => {
   }).timeout(0)
 
   it('pushWxMsg markdown should be true', async () => {
-    const result = await pushWxMsg("Markdown 内容")
+    const result = await pushWxMsg("Markdown 内容：**标题**完成，显示_内容_")
     console.log(result)
     expect(result).to.true
   }).timeout(0)
