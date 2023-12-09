@@ -5,7 +5,7 @@ import {Topic, TopicTaskInfo} from "./spider/types"
 import {readJSON, writeJSON} from "./file"
 import {isQL} from "./utils"
 import pushWxMsg from "./wxpush"
-import {TAG} from "./comm"
+import {parseAxiosErr, TAG} from "./comm"
 
 // 需要保存到文件的数据结构
 export interface TopicsFile {
@@ -73,7 +73,7 @@ const notifyTopics = async (taskInfo: TaskInfo) => {
   const results = await Promise.allSettled(tasks)
   for (let result of results) {
     if (result.status === "rejected") {
-      console.log("😱 执行失败：", result.reason)
+      console.log("😱 执行失败：", parseAxiosErr(result.reason).message)
     }
   }
 

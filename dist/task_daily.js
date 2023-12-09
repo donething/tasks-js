@@ -11,6 +11,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // cron: 10 0 * * *
 const award_1 = __importDefault(require("./utils/spider/hostloc/award"));
 const mteam_1 = __importDefault(require("./utils/spider/mteam/mteam"));
+const comm_1 = require("./utils/comm");
 const TAG = "每日任务";
 // 开始每日任务
 const startTask = async () => {
@@ -20,7 +21,7 @@ const startTask = async () => {
     const results = await Promise.allSettled([(0, mteam_1.default)(), (0, award_1.default)()]);
     for (let result of results) {
         if (result.status === "rejected") {
-            console.log("😱 执行失败：", result.reason);
+            console.log("😱 执行失败：", (0, comm_1.parseAxiosErr)(result.reason).message);
         }
     }
     console.log("🤨", TAG, "已执行完毕");

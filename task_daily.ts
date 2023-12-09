@@ -8,6 +8,7 @@
 
 import startLocTask from "./utils/spider/hostloc/award"
 import startMtTask from "./utils/spider/mteam/mteam"
+import {parseAxiosErr} from "./utils/comm"
 
 const TAG = "每日任务"
 
@@ -20,7 +21,7 @@ const startTask = async () => {
   const results = await Promise.allSettled([startMtTask(), startLocTask()])
   for (let result of results) {
     if (result.status === "rejected") {
-      console.log("😱 执行失败：", result.reason)
+      console.log("😱 执行失败：", parseAxiosErr(result.reason).message)
     }
   }
 
