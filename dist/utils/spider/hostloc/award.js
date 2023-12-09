@@ -8,14 +8,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TAG = void 0;
 const puppeteer_core_1 = __importDefault(require("puppeteer-core"));
-const puppeteer_1 = require("../base/puppeteer");
+const puppeteer_1 = require("../base/puppeteer/puppeteer");
 const tgpush_1 = require("../../tgpush");
 const comm_1 = require("../base/comm");
 const do_utils_1 = require("do-utils");
 exports.TAG = "hostloc";
 // 需要访问空间的用户 uid
 const uids = ["66244", "61525", "62920", "61253", "62278", "29148",
-    "62445", "59122", "24752", "6382", "65872", "62181"];
+    "62445", "59122", "24752", "32049", "65872", "62181"];
 // 访问空间有奖励的次数
 const SPACE_NUM = 10;
 // 环境变量的键
@@ -97,6 +97,7 @@ const accessSpace = async (uid, page) => {
     try {
         const selector = "div.pc_inner div#creditpromptdiv";
         await page.waitForSelector(selector);
+        await (0, do_utils_1.sleep)(1000);
         const tip = await (0, puppeteer_1.evalText)(page, selector);
         // 成功访问空间
         if (tip.includes("访问别人空间")) {

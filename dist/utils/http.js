@@ -26,7 +26,9 @@ const client = axios_1.default.create({
     // axios-cookiejar-supporth 和 httpsAgent 冲突；而 换用 http-cookie-agent 会报上面`proxy`同样的的错误
     // httpsAgent: isQL ? false : new HttpsCookieAgent({}),
     // 自动处理 Cookie
-    jar: new tough_cookie_1.CookieJar()
+    jar: new tough_cookie_1.CookieJar(),
+    // 超时
+    timeout: 6000
 });
 /**
  * axios 可自动处理 Cookie

@@ -9,7 +9,7 @@ const wxpush_1 = require("./wxpush");
 const do_utils_1 = require("do-utils");
 // TG 消息的键
 let tgKey = JSON.parse(process.env.TG_KEY || "{}");
-// 推送消息（可 Markdown 格式）
+// 推送消息。需要自行转义 Markdown v2
 const push = async (title, content, t) => {
     if (!process.env.TG_KEY) {
         console.log("😢 无法推送 TG 消息，请先设置环境变量'TG_KEY'");
@@ -22,11 +22,11 @@ const push = async (title, content, t) => {
         await (0, wxpush_1.pushTextMsg)("推送 TG 消息失败", `${response.error_code}：${response.description}\n\n"${title}"`);
         return false;
     }
-    console.log("😊 推送 TG 消息成功");
+    console.log(`😊 推送 TG 消息成功："${title}"`);
     return true;
 };
 /**
- * 推送普通 TG 消息。需要自行转义 Markdown v2
+ * 推送普通 TG 消息
  * @param title 标题。如 "京豆签到"
  * @param content 消息
  * @param tag 标签。用于 TG 中用井号分类。如 "jd"

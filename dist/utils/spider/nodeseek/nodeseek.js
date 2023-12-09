@@ -11,7 +11,7 @@ const puppeteer_core_1 = __importDefault(require("puppeteer-core"));
 const rss_parser_1 = __importDefault(require("rss-parser"));
 const do_utils_1 = require("do-utils");
 const comm_1 = require("../base/comm");
-const puppeteer_1 = require("../base/puppeteer");
+const puppeteer_1 = require("../base/puppeteer/puppeteer");
 // 匹配 Rss 地址的正则
 const rssReg = /\.xml$/i;
 const name = "nodeseek";
