@@ -1,4 +1,4 @@
-// 帖子的信息
+// RSS 帖子的信息
 export interface Item {
   // 标题。如 "搭了个二级域名分发系统玩玩"
   title: string
@@ -29,4 +29,18 @@ export interface LocRSS {
     link: string;
   };
   items: Item[];
+}
+
+// https://hostloc.mjj.sale/
+export interface LocSaleLJ{
+  new_data:LocSaleLJItem[][]
+}
+export interface LocSaleLJItem  {
+  主题ID: string
+  主题: string
+  发布者: string
+  发布者链接: string
+  发布时间: string
+  主题内容: string[]
+  主题链接: string
 }

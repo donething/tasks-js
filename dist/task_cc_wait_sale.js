@@ -9,7 +9,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // new Env('CC有售')
 // cron: */10 * * * * *
 const topicsFile_1 = __importDefault(require("./utils/topicsFile"));
-const hostloc_1 = __importDefault(require("./utils/spider/hostloc/hostloc"));
+const hostloc_1 = require("./utils/spider/hostloc/hostloc");
 const nodeseek_1 = __importDefault(require("./utils/spider/nodeseek/nodeseek"));
 const tgpush_1 = require("./utils/tgpush");
 const TAG = "CC有售";
@@ -18,7 +18,7 @@ const taskInfo = {
     // 需要扫描帖子的网址及节点
     topicTaskInfos: [
         {
-            fun: hostloc_1.default,
+            fun: hostloc_1.parseLocSaleLJ,
             // VPS 综合讨论区
             node: "45"
         },

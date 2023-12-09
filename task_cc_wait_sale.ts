@@ -6,7 +6,7 @@
 // cron: */10 * * * * *
 
 import notifyTopics, {TaskInfo} from "./utils/topicsFile"
-import parseLocHtml from "./utils/spider/hostloc/hostloc"
+import {parseLocSaleLJ} from "./utils/spider/hostloc/hostloc"
 import parseNSRss from "./utils/spider/nodeseek/nodeseek"
 import {pushTGMsg} from "./utils/tgpush"
 
@@ -17,7 +17,7 @@ const taskInfo: TaskInfo = {
   // 需要扫描帖子的网址及节点
   topicTaskInfos: [
     {
-      fun: parseLocHtml,
+      fun: parseLocSaleLJ,
       // VPS 综合讨论区
       node: "45"
     },

@@ -6,7 +6,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.parseLocRss = void 0;
+exports.parseLocSaleLJ = exports.parseLocRss = void 0;
 const rss_parser_1 = __importDefault(require("rss-parser"));
 const comm_1 = require("../base/comm");
 const do_utils_1 = require("do-utils");
@@ -54,4 +54,28 @@ const parseLocHtml = async (fid = "") => {
     const info = { include: check, headers, name, selector, tidReg, url };
     return await (0, html_1.getHTMLTopics)(info);
 };
+// 解析 https://hostloc.mjj.sale/
+const parseLocSaleLJ = async () => {
+    const resp = await http_1.mAxios.get("https://hostloc.mjj.sale/");
+    const data = resp.data.new_data[0];
+    const topics = [];
+    for (let item of data) {
+        const m = item.主题链接.match(tidReg);
+        if (!m || m.length <= 1) {
+            throw Error(`无法解析帖子的 ID: ${item.主题链接}`);
+        }
+        const tid = m[1];
+        const title = item.主题;
+        const url = item.主题链接;
+        const author = item.发布者;
+        // xmlparser 将 description 解析到了 content 变量
+        const content = (0, comm_1.truncate4tg)(item.主题内容.join("\n"));
+        const dStr = item.发布时间.trim().replaceAll("\\", "");
+        const d = dStr.substring(0, dStr.lastIndexOf(" "));
+        const pub = (0, do_utils_1.date)(new Date(d), comm_1.TOPIC_TIME);
+        topics.push({ name, tid, title, url, author, content, pub });
+    }
+    return topics;
+};
+exports.parseLocSaleLJ = parseLocSaleLJ;
 exports.default = parseLocHtml;

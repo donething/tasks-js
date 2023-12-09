@@ -4,7 +4,7 @@
 
 import {Topic, UrlInfo} from "../types"
 import Parser from "rss-parser"
-import {Item, LocRSS} from "./types"
+import {Item, LocRSS, LocSaleLJ, LocSaleLJItem} from "./types"
 import {TOPIC_TIME, truncate4tg} from "../base/comm"
 import {date} from "do-utils"
 import {mAxios, UserAgents} from "../../http"
@@ -59,6 +59,35 @@ const parseLocHtml = async (fid = ""): Promise<Topic[]> => {
   const info: UrlInfo = {include: check, headers, name, selector, tidReg, url}
 
   return await getHTMLTopics(info)
+}
+
+// 解析 https://hostloc.mjj.sale/
+export const parseLocSaleLJ = async () => {
+  const resp = await mAxios.get("https://hostloc.mjj.sale/")
+  const data: LocSaleLJItem[] = resp.data.new_data[0]
+
+  const topics: Topic[] = []
+  for (let item of data) {
+    const m = item.主题链接.match(tidReg)
+    if (!m || m.length <= 1) {
+      throw Error(`无法解析帖子的 ID: ${item.主题链接}`)
+    }
+
+    const tid = m[1]
+    const title = item.主题
+    const url = item.主题链接
+    const author = item.发布者
+    // xmlparser 将 description 解析到了 content 变量
+    const content = truncate4tg(item.主题内容.join("\n"))
+
+    const dStr = item.发布时间.trim().replaceAll("\\", "")
+    const d = dStr.substring(0, dStr.lastIndexOf(" "))
+    const pub = date(new Date(d), TOPIC_TIME)
+
+    topics.push({name, tid, title, url, author, content, pub})
+  }
+
+  return topics
 }
 
 export default parseLocHtml
