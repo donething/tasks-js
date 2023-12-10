@@ -35,7 +35,7 @@ const notifyTopics = async (taskInfo) => {
             }
             console.log(`😊 通知新帖：`, t.title, "\n  ", t.url, "\n");
             // const ok = await pushTGTopic(taskInfo.tag, t)
-            const ok = await (0, wxpush_1.default)(`访问：\n\n<a href="${t.url}">${t.title}</a>`, `${taskInfo.tag} ${t.title}`);
+            const ok = await (0, wxpush_1.default)(`${t.title}\n\n${t.url}`, `${taskInfo.tag} ${t.title}`);
             if (!ok) {
                 continue;
             }
