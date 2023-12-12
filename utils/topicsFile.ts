@@ -73,7 +73,7 @@ const notifyTopics = async (taskInfo: TaskInfo) => {
   const results = await Promise.allSettled(tasks)
   for (let result of results) {
     if (result.status === "rejected") {
-      console.log("😱 执行失败：", parseAxiosErr(result.reason).message)
+      console.log("😱 执行失败：", parseAxiosErr(result.reason).message, result.reason)
     }
   }
 
