@@ -45,6 +45,7 @@ interface PushToken {
   token: string
   channels: {
     newTopics: string
+    notifiyCkecker: string
   }
 }
 

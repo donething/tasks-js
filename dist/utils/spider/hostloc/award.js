@@ -77,6 +77,7 @@ const login = async (username, password, page) => {
     const pcInnerElem = await page.$("div.pc_inner");
     if (pcInnerElem) {
         const text = await page.evaluate(el => el.textContent, pcInnerElem);
+        // 每天登录奖励的消息提示，不是登录失败
         if (text?.includes("每天登录")) {
             return true;
         }
