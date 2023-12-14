@@ -134,5 +134,5 @@ const printBeans = async (ck: string, day?: number) => {
 
 printBeans(process.env.JD_COOKIE || "").catch(err => {
   console.log(TAG, "获取出错：", err)
-  pushTGMsg(TypeError(err).message, "获取出错", TAG)
+  pushTGMsg("获取出错", TypeError(err).message, TAG)
 })
