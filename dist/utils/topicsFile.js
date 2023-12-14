@@ -1,12 +1,9 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const file_1 = require("./file");
 const utils_1 = require("./utils");
-const wxpush_1 = __importDefault(require("./wxpush"));
 const comm_1 = require("./comm");
+const bulletpush_1 = require("./bulletpush");
 /**
  * 扫描并通知有关的新帖
  */
@@ -35,7 +32,8 @@ const notifyTopics = async (taskInfo) => {
             }
             console.log(`😊 通知新帖：`, t.title, "\n  ", t.url, "\n");
             // const ok = await pushTGTopic(taskInfo.tag, t)
-            const ok = await (0, wxpush_1.default)(`${t.title}\n\n${t.url}`, `${taskInfo.tag} ${t.title}`);
+            // const ok = await pushWxMsg(`${t.title}\n\n${t.url}`, `${taskInfo.tag} ${t.title}`)
+            const ok = await (0, bulletpush_1.pushBulletTopic)(taskInfo.tag, t);
             if (!ok) {
                 continue;
             }
@@ -48,7 +46,7 @@ const notifyTopics = async (taskInfo) => {
     const results = await Promise.allSettled(tasks);
     for (let result of results) {
         if (result.status === "rejected") {
-            console.log("😱 执行失败：", (0, comm_1.parseAxiosErr)(result.reason).message);
+            console.log("😱 执行失败：", (0, comm_1.parseAxiosErr)(result.reason).message, result.reason);
         }
     }
     if (hadSend.length === 0) {

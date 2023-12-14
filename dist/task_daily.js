@@ -21,7 +21,7 @@ const startTask = async () => {
     const results = await Promise.allSettled([(0, mteam_1.default)(), (0, award_1.default)()]);
     for (let result of results) {
         if (result.status === "rejected") {
-            console.log("😱 执行失败：", (0, comm_1.parseAxiosErr)(result.reason).message);
+            console.log("😱 执行失败：", (0, comm_1.parseAxiosErr)(result.reason).message, result.reason);
         }
     }
     console.log("🤨", TAG, "已执行完毕");
