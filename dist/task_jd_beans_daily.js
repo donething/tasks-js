@@ -99,5 +99,5 @@ const printBeans = async (ck, day) => {
 };
 printBeans(process.env.JD_COOKIE || "").catch(err => {
     console.log(TAG, "获取出错：", err);
-    (0, tgpush_1.pushTGMsg)(do_utils_1.TGSender.escapeMk(err), "获取出错", TAG);
+    (0, tgpush_1.pushTGMsg)(TypeError(err).message, "获取出错", TAG);
 });
