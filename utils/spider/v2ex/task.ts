@@ -2,7 +2,7 @@
 import {mAxios} from "../../http"
 import {envTip} from "../base/comm"
 import {NotificationResp} from "./types"
-import {readJSON} from "../../file"
+import {readJSON, writeJSON} from "../../file"
 import {Result} from "../../types/result"
 
 export const TAG = "v2ex"
@@ -46,6 +46,13 @@ export const ckeckV2exNotifily = async (): Promise<Result<string>> => {
   }
 
   const index = data.result.findIndex(item => item.created > dbData.lastCkeckNo)
+  if (index === -1) {
+    return {tag: TAG, data: ""}
+  }
 
-  return {tag: TAG, data: index !== -1 ? "https://v2ex.com/notifications" : ""}
+  // 保存到文件
+  dbData.lastCkeckNo = data.result[index].created
+  writeJSON(dbPath, dbData)
+
+  return {tag: TAG, data: "https://v2ex.com/notifications"}
 }
