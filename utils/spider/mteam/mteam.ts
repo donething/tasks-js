@@ -4,9 +4,9 @@
  */
 
 import {mAxios, UserAgents} from "../../http"
-import {parseSetCookie, typeError} from "do-utils"
-import {pushTGSign} from "../../tgpush"
+import {parseSetCookie} from "do-utils"
 import {envTip} from "../base/comm"
+import {Result} from "../../types/result"
 
 const TAG = "mteam"
 
@@ -17,10 +17,10 @@ const loginUrl = `${addr}/takelogin.php`
 const ENV_KEY = "MT_USER_PWD"
 
 // 开始 馒头PT 的任务
-const startMtTask = async () => {
+const startMtTask = async (): Promise<Result<string>> => {
   if (!process.env[ENV_KEY]) {
     console.log("😢", TAG, envTip(ENV_KEY))
-    return
+    throw Error(`${TAG} ${envTip(ENV_KEY)}`)
   }
 
   console.log("🤨", TAG, "开始执行任务")
@@ -28,14 +28,7 @@ const startMtTask = async () => {
   const [username, password] = process.env[ENV_KEY].split("//")
 
   // 登录
-  try {
-    await login(username, password)
-  } catch (e) {
-    console.log("😱", TAG, "登录失败：", e)
-    await pushTGSign(TAG, "登录失败", `${typeError(e).message}`)
-
-    return
-  }
+  await login(username, password)
 
   console.log("😊", TAG, "登录成功")
 
@@ -46,7 +39,7 @@ const startMtTask = async () => {
   message += "已完成 每日访问的任务"
 
   // 完成任务
-  await pushTGSign(TAG, "每日任务", message)
+  return {tag: TAG, data: message}
 }
 
 // 登录

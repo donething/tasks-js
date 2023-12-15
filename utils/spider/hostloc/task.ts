@@ -2,11 +2,11 @@
  * 执行 hostloc 任务
  */
 
-import puppeteer, {Page} from "puppeteer-core"
-import {evalText, PupOptions, waitForNavNoThrow} from "../base/puppeteer/puppeteer"
-import {pushTGSign} from "../../tgpush"
+import {Page} from "puppeteer-core"
+import {evalText, waitForNavNoThrow} from "../base/puppeteer/puppeteer"
 import {envTip} from "../base/comm"
-import {sleep, TGSender, typeError} from "do-utils"
+import {sleep} from "do-utils"
+import {Result} from "../../types/result"
 
 export const TAG = "hostloc"
 
@@ -20,33 +20,18 @@ const SPACE_NUM = 10
 const ENV_KEY = "LOC_USER_PWD"
 
 // 执行 hostloc 的任务
-const startLocTask = async () => {
+const startLocTask = async (page: Page): Promise<Result<string>> => {
   if (!process.env[ENV_KEY]) {
     console.log("😢", TAG, envTip(ENV_KEY))
-    return
+    throw Error(`${TAG} ${envTip(ENV_KEY)}`)
   }
 
   const [username, password] = process.env[ENV_KEY].split("//")
 
-  // Launch the browser and open a new blank page
-  const browser = await puppeteer.launch(PupOptions)
-
-  const page = await browser.newPage()
-
-  page.setDefaultTimeout(5000)
-
   console.log("🤨", TAG, "开始执行任务")
 
   // 登录
-  try {
-    await login(username, password, page)
-  } catch (e) {
-    console.log("😱", TAG, "登录失败：", e)
-    await pushTGSign(TAG, "登录失败", TGSender.escapeMk(`${typeError(e).message}`))
-
-    await browser.close()
-    return
-  }
+  await login(username, password, page)
 
   console.log("😊", TAG, "登录成功")
 
@@ -68,10 +53,7 @@ const startLocTask = async () => {
   message += spaceMsg
   console.log("🤨", TAG, spaceMsg)
 
-  // 已完成所有任务，关闭浏览器
-  await browser.close()
-
-  await pushTGSign(TAG, "每日任务", TGSender.escapeMk(message))
+  return {tag: TAG, data: message}
 }
 
 // 登录
@@ -137,6 +119,26 @@ const accessSpace = async (uid: string, page: Page): Promise<boolean> => {
   }
 
   return false
+}
+
+// 检测是否有通知
+export const ckeckLocNotifily = async (page: Page): Promise<Result<boolean>> => {
+  if (!process.env[ENV_KEY]) {
+    console.log("😢", TAG, envTip(ENV_KEY))
+    throw Error(`${TAG} ${envTip(ENV_KEY)}`)
+  }
+
+  const [username, password] = process.env[ENV_KEY].split("//")
+
+  await login(username, password, page)
+
+  await page.goto("https://hostloc.com/")
+
+  await page.waitForSelector("a#myprompt")
+
+  const text = await evalText(page, "a#myprompt")
+
+  return {tag: TAG, data: text.includes("提醒(")}
 }
 
 export default startLocTask

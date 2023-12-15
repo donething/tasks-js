@@ -11,6 +11,6 @@ export const truncate4tg = (content: string) => {
 }
 
 // 在环境变量中增加变量的提示
-export const envTip = (keyName: string, split = "//"): string => {
-  return `先增加环境变量"${keyName}"，值用"${split}"来分隔。如"username${split}password"`
+export const envTip = (keyName: string): string => {
+  return `请先设置环境变量"${keyName}"`
 }

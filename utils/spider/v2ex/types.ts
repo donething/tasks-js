@@ -22,3 +22,31 @@ export interface V2RSS {
   id: string
   updated: string
 }
+
+
+// 最新通知的响应
+export interface NotificationResp {
+  success: boolean
+  message: string
+  result: Notification[]
+}
+
+export interface Notification {
+  // 消息 ID
+  id: number
+  // 发表回复的用户的 ID
+  member_id: number
+  // 收到消息提醒的用户 ID
+  for_member_id: number
+  // 含主题标题、链接等信息的 HTML 超链接
+  text: string
+  // 回复内容
+  payload: string
+  // 回复内容。推荐这个
+  payload_rendered: string
+  // 回复时间戳（秒）
+  created: number
+  member: {
+    username: string
+  }
+}

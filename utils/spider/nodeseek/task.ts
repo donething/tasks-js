@@ -3,6 +3,7 @@ import {envTip} from "../base/comm"
 import {evalText, PupOptions, waitForNavNoThrow} from "../base/puppeteer/puppeteer"
 import {SignResp} from "./types"
 import {sleep} from "do-utils"
+import {Result} from "../../types/result"
 
 export const TAG = "nodeseek"
 
@@ -13,7 +14,7 @@ const ENV_KEY = "NODESEEK_USER_PWD"
 const login = async (page: Page): Promise<boolean> => {
   if (!process.env[ENV_KEY]) {
     console.log("😢", TAG, envTip(ENV_KEY))
-    return false
+    throw Error(`${TAG} ${envTip(ENV_KEY)}`)
   }
 
   const [username, password] = process.env[ENV_KEY].split("//")
@@ -21,7 +22,7 @@ const login = async (page: Page): Promise<boolean> => {
   await page.goto("https://www.nodeseek.com/signIn.html")
 
   await sleep(15 * 1000)
-  while (true) {
+  for (let i = 0; i < 3; i++) {
     const iframe = await page.$('iframe')
     if (!iframe) {
       break
@@ -33,7 +34,7 @@ const login = async (page: Page): Promise<boolean> => {
     }
 
     await frame.click("input[type='checkbox']")
-    await sleep(15 * 1000)
+    await sleep(10 * 1000)
   }
 
   // 等待输入框出现后，输入用户名、密码后，点击“登录”
@@ -101,9 +102,9 @@ export const sign = async () => {
 }
 
 // 检测通知
-export const ckeckNotifily = async (page: Page): Promise<string> => {
+export const ckeckNodeSeekNotifily = async (page: Page): Promise<Result<boolean>> => {
   if (!(await login(page))) {
-    return ""
+    return {tag: TAG, data: false}
   }
 
   await page.goto("https://www.nodeseek.com/")
@@ -111,7 +112,8 @@ export const ckeckNotifily = async (page: Page): Promise<string> => {
   // 等待输入框出现后，输入用户名、密码后，点击“登录”
   await page.waitForSelector("div.user-card")
 
-  return await evalText(page, "div.user-card span.notify-count")
+  const count = await evalText(page, "div.user-card span.notify-count")
+  return {tag: TAG, data: !!count}
 }
 
 // 提取网页弹出的消息

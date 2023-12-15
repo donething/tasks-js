@@ -167,7 +167,7 @@ const login = async (page: Page, username: string, password: string): Promise<bo
 const startJDCookie = async () => {
   if (!process.env[ENV_KEY]) {
     console.log("😢", TAG, envTip(ENV_KEY))
-    return
+    throw Error(`${TAG} ${envTip(ENV_KEY)}`)
   }
 
   console.log("🤨", TAG, "开始执行任务")

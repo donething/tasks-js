@@ -148,7 +148,7 @@ const login = async (page, username, password) => {
 const startJDCookie = async () => {
     if (!process.env[ENV_KEY]) {
         console.log("😢", TAG, (0, comm_1.envTip)(ENV_KEY));
-        return;
+        throw Error(`${TAG} ${(0, comm_1.envTip)(ENV_KEY)}`);
     }
     console.log("🤨", TAG, "开始执行任务");
     const [username, password] = process.env[ENV_KEY].split("//");

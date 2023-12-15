@@ -6,7 +6,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const http_1 = require("../../http");
 const do_utils_1 = require("do-utils");
-const tgpush_1 = require("../../tgpush");
 const comm_1 = require("../base/comm");
 const TAG = "mteam";
 const addr = "https://kp.m-team.cc";
@@ -17,26 +16,19 @@ const ENV_KEY = "MT_USER_PWD";
 const startMtTask = async () => {
     if (!process.env[ENV_KEY]) {
         console.log("😢", TAG, (0, comm_1.envTip)(ENV_KEY));
-        return;
+        throw Error(`${TAG} ${(0, comm_1.envTip)(ENV_KEY)}`);
     }
     console.log("🤨", TAG, "开始执行任务");
     const [username, password] = process.env[ENV_KEY].split("//");
     // 登录
-    try {
-        await login(username, password);
-    }
-    catch (e) {
-        console.log("😱", TAG, "登录失败：", e);
-        await (0, tgpush_1.pushTGSign)(TAG, "登录失败", `${(0, do_utils_1.typeError)(e).message}`);
-        return;
-    }
+    await login(username, password);
     console.log("😊", TAG, "登录成功");
     // 完成任务发送的通知
     let message = "";
     // 每日登录，避免账号被清空
     message += "已完成 每日访问的任务";
     // 完成任务
-    await (0, tgpush_1.pushTGSign)(TAG, "每日任务", message);
+    return { tag: TAG, data: message };
 };
 // 登录
 // 当登录失败时，要获取 set-cookie 中的消息；成功时需要获取 set-cookie 设置的"tp"键值，再次请求时携带该 cookie

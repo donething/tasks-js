@@ -12,7 +12,7 @@ const truncate4tg = (content) => {
 };
 exports.truncate4tg = truncate4tg;
 // 在环境变量中增加变量的提示
-const envTip = (keyName, split = "//") => {
-    return `先增加环境变量"${keyName}"，值用"${split}"来分隔。如"username${split}password"`;
+const envTip = (keyName) => {
+    return `请先设置环境变量"${keyName}"`;
 };
 exports.envTip = envTip;
