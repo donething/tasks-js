@@ -13,6 +13,9 @@ declare module 'axios' {
   }
 }
 
+// 最大重试次数
+const MAX_RETRY = 3
+
 /**
  * axios 自定义的实例
  *
@@ -38,7 +41,35 @@ const client = axios.create({
   jar: new CookieJar(),
 
   // 超时
-  timeout: 5000
+  timeout: 3000
+})
+
+// 添加响应拦截器：增加超时时重试
+client.interceptors.response.use((response) => {
+  // 对响应数据做一些处理
+  return response
+}, (error) => {
+  // 处理响应错误
+  if (error.code === "ECONNABORTED" && error.message.toLowerCase().includes("timeout")) {
+    // 重试次数计数器
+    let retryCount = error.config.retryCount || 0
+
+    if (retryCount < MAX_RETRY) {
+      // 增加重试次数
+      retryCount++
+
+      // 更新请求配置
+      const config = {
+        ...error.config,
+        retryCount
+      }
+
+      // 重新发送请求
+      return client.request(config)
+    }
+  }
+
+  return Promise.reject(error)
 })
 
 /**

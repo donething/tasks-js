@@ -7,7 +7,6 @@
 
 import notifyTopics, {TaskInfo} from "./utils/topicsFile"
 import parseV2exRss from "./utils/spider/v2ex/v2ex"
-import {pushTGMsg} from "./utils/tgpush"
 
 const TAG = "V2exVPS"
 
@@ -31,8 +30,4 @@ const taskInfo: TaskInfo = {
   tag: TAG
 }
 
-notifyTopics(taskInfo).catch(e => {
-  const err = TypeError(e)
-  console.log(TAG, "通知新帖出错：", err.message, err.stack)
-  pushTGMsg(`通知新帖出错`, err.message, TAG)
-})
+notifyTopics(taskInfo)

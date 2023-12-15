@@ -4,6 +4,7 @@ const file_1 = require("./file");
 const utils_1 = require("./utils");
 const comm_1 = require("./comm");
 const bulletpush_1 = require("./bulletpush");
+const tgpush_1 = require("./tgpush");
 /**
  * 扫描并通知有关的新帖
  */
@@ -46,7 +47,9 @@ const notifyTopics = async (taskInfo) => {
     const results = await Promise.allSettled(tasks);
     for (let result of results) {
         if (result.status === "rejected") {
-            console.log("😱 执行失败：", (0, comm_1.parseAxiosErr)(result.reason).message, result.reason);
+            const err = (0, comm_1.parseAxiosErr)(result.reason);
+            console.log(`😱 执行失败 ${taskInfo.tag}`, err.message, err.stack);
+            (0, tgpush_1.pushTGMsg)(taskInfo.tag, err.message, "执行失败");
         }
     }
     if (hadSend.length === 0) {

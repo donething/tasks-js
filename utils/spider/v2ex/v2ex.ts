@@ -22,8 +22,7 @@ const parseV2exRss = async (): Promise<Topic[]> => {
   for (let item of rss.items) {
     const m = item.id.match(tidReg)
     if (!m || m.length <= 1) {
-      console.log(`无法解析帖子的 ID: '${item.id}'`)
-      return []
+      throw Error(`无法解析帖子的 ID: "${item.id}"`)
     }
 
     const tid = m[1]

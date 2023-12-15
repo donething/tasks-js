@@ -10,7 +10,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // cron: */2 * * * *
 const topicsFile_1 = __importDefault(require("./utils/topicsFile"));
 const v2ex_1 = __importDefault(require("./utils/spider/v2ex/v2ex"));
-const tgpush_1 = require("./utils/tgpush");
 const TAG = "V2exVPS";
 // 任务信息
 const taskInfo = {
@@ -28,8 +27,4 @@ const taskInfo = {
     // 发送通知时的提示文本
     tag: TAG
 };
-(0, topicsFile_1.default)(taskInfo).catch(e => {
-    const err = TypeError(e);
-    console.log(TAG, "通知新帖出错：", err.message, err.stack);
-    (0, tgpush_1.pushTGMsg)(`通知新帖出错`, err.message, TAG);
-});
+(0, topicsFile_1.default)(taskInfo);

@@ -6,6 +6,7 @@ import {readJSON, writeJSON} from "./file"
 import {isQL} from "./utils"
 import {parseAxiosErr} from "./comm"
 import {pushBulletTopic} from "./bulletpush"
+import {pushTGMsg} from "./tgpush"
 
 // 需要保存到文件的数据结构
 export interface TopicsFile {
@@ -74,7 +75,9 @@ const notifyTopics = async (taskInfo: TaskInfo) => {
   const results = await Promise.allSettled(tasks)
   for (let result of results) {
     if (result.status === "rejected") {
-      console.log("😱 执行失败：", parseAxiosErr(result.reason).message, result.reason)
+      const err = parseAxiosErr(result.reason)
+      console.log(`😱 执行失败 ${taskInfo.tag}`, err.message, err.stack)
+      pushTGMsg(taskInfo.tag, err.message, "执行失败")
     }
   }
 

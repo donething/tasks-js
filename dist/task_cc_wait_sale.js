@@ -11,7 +11,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const topicsFile_1 = __importDefault(require("./utils/topicsFile"));
 const hostloc_1 = require("./utils/spider/hostloc/hostloc");
 const nodeseek_1 = __importDefault(require("./utils/spider/nodeseek/nodeseek"));
-const tgpush_1 = require("./utils/tgpush");
 const TAG = "CC有售";
 // 任务信息
 const taskInfo = {
@@ -35,7 +34,4 @@ const taskInfo = {
     // 发送通知时的提示文本
     tag: TAG,
 };
-(0, topicsFile_1.default)(taskInfo).catch(err => {
-    console.log(TAG, "通知帖子出错：", err);
-    (0, tgpush_1.pushTGMsg)("通知帖子出错", err, TAG);
-});
+(0, topicsFile_1.default)(taskInfo);
