@@ -49,7 +49,7 @@ const notifyTopics = async (taskInfo) => {
         if (result.status === "rejected") {
             const err = (0, comm_1.parseAxiosErr)(result.reason);
             console.log(`😱 执行失败 ${taskInfo.tag}`, err.message, err.stack);
-            (0, tgpush_1.pushTGMsg)(taskInfo.tag, err.message, "执行失败");
+            (0, tgpush_1.pushTGMsg)("执行失败", err.message, taskInfo.tag);
         }
     }
     if (hadSend.length === 0) {

@@ -77,7 +77,7 @@ const notifyTopics = async (taskInfo: TaskInfo) => {
     if (result.status === "rejected") {
       const err = parseAxiosErr(result.reason)
       console.log(`😱 执行失败 ${taskInfo.tag}`, err.message, err.stack)
-      pushTGMsg(taskInfo.tag, err.message, "执行失败")
+      pushTGMsg("执行失败", err.message, taskInfo.tag)
     }
   }
 
