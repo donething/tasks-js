@@ -65,7 +65,13 @@ client.interceptors.response.use((response) => {
       }
 
       // 重新发送请求
-      return client.request(config)
+      // return client.request(config)
+      // 延迟1秒钟后重新发送请求
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(client.request(config))
+        }, 1000) // 1秒钟的延迟
+      })
     }
   }
 
