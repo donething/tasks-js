@@ -28,7 +28,8 @@ const taskInfo = {
     // 发送通知时的提示文本
     tag: TAG
 };
-(0, topicsFile_1.default)(taskInfo).catch(err => {
-    console.log(TAG, "通知帖子出错：", err);
-    (0, tgpush_1.pushTGMsg)(`通知帖子出错`, err, TAG);
+(0, topicsFile_1.default)(taskInfo).catch(e => {
+    const err = TypeError(e);
+    console.log(TAG, "通知新帖出错：", err.message, err.stack);
+    (0, tgpush_1.pushTGMsg)(`通知新帖出错`, err.message, TAG);
 });

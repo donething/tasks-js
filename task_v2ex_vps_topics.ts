@@ -31,7 +31,8 @@ const taskInfo: TaskInfo = {
   tag: TAG
 }
 
-notifyTopics(taskInfo).catch(err => {
-  console.log(TAG, "通知帖子出错：", err)
-  pushTGMsg(`通知帖子出错`, err, TAG)
+notifyTopics(taskInfo).catch(e => {
+  const err = TypeError(e)
+  console.log(TAG, "通知新帖出错：", err.message, err.stack)
+  pushTGMsg(`通知新帖出错`, err.message, TAG)
 })
