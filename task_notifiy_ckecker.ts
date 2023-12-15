@@ -36,7 +36,7 @@ const startCheck = async () => {
     if (result.status === "rejected") {
       const err = parseAxiosErr(result.reason)
       console.log("😱 执行失败：", err.message, err.stack)
-      pushTGMsg(TAG, err.message, "执行失败")
+      pushTGMsg("执行失败", err.message, TAG)
       continue
     }
 

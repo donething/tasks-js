@@ -31,7 +31,7 @@ const startCheck = async () => {
         if (result.status === "rejected") {
             const err = (0, comm_1.parseAxiosErr)(result.reason);
             console.log("😱 执行失败：", err.message, err.stack);
-            (0, tgpush_1.pushTGMsg)(TAG, err.message, "执行失败");
+            (0, tgpush_1.pushTGMsg)("执行失败", err.message, TAG);
             continue;
         }
         // 根据 data 判断是否有新通知
