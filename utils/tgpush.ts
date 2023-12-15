@@ -68,11 +68,11 @@ export const pushTGTopic = async (tag: string, t: Topic) => {
 }
 
 /**
- * 推送每日签到的 TG 消息。需要自行转义 Markdown v2
+ * 推送每日任务执行结果的 TG 消息。需要自行转义 Markdown v2
  * @param tag 标签。如 "daily"
  * @param result 成功或失败。如 "签到失败"
  * @param tips 消息内容
  */
-export const pushTGSign = async (tag: string, result: string, tips: string) => {
+export const pushTGDaily = async (tag: string, result: string, tips: string) => {
   return push(`\\#${TGSender.escapeMk(tag)} ${TGSender.escapeMk(result)}`, TGSender.escapeMk(tips), tgKey.signBot)
 }

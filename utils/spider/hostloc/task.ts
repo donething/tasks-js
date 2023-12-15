@@ -81,14 +81,14 @@ const login = async (username: string, password: string, page: Page): Promise<bo
       return true
     }
 
-    throw new Error(`检查到未处理的提示文本：\n${text}`)
+    throw Error(`${TAG} 检查到未处理的提示文本：\n${text}`)
   }
 
   // 可能登录成功
   // 获取用户名的元素来验证
   const name = await evalText(page, "div#um p strong a")
   if (name !== username) {
-    throw Error("解析的用户名和登录的用户名不匹配")
+    throw Error(`${TAG} 解析的用户名和登录的用户名不匹配`)
   }
 
   // 登录成功
@@ -122,7 +122,7 @@ const accessSpace = async (uid: string, page: Page): Promise<boolean> => {
 }
 
 // 检测是否有通知
-export const ckeckLocNotifily = async (page: Page): Promise<Result<boolean>> => {
+export const ckeckLocNotifily = async (page: Page): Promise<Result<string>> => {
   if (!process.env[ENV_KEY]) {
     console.log("😢", TAG, envTip(ENV_KEY))
     throw Error(`${TAG} ${envTip(ENV_KEY)}`)
@@ -138,7 +138,7 @@ export const ckeckLocNotifily = async (page: Page): Promise<Result<boolean>> => 
 
   const text = await evalText(page, "a#myprompt")
 
-  return {tag: TAG, data: text.includes("提醒(")}
+  return {tag: TAG, data: text.includes("提醒(") ? "https://hostloc.com/home.php?mod=space&do=notice" : ""}
 }
 
 export default startLocTask

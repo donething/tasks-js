@@ -7,7 +7,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.pushTGSign = exports.pushTGTopic = exports.pushTGMsg = void 0;
+exports.pushTGDaily = exports.pushTGTopic = exports.pushTGMsg = void 0;
 const do_utils_1 = require("do-utils");
 const wxpush_1 = __importDefault(require("./wxpush"));
 // TG 消息的键
@@ -50,12 +50,12 @@ const pushTGTopic = async (tag, t) => {
 };
 exports.pushTGTopic = pushTGTopic;
 /**
- * 推送每日签到的 TG 消息。需要自行转义 Markdown v2
+ * 推送每日任务执行结果的 TG 消息。需要自行转义 Markdown v2
  * @param tag 标签。如 "daily"
  * @param result 成功或失败。如 "签到失败"
  * @param tips 消息内容
  */
-const pushTGSign = async (tag, result, tips) => {
+const pushTGDaily = async (tag, result, tips) => {
     return push(`\\#${do_utils_1.TGSender.escapeMk(tag)} ${do_utils_1.TGSender.escapeMk(result)}`, do_utils_1.TGSender.escapeMk(tips), tgKey.signBot);
 };
-exports.pushTGSign = pushTGSign;
+exports.pushTGDaily = pushTGDaily;

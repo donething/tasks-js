@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.pushBulletTopic = void 0;
+exports.pushBulletNotify = exports.pushBulletTopic = void 0;
 const http_1 = require("./http");
 const wxpush_1 = __importDefault(require("./wxpush"));
 const TAG = "pushbullet";
@@ -49,4 +49,9 @@ const pushBulletTopic = async (tag, t) => {
     return pushBullet(`[${tag}] ${t.title}`, t.content, t.url, pushToken.channels.newTopics);
 };
 exports.pushBulletTopic = pushBulletTopic;
+// 推送站内通知
+const pushBulletNotify = async (tag, title, url) => {
+    return pushBullet(`[${tag}] ${title}`, "有新通知，点击查看", url, pushToken.channels.newNotifications);
+};
+exports.pushBulletNotify = pushBulletNotify;
 exports.default = pushBullet;

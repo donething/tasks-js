@@ -62,7 +62,7 @@ const login = async (username: string, password: string): Promise<boolean> => {
   const setCookies = resp.headers["set-cookie"]
 
   if (!setCookies) {
-    throw Error("响应头中没有'set-cookie'值")
+    throw Error(`${TAG} 响应头中没有'set-cookie'值`)
   }
 
   // 登录失败时，消息会通过响应 set-cookie 中的字段 flash_msg 显示
@@ -78,7 +78,7 @@ const login = async (username: string, password: string): Promise<boolean> => {
   // 不包括用户名，登录失败
   if (!text.includes(username)) {
     console.log(TAG, "其它原因：\n", text)
-    throw Error("其它原因")
+    throw Error(`${TAG} 其它原因`)
   }
 
   // 登录成功

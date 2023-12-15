@@ -12,8 +12,11 @@ const puppeteer_1 = require("./utils/spider/base/puppeteer/puppeteer");
 const comm_1 = require("./utils/comm");
 const task_1 = require("./utils/spider/hostloc/task");
 const task_2 = require("./utils/spider/v2ex/task");
+const tgpush_1 = require("./utils/tgpush");
+const bulletpush_1 = require("./utils/bulletpush");
 // new Env('站内通知检测')
 // cron: */1 * * * *
+const TAG = "站内通知";
 // 执行检测
 const startCheck = async () => {
     // Launch the browser and open a new blank page
@@ -28,10 +31,18 @@ const startCheck = async () => {
         if (result.status === "rejected") {
             const err = (0, comm_1.parseAxiosErr)(result.reason);
             console.log("😱 执行失败：", err.message, err.stack);
+            (0, tgpush_1.pushTGMsg)(TAG, err.message, "执行失败");
             continue;
         }
         console.log("执行结果：", result.value.tag, result.value.data);
+        if (result.value.data) {
+            (0, bulletpush_1.pushBulletNotify)(TAG, result.value.tag, result.value.data);
+        }
+        else {
+            console.log(TAG, result.value.tag, "没有新通知");
+        }
     }
+    console.log("🤨", TAG, "已执行完毕");
     await browser.close();
 };
 startCheck();

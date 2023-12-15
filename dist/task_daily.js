@@ -14,6 +14,7 @@ const mteam_1 = __importDefault(require("./utils/spider/mteam/mteam"));
 const comm_1 = require("./utils/comm");
 const puppeteer_core_1 = __importDefault(require("puppeteer-core"));
 const puppeteer_1 = require("./utils/spider/base/puppeteer/puppeteer");
+const tgpush_1 = require("./utils/tgpush");
 const TAG = "每日任务";
 // 开始每日任务
 const startTask = async () => {
@@ -29,9 +30,11 @@ const startTask = async () => {
         if (result.status === "rejected") {
             const err = (0, comm_1.parseAxiosErr)(result.reason);
             console.log("😱 执行失败：", err.message, err.stack);
+            (0, tgpush_1.pushTGDaily)(TAG, "执行失败", err.message);
             continue;
         }
         console.log("🤨 执行结果：", result.value.tag, result.value.data);
+        (0, tgpush_1.pushTGDaily)(TAG, `${result.value.tag} 执行完成`, result.value.data);
     }
     console.log("🤨", TAG, "已执行完毕");
     await browser.close();

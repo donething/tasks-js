@@ -45,7 +45,7 @@ interface PushToken {
   token: string
   channels: {
     newTopics: string
-    notifiyCkecker: string
+    newNotifications: string
   }
 }
 
@@ -96,6 +96,11 @@ const pushBullet = async (title: string, body: string, url?: string, channel_tag
 // 推送新帖
 export const pushBulletTopic = async (tag: string, t: Topic) => {
   return pushBullet(`[${tag}] ${t.title}`, t.content, t.url, pushToken.channels.newTopics)
+}
+
+// 推送站内通知
+export const pushBulletNotify = async (tag: string, title: string, url: string) => {
+  return pushBullet(`[${tag}] ${title}`, "有新通知，点击查看", url, pushToken.channels.newNotifications)
 }
 
 export default pushBullet

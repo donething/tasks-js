@@ -85,13 +85,13 @@ exports.sign = sign;
 // 检测通知
 const ckeckNodeSeekNotifily = async (page) => {
     if (!(await login(page))) {
-        return { tag: exports.TAG, data: false };
+        return { tag: exports.TAG, data: "" };
     }
     await page.goto("https://www.nodeseek.com/");
     // 等待输入框出现后，输入用户名、密码后，点击“登录”
     await page.waitForSelector("div.user-card");
     const count = await (0, puppeteer_1.evalText)(page, "div.user-card span.notify-count");
-    return { tag: exports.TAG, data: !!count };
+    return { tag: exports.TAG, data: !!count ? "https://www.nodeseek.com/notification" : "" };
 };
 exports.ckeckNodeSeekNotifily = ckeckNodeSeekNotifily;
 // 提取网页弹出的消息

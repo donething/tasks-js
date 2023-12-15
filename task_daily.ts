@@ -11,6 +11,7 @@ import startMtTask from "./utils/spider/mteam/mteam"
 import {parseAxiosErr} from "./utils/comm"
 import puppeteer from "puppeteer-core"
 import {PupOptions} from "./utils/spider/base/puppeteer/puppeteer"
+import {pushTGDaily} from "./utils/tgpush"
 
 const TAG = "每日任务"
 
@@ -32,10 +33,12 @@ const startTask = async () => {
     if (result.status === "rejected") {
       const err = parseAxiosErr(result.reason)
       console.log("😱 执行失败：", err.message, err.stack)
+      pushTGDaily(TAG, "执行失败", err.message)
       continue
     }
 
     console.log("🤨 执行结果：", result.value.tag, result.value.data)
+    pushTGDaily(TAG, `${result.value.tag} 执行完成`, result.value.data)
   }
 
   console.log("🤨", TAG, "已执行完毕")

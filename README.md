@@ -21,7 +21,7 @@
 因为拉取后会改变任务和依赖脚本的相对路径，需要在面板`拉取后执行的命令`输入框中，增加命令：
 
 ```shell
-mv -f /相对路径/utils/* .
+rm -rf /ql/data/scripts/donething_tasks-js/utils && mv /ql/data/scripts/donething_tasks-js/dist/utils  /ql/data/scripts/donething_tasks-js/
 ```
 
 # 配置
@@ -70,6 +70,7 @@ mv -f /相对路径/utils/* .
 // cron: 51 5 * * *
 
 console.log("测试！")
+
 ```
 
 ## 测试
@@ -98,9 +99,13 @@ ts-node .\tasks\discfan.ts
 
 # 每日任务的原则
 
-## 每个任务单独推送消息
+## 具体任务可直接抛出错误
 
-虽然在一个文件`task_daily.ts`中调用所有`每日任务`，但所有任务分开处理异常，分开推送消息
+如登录功能，各步骤没有满足都可以抛出错误
+
+某个任务执行完后可以返回`Result<T>`，以供调用出打印信息
+
+然后在调用时用`Promise.allSettled`执行，如在一个文件`task_daily.ts`中调用所有`每日任务`，用 `for`遍历结果，推送消息
 
 ## 打印日志、抛出错误
 

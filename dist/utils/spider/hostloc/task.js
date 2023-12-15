@@ -62,13 +62,13 @@ const login = async (username, password, page) => {
         if (text?.includes("每天登录")) {
             return true;
         }
-        throw new Error(`检查到未处理的提示文本：\n${text}`);
+        throw Error(`${exports.TAG} 检查到未处理的提示文本：\n${text}`);
     }
     // 可能登录成功
     // 获取用户名的元素来验证
     const name = await (0, puppeteer_1.evalText)(page, "div#um p strong a");
     if (name !== username) {
-        throw Error("解析的用户名和登录的用户名不匹配");
+        throw Error(`${exports.TAG} 解析的用户名和登录的用户名不匹配`);
     }
     // 登录成功
     return true;
@@ -105,7 +105,7 @@ const ckeckLocNotifily = async (page) => {
     await page.goto("https://hostloc.com/");
     await page.waitForSelector("a#myprompt");
     const text = await (0, puppeteer_1.evalText)(page, "a#myprompt");
-    return { tag: exports.TAG, data: text.includes("提醒(") };
+    return { tag: exports.TAG, data: text.includes("提醒(") ? "https://hostloc.com/home.php?mod=space&do=notice" : "" };
 };
 exports.ckeckLocNotifily = ckeckLocNotifily;
 exports.default = startLocTask;

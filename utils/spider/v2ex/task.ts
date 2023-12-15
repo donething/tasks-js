@@ -25,7 +25,7 @@ type Data = {
 }
 
 // 检测是否有通知
-export const ckeckV2exNotifily = async (): Promise<Result<boolean>> => {
+export const ckeckV2exNotifily = async (): Promise<Result<string>> => {
   if (!process.env[ENV_KEY]) {
     console.log("😢", TAG, envTip(ENV_KEY))
     throw Error(`${TAG} ${envTip(ENV_KEY)}`)
@@ -47,5 +47,5 @@ export const ckeckV2exNotifily = async (): Promise<Result<boolean>> => {
 
   const index = data.result.findIndex(item => item.created > dbData.lastCkeckNo)
 
-  return {tag: TAG, data: index !== -1}
+  return {tag: TAG, data: index !== -1 ? "https://v2ex.com/notifications" : ""}
 }

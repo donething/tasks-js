@@ -102,9 +102,9 @@ export const sign = async () => {
 }
 
 // 检测通知
-export const ckeckNodeSeekNotifily = async (page: Page): Promise<Result<boolean>> => {
+export const ckeckNodeSeekNotifily = async (page: Page): Promise<Result<string>> => {
   if (!(await login(page))) {
-    return {tag: TAG, data: false}
+    return {tag: TAG, data: ""}
   }
 
   await page.goto("https://www.nodeseek.com/")
@@ -113,7 +113,8 @@ export const ckeckNodeSeekNotifily = async (page: Page): Promise<Result<boolean>
   await page.waitForSelector("div.user-card")
 
   const count = await evalText(page, "div.user-card span.notify-count")
-  return {tag: TAG, data: !!count}
+
+  return {tag: TAG, data: !!count ? "https://www.nodeseek.com/notification" : ""}
 }
 
 // 提取网页弹出的消息

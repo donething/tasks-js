@@ -32,6 +32,6 @@ const ckeckV2exNotifily = async () => {
         dbData.lastCkeckNo = 0;
     }
     const index = data.result.findIndex(item => item.created > dbData.lastCkeckNo);
-    return { tag: exports.TAG, data: index !== -1 };
+    return { tag: exports.TAG, data: index !== -1 ? "https://v2ex.com/notifications" : "" };
 };
 exports.ckeckV2exNotifily = ckeckV2exNotifily;

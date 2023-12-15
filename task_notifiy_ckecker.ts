@@ -8,9 +8,13 @@ import {PupOptions} from "./utils/spider/base/puppeteer/puppeteer"
 import {parseAxiosErr} from "./utils/comm"
 import {ckeckLocNotifily} from "./utils/spider/hostloc/task"
 import {ckeckV2exNotifily} from "./utils/spider/v2ex/task"
+import {pushTGMsg} from "./utils/tgpush"
+import {pushBulletNotify} from "./utils/bulletpush"
 
 // new Env('站内通知检测')
 // cron: */1 * * * *
+
+const TAG = "站内通知"
 
 // 执行检测
 const startCheck = async () => {
@@ -32,11 +36,19 @@ const startCheck = async () => {
     if (result.status === "rejected") {
       const err = parseAxiosErr(result.reason)
       console.log("😱 执行失败：", err.message, err.stack)
+      pushTGMsg(TAG, err.message, "执行失败")
       continue
     }
 
     console.log("执行结果：", result.value.tag, result.value.data)
+    if (result.value.data) {
+      pushBulletNotify(TAG, result.value.tag, result.value.data)
+    } else {
+      console.log(TAG, result.value.tag, "没有新通知")
+    }
   }
+
+  console.log("🤨", TAG, "已执行完毕")
 
   await browser.close()
 }
