@@ -12,7 +12,7 @@ import {pushTGMsg} from "./utils/tgpush"
 import {pushBulletNotify} from "./utils/bulletpush"
 
 // new Env('站内通知检测')
-// cron: */1 * * * *
+// cron: */3 * * * *
 
 const TAG = "站内通知"
 
@@ -40,11 +40,12 @@ const startCheck = async () => {
       continue
     }
 
-    console.log("执行结果：", result.value.tag, result.value.data)
+    // 根据 data 判断是否有新通知
     if (result.value.data) {
+      console.log("😊 有新通知", result.value.tag, result.value.data)
       pushBulletNotify(TAG, result.value.tag, result.value.data)
     } else {
-      console.log(TAG, result.value.tag, "没有新通知")
+      console.log("😪", TAG, result.value.tag, "没有新通知")
     }
   }
 

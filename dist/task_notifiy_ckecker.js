@@ -15,7 +15,7 @@ const task_2 = require("./utils/spider/v2ex/task");
 const tgpush_1 = require("./utils/tgpush");
 const bulletpush_1 = require("./utils/bulletpush");
 // new Env('站内通知检测')
-// cron: */1 * * * *
+// cron: */3 * * * *
 const TAG = "站内通知";
 // 执行检测
 const startCheck = async () => {
@@ -34,12 +34,13 @@ const startCheck = async () => {
             (0, tgpush_1.pushTGMsg)(TAG, err.message, "执行失败");
             continue;
         }
-        console.log("执行结果：", result.value.tag, result.value.data);
+        // 根据 data 判断是否有新通知
         if (result.value.data) {
+            console.log("😊 有新通知", result.value.tag, result.value.data);
             (0, bulletpush_1.pushBulletNotify)(TAG, result.value.tag, result.value.data);
         }
         else {
-            console.log(TAG, result.value.tag, "没有新通知");
+            console.log("😪", TAG, result.value.tag, "没有新通知");
         }
     }
     console.log("🤨", TAG, "已执行完毕");
