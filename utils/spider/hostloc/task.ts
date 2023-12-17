@@ -7,7 +7,7 @@ import {evalText, waitForNavNoThrow} from "../base/puppeteer/puppeteer"
 import {envTip} from "../base/comm"
 import {sleep} from "do-utils"
 import {Result} from "../../types/result"
-import {RetPayload, RetTag} from "../../../task_notifiy_ckecker"
+import {RetPayload, RetTag} from "../../../task_notify_ckecker"
 
 export const TAG = "hostloc"
 

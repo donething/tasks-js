@@ -18,7 +18,7 @@ import {readJSON, writeJSON} from "./utils/file"
 const TAG = "站内通知"
 
 // 保存上次检测的的时间戳，避免重复通知
-const dbPath = "./db/notifiy_ckecker.json"
+const dbPath = "./db/notify_ckecker.json"
 
 // 任务返回时的 tag 类型
 export type RetTag = "v2ex" | "hostloc" | "nodeseek"
