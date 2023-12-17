@@ -8,7 +8,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 // new Env('CC有售')
 // cron: */10 * * * * *
-const topicsFile_1 = __importDefault(require("./utils/topicsFile"));
+const notify_1 = __importDefault(require("./utils/notify"));
 const hostloc_1 = require("./utils/spider/hostloc/hostloc");
 const nodeseek_1 = __importDefault(require("./utils/spider/nodeseek/nodeseek"));
 const TAG = "CC有售";
@@ -34,4 +34,4 @@ const taskInfo = {
     // 发送通知时的提示文本
     tag: TAG,
 };
-(0, topicsFile_1.default)(taskInfo);
+(0, notify_1.default)(taskInfo);

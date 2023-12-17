@@ -8,11 +8,16 @@ const fs_1 = __importDefault(require("fs"));
 /**
  * 读取文件内容为 JSON
  */
-const readJSON = (path) => {
+const readJSON = (path, defautl) => {
+    const tmp = defautl || {};
     if (!fs_1.default.existsSync(path)) {
-        return {};
+        return tmp;
     }
-    return JSON.parse(fs_1.default.readFileSync(path).toString() || "{}");
+    const text = fs_1.default.readFileSync(path);
+    if (!text) {
+        return tmp;
+    }
+    return JSON.parse(text.toString());
 };
 exports.readJSON = readJSON;
 /**

@@ -7,6 +7,7 @@ import {evalText, waitForNavNoThrow} from "../base/puppeteer/puppeteer"
 import {envTip} from "../base/comm"
 import {sleep} from "do-utils"
 import {Result} from "../../types/result"
+import {RetPayload, RetTag} from "../../../task_notifiy_ckecker"
 
 export const TAG = "hostloc"
 
@@ -20,7 +21,7 @@ const SPACE_NUM = 10
 const ENV_KEY = "LOC_USER_PWD"
 
 // 执行 hostloc 的任务
-const startLocTask = async (page: Page): Promise<Result<string>> => {
+const startLocTask = async (page: Page): Promise<Result<RetTag, string>> => {
   if (!process.env[ENV_KEY]) {
     console.log("😢", TAG, envTip(ENV_KEY))
     throw Error(`${TAG} ${envTip(ENV_KEY)}`)
@@ -122,7 +123,7 @@ const accessSpace = async (uid: string, page: Page): Promise<boolean> => {
 }
 
 // 检测是否有通知
-export const ckeckLocNotifily = async (page: Page): Promise<Result<string>> => {
+export const ckeckLocNotifily = async (page: Page): Promise<Result<RetTag, RetPayload>> => {
   if (!process.env[ENV_KEY]) {
     console.log("😢", TAG, envTip(ENV_KEY))
     throw Error(`${TAG} ${envTip(ENV_KEY)}`)
@@ -138,7 +139,7 @@ export const ckeckLocNotifily = async (page: Page): Promise<Result<string>> => {
 
   const text = await evalText(page, "a#myprompt")
 
-  return {tag: TAG, data: text.includes("提醒(") ? "https://hostloc.com/home.php?mod=space&do=notice" : ""}
+  return {tag: TAG, data: {url: text.includes("提醒(") ? "https://hostloc.com/home.php?mod=space&do=notice" : ""}}
 }
 
 export default startLocTask

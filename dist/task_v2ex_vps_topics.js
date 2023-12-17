@@ -8,7 +8,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 // new Env('V2exVPS新帖')
 // cron: */2 * * * *
-const topicsFile_1 = __importDefault(require("./utils/topicsFile"));
+const notify_1 = __importDefault(require("./utils/notify"));
 const v2ex_1 = __importDefault(require("./utils/spider/v2ex/v2ex"));
 const TAG = "V2exVPS";
 // 任务信息
@@ -27,4 +27,4 @@ const taskInfo = {
     // 发送通知时的提示文本
     tag: TAG
 };
-(0, topicsFile_1.default)(taskInfo);
+(0, notify_1.default)(taskInfo);

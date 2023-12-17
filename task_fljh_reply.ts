@@ -45,7 +45,7 @@ const ENV_KEY = "FLJH_COOKIE"
 // 保存到文件的数据
 type FData = {
   // 已回复过的帖子（ID）的列表
-  tids?: string[]
+  tids: string[]
 }
 
 // 开始任务
@@ -70,10 +70,7 @@ const start = async (cookie: string) => {
   }
 
   // 读取已回复的帖子列表（ID列表）
-  const data = readJSON<FData>(FILE_FLJH)
-  if (!data.tids) {
-    data.tids = []
-  }
+  const data = readJSON<FData>(FILE_FLJH, {tids: []})
 
   // 依次回复主题
   for (const [index, t] of topics.entries()) {

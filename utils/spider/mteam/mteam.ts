@@ -7,6 +7,7 @@ import {mAxios, UserAgents} from "../../http"
 import {parseSetCookie} from "do-utils"
 import {envTip} from "../base/comm"
 import {Result} from "../../types/result"
+import {RetTag} from "../../../task_daily"
 
 const TAG = "mteam"
 
@@ -17,7 +18,7 @@ const loginUrl = `${addr}/takelogin.php`
 const ENV_KEY = "MT_USER_PWD"
 
 // 开始 馒头PT 的任务
-const startMtTask = async (): Promise<Result<string>> => {
+const startMtTask = async (): Promise<Result<RetTag, string>> => {
   if (!process.env[ENV_KEY]) {
     console.log("😢", TAG, envTip(ENV_KEY))
     throw Error(`${TAG} ${envTip(ENV_KEY)}`)

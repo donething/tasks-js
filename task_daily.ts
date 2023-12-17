@@ -15,6 +15,9 @@ import {pushTGDaily} from "./utils/tgpush"
 
 const TAG = "每日任务"
 
+// 任务返回时的 tag 类型
+export type RetTag = "mteam" | "hostloc" | "nodeseek"
+
 // 开始每日任务
 const startTask = async () => {
   // 执行任务

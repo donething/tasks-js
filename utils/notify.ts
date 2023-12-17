@@ -9,7 +9,7 @@ import {pushBulletTopic} from "./bulletpush"
 import {pushTGMsg} from "./tgpush"
 
 // 需要保存到文件的数据结构
-export interface TopicsFile {
+export interface Notify {
   // 主题信息的列表
   topics: Topic[]
 }
@@ -31,10 +31,7 @@ export type TaskInfo = {
  */
 const notifyTopics = async (taskInfo: TaskInfo) => {
   // 读取已提示的帖子列表（ID 列表）
-  const data = readJSON<TopicsFile>(taskInfo.filepath)
-  if (!data.topics) {
-    data.topics = []
-  }
+  const data = readJSON<Notify>(taskInfo.filepath, {topics: []})
 
   // 临时保存已发送的帖子
   const hadSend: Topic[] = []

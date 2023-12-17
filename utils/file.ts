@@ -3,12 +3,18 @@ import fs from "fs"
 /**
  * 读取文件内容为 JSON
  */
-export const readJSON = <T>(path: string): T => {
+export const readJSON = <T>(path: string, defautl?: T): T => {
+  const tmp = defautl || ({} as T)
   if (!fs.existsSync(path)) {
-    return {} as T
+    return tmp
   }
 
-  return JSON.parse(fs.readFileSync(path).toString() || "{}")
+  const text = fs.readFileSync(path)
+  if (!text) {
+    return tmp
+  }
+
+  return JSON.parse(text.toString())
 }
 
 /**

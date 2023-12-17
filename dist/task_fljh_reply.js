@@ -54,10 +54,7 @@ const start = async (cookie) => {
         return;
     }
     // 读取已回复的帖子列表（ID列表）
-    const data = (0, file_1.readJSON)(FILE_FLJH);
-    if (!data.tids) {
-        data.tids = [];
-    }
+    const data = (0, file_1.readJSON)(FILE_FLJH, { tids: [] });
     // 依次回复主题
     for (const [index, t] of topics.entries()) {
         const no = index + 1;

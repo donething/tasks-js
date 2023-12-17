@@ -5,7 +5,7 @@
 // new Env('CC有售')
 // cron: */10 * * * * *
 
-import notifyTopics, {TaskInfo} from "./utils/topicsFile"
+import notifyTopics, {TaskInfo} from "./utils/notify"
 import {parseLocSaleLJ} from "./utils/spider/hostloc/hostloc"
 import parseNSRss from "./utils/spider/nodeseek/nodeseek"
 

@@ -105,7 +105,7 @@ const ckeckLocNotifily = async (page) => {
     await page.goto("https://hostloc.com/");
     await page.waitForSelector("a#myprompt");
     const text = await (0, puppeteer_1.evalText)(page, "a#myprompt");
-    return { tag: exports.TAG, data: text.includes("提醒(") ? "https://hostloc.com/home.php?mod=space&do=notice" : "" };
+    return { tag: exports.TAG, data: { url: text.includes("提醒(") ? "https://hostloc.com/home.php?mod=space&do=notice" : "" } };
 };
 exports.ckeckLocNotifily = ckeckLocNotifily;
 exports.default = startLocTask;

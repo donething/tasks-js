@@ -5,7 +5,7 @@
 // new Env('V2exVPS新帖')
 // cron: */2 * * * *
 
-import notifyTopics, {TaskInfo} from "./utils/topicsFile"
+import notifyTopics, {TaskInfo} from "./utils/notify"
 import parseV2exRss from "./utils/spider/v2ex/v2ex"
 
 const TAG = "V2exVPS"

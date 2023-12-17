@@ -4,6 +4,7 @@ import {evalText, PupOptions, waitForNavNoThrow} from "../base/puppeteer/puppete
 import {SignResp} from "./types"
 import {sleep} from "do-utils"
 import {Result} from "../../types/result"
+import {RetTag} from "../../../task_daily"
 
 export const TAG = "nodeseek"
 
@@ -102,7 +103,7 @@ export const sign = async () => {
 }
 
 // 检测通知
-export const ckeckNodeSeekNotifily = async (page: Page): Promise<Result<string>> => {
+export const ckeckNodeSeekNotifily = async (page: Page): Promise<Result<RetTag, string>> => {
   if (!(await login(page))) {
     return {tag: TAG, data: ""}
   }

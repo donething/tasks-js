@@ -2,8 +2,8 @@
 import {mAxios} from "../../http"
 import {envTip} from "../base/comm"
 import {NotificationResp} from "./types"
-import {readJSON, writeJSON} from "../../file"
 import {Result} from "../../types/result"
+import {RetPayload, RetTag} from "../../../task_notifiy_ckecker"
 
 export const TAG = "v2ex"
 
@@ -16,16 +16,8 @@ const headers = {
   "Authorization": "Bearer " + process.env[ENV_KEY]
 }
 
-// 保存上次检测的的时间戳，避免重复通知
-const dbPath = "./db/notifiy_ckecker_v2ex.json"
-
-// 保存的数据
-type Data = {
-  lastCkeckNo: number
-}
-
 // 检测是否有通知
-export const ckeckV2exNotifily = async (): Promise<Result<string>> => {
+export const ckeckV2exNotifily = async (lastCk: number): Promise<Result<RetTag, RetPayload>> => {
   if (!process.env[ENV_KEY]) {
     console.log("😢", TAG, envTip(ENV_KEY))
     throw Error(`${TAG} ${envTip(ENV_KEY)}`)
@@ -39,20 +31,10 @@ export const ckeckV2exNotifily = async (): Promise<Result<string>> => {
     throw Error(`${TAG} 获取最新通知失败：${data.message}`)
   }
 
-  // 读取已提示的帖子列表（ID 列表）
-  const dbData = readJSON<Data>(dbPath)
-  if (!dbData.lastCkeckNo) {
-    dbData.lastCkeckNo = 0
-  }
-
-  const index = data.result.findIndex(item => item.created > dbData.lastCkeckNo)
+  const index = data.result.findIndex(item => item.created > lastCk)
   if (index === -1) {
-    return {tag: TAG, data: ""}
+    return {tag: TAG, data: {url: ""}}
   }
 
-  // 保存到文件
-  dbData.lastCkeckNo = data.result[index].created
-  writeJSON(dbPath, dbData)
-
-  return {tag: TAG, data: "https://v2ex.com/notifications"}
+  return {tag: TAG, data: {url: "https://v2ex.com/notifications", extra: data.result[index].created}}
 }
