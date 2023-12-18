@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ckeckV2exNotifily = exports.TAG = void 0;
+exports.ckV2exNotifily = exports.TAG = void 0;
 // 检测通知
 const http_1 = require("../../http");
 const comm_1 = require("../base/comm");
@@ -12,7 +12,7 @@ const headers = {
     "Authorization": "Bearer " + process.env[ENV_KEY]
 };
 // 检测是否有通知
-const ckeckV2exNotifily = async (lastCk) => {
+const ckV2exNotifily = async (lastCk) => {
     if (!process.env[ENV_KEY]) {
         console.log("😢", exports.TAG, (0, comm_1.envTip)(ENV_KEY));
         throw Error(`${exports.TAG} ${(0, comm_1.envTip)(ENV_KEY)}`);
@@ -30,4 +30,4 @@ const ckeckV2exNotifily = async (lastCk) => {
     console.log(exports.TAG, "有新通知，创建时间：", data.result[index].created);
     return { tag: exports.TAG, data: { url: "https://v2ex.com/notifications", extra: data.result[index].created } };
 };
-exports.ckeckV2exNotifily = ckeckV2exNotifily;
+exports.ckV2exNotifily = ckV2exNotifily;

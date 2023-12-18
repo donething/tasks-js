@@ -103,7 +103,7 @@ export const sign = async () => {
 }
 
 // 检测通知
-export const ckeckNodeSeekNotifily = async (page: Page): Promise<Result<RetTag, string>> => {
+export const ckNodeSeekNotifily = async (page: Page): Promise<Result<RetTag, string>> => {
   if (!(await login(page))) {
     return {tag: TAG, data: ""}
   }

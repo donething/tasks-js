@@ -6,8 +6,8 @@
 import puppeteer from "puppeteer-core"
 import {PupOptions} from "./utils/spider/base/puppeteer/puppeteer"
 import {parseAxiosErr} from "./utils/comm"
-import {ckeckLocNotifily} from "./utils/spider/hostloc/task"
-import {ckeckV2exNotifily} from "./utils/spider/v2ex/task"
+import {ckLocNotifily} from "./utils/spider/hostloc/task"
+import {ckV2exNotifily} from "./utils/spider/v2ex/task"
 import {pushTGMsg} from "./utils/tgpush"
 import {pushBulletNotify} from "./utils/bulletpush"
 import {readJSON, writeJSON} from "./utils/file"
@@ -37,6 +37,7 @@ type Site = {
   // 检测到没有新通知，要设为 false，以便下次检测做判断
   hadNotify?: boolean
   // 额外需要保存的数据。v2ex中要保存记录上次发送的通知ID（因为API中通知没有“未读”属性）
+  // 传递参数时，接收端不会判断类型
   data?: any
 }
 
@@ -56,7 +57,7 @@ const startCheck = async () => {
 
   // 注意调用返回 Promise，而不是传递函数的引用，否则不会运行
   const results = await Promise.allSettled(
-    [ckeckLocNotifily(pageLoc), ckeckV2exNotifily(fData.v2ex.data)]
+    [ckLocNotifily(pageLoc), ckV2exNotifily(fData.v2ex.data)]
   )
 
   for (let result of results) {

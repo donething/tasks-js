@@ -17,7 +17,7 @@ const headers = {
 }
 
 // 检测是否有通知
-export const ckeckV2exNotifily = async (lastCk: number): Promise<Result<RetTag, RetPayload>> => {
+export const ckV2exNotifily = async (lastCk: number): Promise<Result<RetTag, RetPayload>> => {
   if (!process.env[ENV_KEY]) {
     console.log("😢", TAG, envTip(ENV_KEY))
     throw Error(`${TAG} ${envTip(ENV_KEY)}`)

@@ -123,7 +123,7 @@ const accessSpace = async (uid: string, page: Page): Promise<boolean> => {
 }
 
 // 检测是否有通知
-export const ckeckLocNotifily = async (page: Page): Promise<Result<RetTag, RetPayload>> => {
+export const ckLocNotifily = async (page: Page): Promise<Result<RetTag, RetPayload>> => {
   if (!process.env[ENV_KEY]) {
     console.log("😢", TAG, envTip(ENV_KEY))
     throw Error(`${TAG} ${envTip(ENV_KEY)}`)

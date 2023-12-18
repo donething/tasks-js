@@ -31,7 +31,7 @@ const startCheck = async () => {
     pageNS.setDefaultTimeout(30 * 1000);
     pageLoc.setDefaultTimeout(5 * 1000);
     // 注意调用返回 Promise，而不是传递函数的引用，否则不会运行
-    const results = await Promise.allSettled([(0, task_1.ckeckLocNotifily)(pageLoc), (0, task_2.ckeckV2exNotifily)(fData.v2ex.data)]);
+    const results = await Promise.allSettled([(0, task_1.ckLocNotifily)(pageLoc), (0, task_2.ckV2exNotifily)(fData.v2ex.data)]);
     for (let result of results) {
         if (result.status === "rejected") {
             const err = (0, comm_1.parseAxiosErr)(result.reason);

@@ -3,7 +3,7 @@
  * 执行 hostloc 任务
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ckeckLocNotifily = exports.TAG = void 0;
+exports.ckLocNotifily = exports.TAG = void 0;
 const puppeteer_1 = require("../base/puppeteer/puppeteer");
 const comm_1 = require("../base/comm");
 const do_utils_1 = require("do-utils");
@@ -95,7 +95,7 @@ const accessSpace = async (uid, page) => {
     return false;
 };
 // 检测是否有通知
-const ckeckLocNotifily = async (page) => {
+const ckLocNotifily = async (page) => {
     if (!process.env[ENV_KEY]) {
         console.log("😢", exports.TAG, (0, comm_1.envTip)(ENV_KEY));
         throw Error(`${exports.TAG} ${(0, comm_1.envTip)(ENV_KEY)}`);
@@ -107,5 +107,5 @@ const ckeckLocNotifily = async (page) => {
     const text = await (0, puppeteer_1.evalText)(page, "a#myprompt");
     return { tag: exports.TAG, data: { url: text.includes("提醒(") ? "https://hostloc.com/home.php?mod=space&do=notice" : "" } };
 };
-exports.ckeckLocNotifily = ckeckLocNotifily;
+exports.ckLocNotifily = ckLocNotifily;
 exports.default = startLocTask;

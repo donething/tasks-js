@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ckeckNodeSeekNotifily = exports.sign = exports.TAG = void 0;
+exports.ckNodeSeekNotifily = exports.sign = exports.TAG = void 0;
 const puppeteer_core_1 = __importDefault(require("puppeteer-core"));
 const comm_1 = require("../base/comm");
 const puppeteer_1 = require("../base/puppeteer/puppeteer");
@@ -83,7 +83,7 @@ const sign = async () => {
 };
 exports.sign = sign;
 // 检测通知
-const ckeckNodeSeekNotifily = async (page) => {
+const ckNodeSeekNotifily = async (page) => {
     if (!(await login(page))) {
         return { tag: exports.TAG, data: "" };
     }
@@ -93,7 +93,7 @@ const ckeckNodeSeekNotifily = async (page) => {
     const count = await (0, puppeteer_1.evalText)(page, "div.user-card span.notify-count");
     return { tag: exports.TAG, data: !!count ? "https://www.nodeseek.com/notification" : "" };
 };
-exports.ckeckNodeSeekNotifily = ckeckNodeSeekNotifily;
+exports.ckNodeSeekNotifily = ckNodeSeekNotifily;
 // 提取网页弹出的消息
 const pickMsg = async (page) => {
     const msgElem = await page.$("div.msc-content .msc-title");
