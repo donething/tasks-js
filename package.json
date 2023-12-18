@@ -2,6 +2,7 @@
   "version": "0.0.1",
   "description": "定时任务脚本",
   "scripts": {
+    "prebuild": "rmdir /s /q dist",
     "build": "tsc",
     "test": "mocha -r ts-node/register -r dotenv/config 'tests/**/*.ts'"
   },
