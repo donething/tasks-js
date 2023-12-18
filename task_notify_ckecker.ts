@@ -70,6 +70,11 @@ const startCheck = async () => {
 
     // 根据 data 判断是否有新通知
     if (result.value.data.url) {
+      if (fData[result.value.tag].hadNotify) {
+        console.log("😂 有新通知。但已发送过通知，此次不再发送", result.value.tag, result.value.data.url)
+        continue
+      }
+
       console.log("😊 有新通知", result.value.tag, result.value.data.url)
       pushBulletNotify(TAG, result.value.tag, result.value.data.url)
       fData[result.value.tag].hadNotify = true
