@@ -31,10 +31,11 @@ export const ckeckV2exNotifily = async (lastCk: number): Promise<Result<RetTag, 
     throw Error(`${TAG} 获取最新通知失败：${data.message}`)
   }
 
-  const index = data.result.findIndex(item => item.created > lastCk)
+  const index = data.result.findIndex(item => item.created > (lastCk || 0))
   if (index === -1) {
     return {tag: TAG, data: {url: ""}}
   }
+  console.log(TAG, "有新通知，创建时间：", data.result[index].created)
 
   return {tag: TAG, data: {url: "https://v2ex.com/notifications", extra: data.result[index].created}}
 }

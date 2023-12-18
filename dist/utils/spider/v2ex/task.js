@@ -23,10 +23,11 @@ const ckeckV2exNotifily = async (lastCk) => {
         console.log(exports.TAG, "获取最新通知失败：", data.message);
         throw Error(`${exports.TAG} 获取最新通知失败：${data.message}`);
     }
-    const index = data.result.findIndex(item => item.created > lastCk);
+    const index = data.result.findIndex(item => item.created > (lastCk || 0));
     if (index === -1) {
         return { tag: exports.TAG, data: { url: "" } };
     }
+    console.log(exports.TAG, "有新通知，创建时间：", data.result[index].created);
     return { tag: exports.TAG, data: { url: "https://v2ex.com/notifications", extra: data.result[index].created } };
 };
 exports.ckeckV2exNotifily = ckeckV2exNotifily;
