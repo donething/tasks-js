@@ -27,7 +27,6 @@ const ckNotifily = async (lastCk) => {
     if (index === -1) {
         return { url: "" };
     }
-    console.log(exports.TAG, "有新通知，创建时间：", data.result[index].created);
     return { url: "https://v2ex.com/notifications", extra: data.result[index].created };
 };
 exports.ckNotifily = ckNotifily;

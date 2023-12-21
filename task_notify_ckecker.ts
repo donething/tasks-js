@@ -77,7 +77,7 @@ const startCheck = async () => {
     // 根据 data 判断是否有新通知
     if (result.value.url) {
       if (fData[promises[i].tag].hadNotify) {
-        console.log("😂 有新通知。但已发送过通知，此次不再发送", promises[i].tag, result.value.url)
+        console.log(`😂 有新通知 ${promises[i].tag} 但已发送过通知，此次不再发送`)
         continue
       }
 
