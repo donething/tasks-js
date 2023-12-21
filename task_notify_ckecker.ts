@@ -77,11 +77,11 @@ const startCheck = async () => {
     // 根据 data 判断是否有新通知
     if (result.value.url) {
       if (fData[promises[i].tag].hadNotify) {
-        console.log(`😂 有新通知 ${promises[i].tag} 但已发送过通知，此次不再发送`)
+        console.log("😂", promises[i].tag, "有新通知，但已发送过通知，此次不再发送")
         continue
       }
 
-      console.log("😊 有新通知", promises[i].tag, result.value.url)
+      console.log("😊", promises[i].tag, "有新通知", result.value.url)
       pushBulletNotify(TAG, promises[i].tag, result.value.url)
       fData[promises[i].tag].hadNotify = true
 
@@ -89,7 +89,7 @@ const startCheck = async () => {
         fData[promises[i].tag].data = result.value.extra
       }
     } else {
-      console.log("😪", TAG, promises[i].tag, "没有新通知")
+      console.log("😪", promises[i].tag, "没有新通知")
       fData[promises[i].tag].hadNotify = false
     }
   }
@@ -97,7 +97,7 @@ const startCheck = async () => {
   // 保存文件
   writeJSON(dbPath, fData)
 
-  console.log("🤨", TAG, "已执行完毕")
+  console.log("🤨", "已执行完毕")
 
   await browser.close()
 }
