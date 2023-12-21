@@ -70,7 +70,7 @@ const startCheck = async () => {
     if (result.status === "rejected") {
       const err = parseAxiosErr(result.reason)
       console.log("😱 执行失败：", promises[i].tag, err.message, err.stack)
-      pushTGMsg("执行失败", err.message, promises[i].tag)
+      pushTGMsg("执行失败", err.message, `${TAG} ${promises[i].tag}`)
       continue
     }
 
@@ -82,7 +82,7 @@ const startCheck = async () => {
       }
 
       console.log("😊", promises[i].tag, "有新通知", result.value.url)
-      pushBulletNotify(TAG, promises[i].tag, result.value.url)
+      pushBulletNotify(`${TAG} ${promises[i].tag}`, "有新通知", result.value.url)
       fData[promises[i].tag].hadNotify = true
 
       if (result.value.extra) {
