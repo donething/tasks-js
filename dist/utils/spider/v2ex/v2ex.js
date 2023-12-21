@@ -30,7 +30,7 @@ const parseV2exRss = async () => {
         // xmlparser 将 description 解析到了 content 变量
         const content = (0, comm_1.truncate4tg)(item.content || "");
         const pub = (0, do_utils_1.date)(new Date(item.pubDate), comm_1.TOPIC_TIME);
-        topics.push({ name, tid, title, url, author, content, pub });
+        topics.push({ tag: name, tid, title, url, author, content, pub });
     }
     return topics;
 };

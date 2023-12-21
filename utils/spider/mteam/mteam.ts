@@ -6,10 +6,8 @@
 import {mAxios, UserAgents} from "../../http"
 import {parseSetCookie} from "do-utils"
 import {envTip} from "../base/comm"
-import {Result} from "../../types/result"
-import {RetTag} from "../../../task_daily"
 
-const TAG = "mteam"
+export const TAG = "mteam"
 
 const addr = "https://kp.m-team.cc"
 const loginUrl = `${addr}/takelogin.php`
@@ -18,7 +16,7 @@ const loginUrl = `${addr}/takelogin.php`
 const ENV_KEY = "MT_USER_PWD"
 
 // 开始 馒头PT 的任务
-const startMtTask = async (): Promise<Result<RetTag, string>> => {
+export const startMtTask = async (): Promise<string> => {
   if (!process.env[ENV_KEY]) {
     console.log("😢", TAG, envTip(ENV_KEY))
     throw Error(`${TAG} ${envTip(ENV_KEY)}`)
@@ -40,7 +38,7 @@ const startMtTask = async (): Promise<Result<RetTag, string>> => {
   message += "已完成 每日访问的任务"
 
   // 完成任务
-  return {tag: TAG, data: message}
+  return message
 }
 
 // 登录
@@ -86,4 +84,3 @@ const login = async (username: string, password: string): Promise<boolean> => {
   return true
 }
 
-export default startMtTask

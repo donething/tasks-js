@@ -53,7 +53,7 @@ export const getHTMLTopics = async (urlInfo: UrlInfo): Promise<Topic[]> => {
 
     const name = urlInfo.name
 
-    tids.push({author: "", content: "", pub: "", title, tid, url, name})
+    tids.push({author: "", content: "", pub: "", title, tid, url, tag: name})
   }
 
   return tids

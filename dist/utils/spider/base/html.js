@@ -69,7 +69,7 @@ const getHTMLTopics = async (urlInfo) => {
             url = new URL(path, baseUrl).href;
         }
         const name = urlInfo.name;
-        tids.push({ author: "", content: "", pub: "", title, tid, url, name });
+        tids.push({ author: "", content: "", pub: "", title, tid, url, tag: name });
     }
     return tids;
 };

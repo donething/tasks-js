@@ -4,7 +4,7 @@ export type SiteName = "v2ex" | "hostloc" | "nodeseek" | "fljh"
 // 提取的主题关键信息
 export interface Topic {
   // 网站名
-  name: SiteName
+  tag: SiteName
 
   // 帖子 ID。如"123"
   tid: string
@@ -48,6 +48,7 @@ export type TopicFunc = (...args: any[]) => Promise<Topic[]>
 
 // 需要获取帖子的任务信息
 export type TopicTaskInfo = {
+  tag: SiteName,
   fun: TopicFunc
   // TopicSite.getTids 需要指定的节点/分区/分区号。如 "tech"、"45"
   node: string

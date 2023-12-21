@@ -10,12 +10,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // cron: */2 * * * *
 const notify_1 = __importDefault(require("./utils/notify"));
 const v2ex_1 = __importDefault(require("./utils/spider/v2ex/v2ex"));
-const TAG = "V2exVPS";
+const TAG = "v2ex";
 // 任务信息
 const taskInfo = {
     // 需要扫描帖子的网址及节点
     topicTaskInfos: [
         {
+            tag: TAG,
             fun: v2ex_1.default,
             node: ""
         }

@@ -49,7 +49,7 @@ const notifyTopics = async (taskInfo: TaskInfo) => {
       }
 
       // 已通知过帖子
-      if (data.topics.find((item) => item.name === t.name && item.tid === t.tid)) {
+      if (data.topics.find((item) => item.tag === t.tag && item.tid === t.tid)) {
         console.log(`😂 已通知过：`, t.title, "\n  ", t.url, "\n")
         continue
       }
@@ -70,11 +70,11 @@ const notifyTopics = async (taskInfo: TaskInfo) => {
 
   // 等待所有任务执行完毕
   const results = await Promise.allSettled(tasks)
-  for (let result of results) {
+  for (const [i, result] of results.entries()) {
     if (result.status === "rejected") {
       const err = parseAxiosErr(result.reason)
-      console.log(`😱 执行失败 ${taskInfo.tag}`, err.message, err.stack)
-      pushTGMsg("执行失败", err.message, taskInfo.tag)
+      console.log(`😱 执行失败 ${taskInfo.tag}`, taskInfo.topicTaskInfos[i].tag, err.message, err.stack)
+      pushTGMsg("执行失败", err.message, taskInfo.tag + " " + taskInfo.topicTaskInfos[i].tag)
     }
   }
 

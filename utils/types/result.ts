@@ -1,9 +1,9 @@
 /**
- * 执行任务后的返回值
+ * 给任务 promise 增加 tag，以便给任务打印对应的网站等信息
  */
-export interface Result<T, V> {
-  // 标签。按需传递泛型
+export interface PromiseName<T, V> {
+  // 如 "v2ex"
   tag: T
-  // 返回数据
-  data: V
+  // 任务 Promise
+  promise: V
 }

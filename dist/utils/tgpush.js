@@ -45,7 +45,7 @@ exports.pushTGMsg = pushTGMsg;
  * @param t 主题信息
  */
 const pushTGTopic = async (tag, t) => {
-    const topicStr = `*[${do_utils_1.TGSender.escapeMk(t.title)}](${do_utils_1.TGSender.escapeMk(t.url)})*\n\n\\#${do_utils_1.TGSender.escapeMk(t.name)} \\#${do_utils_1.TGSender.escapeMk(t.author || "[作者未知]")} _${do_utils_1.TGSender.escapeMk(t.pub || "[日期未知]")}_`;
+    const topicStr = `*[${do_utils_1.TGSender.escapeMk(t.title)}](${do_utils_1.TGSender.escapeMk(t.url)})*\n\n\\#${do_utils_1.TGSender.escapeMk(t.tag)} \\#${do_utils_1.TGSender.escapeMk(t.author || "[作者未知]")} _${do_utils_1.TGSender.escapeMk(t.pub || "[日期未知]")}_`;
     return push(`\\#${do_utils_1.TGSender.escapeMk(tag)} 新帖`, topicStr, tgKey.freshPost);
 };
 exports.pushTGTopic = pushTGTopic;

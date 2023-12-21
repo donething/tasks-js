@@ -6,13 +6,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.parseLocSaleLJ = exports.parseLocRss = void 0;
+exports.parseLocSaleLJ = exports.parseLocRss = exports.TAG = void 0;
 const rss_parser_1 = __importDefault(require("rss-parser"));
 const comm_1 = require("../base/comm");
 const do_utils_1 = require("do-utils");
 const http_1 = require("../../http");
 const html_1 = require("../base/html");
-const name = "hostloc";
+exports.TAG = "hostloc";
 // 匹配帖子的 ID
 const tidReg = /thread-(\d+)-/i;
 const check = "全球主机交流论坛";
@@ -40,7 +40,7 @@ const parseLocRss = async (fid = "") => {
         // xmlparser 将 description 解析到了 content 变量
         const content = (0, comm_1.truncate4tg)(item.description || item.content || "");
         const pub = (0, do_utils_1.date)(new Date(item.pubDate), comm_1.TOPIC_TIME);
-        topics.push({ name, tid, title, url, author, content, pub });
+        topics.push({ tag: exports.TAG, tid, title, url, author, content, pub });
     }
     return topics;
 };
@@ -51,7 +51,7 @@ exports.parseLocRss = parseLocRss;
  */
 const parseLocHtml = async (fid = "") => {
     const url = `https://hostloc.com/forum.php?mod=forumdisplay&fid=${fid}&orderby=dateline`;
-    const info = { include: check, headers, name, selector, tidReg, url };
+    const info = { include: check, headers, name: exports.TAG, selector, tidReg, url };
     return await (0, html_1.getHTMLTopics)(info);
 };
 // 解析 https://hostloc.mjj.sale/
@@ -74,7 +74,7 @@ const parseLocSaleLJ = async () => {
         const dStr = item.发布时间.trim().replaceAll("\\", "");
         const d = dStr.substring(0, dStr.lastIndexOf(" "));
         const pub = (0, do_utils_1.date)(new Date(d), comm_1.TOPIC_TIME);
-        topics.push({ name, tid, title, url, author, content, pub });
+        topics.push({ tag: exports.TAG, tid, title, url, author, content, pub });
     }
     return topics;
 };

@@ -33,7 +33,7 @@ const parseV2exRss = async (): Promise<Topic[]> => {
     const content = truncate4tg(item.content || "")
     const pub = date(new Date(item.pubDate), TOPIC_TIME)
 
-    topics.push({name, tid, title, url, author, content, pub})
+    topics.push({tag: name, tid, title, url, author, content, pub})
   }
 
   return topics

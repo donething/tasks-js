@@ -6,11 +6,12 @@
 import puppeteer from "puppeteer-core"
 import {PupOptions} from "./utils/spider/base/puppeteer/puppeteer"
 import {parseAxiosErr} from "./utils/comm"
-import {ckLocNotifily} from "./utils/spider/hostloc/task"
-import {ckV2exNotifily} from "./utils/spider/v2ex/task"
+import * as hostloc from "./utils/spider/hostloc/task"
+import * as v2ex from "./utils/spider/v2ex/task"
 import {pushTGMsg} from "./utils/tgpush"
 import {pushBulletNotify} from "./utils/bulletpush"
 import {readJSON, writeJSON} from "./utils/file"
+import {PromiseName} from "./utils/types/result"
 
 // new Env('站内通知检测')
 // cron: */3 * * * *
@@ -49,42 +50,47 @@ const startCheck = async () => {
   // Launch the browser and open a new blank page
   const browser = await puppeteer.launch(PupOptions)
 
-  const pageNS = await browser.newPage()
+  // const pageNS = await browser.newPage()
   const pageLoc = await browser.newPage()
 
-  pageNS.setDefaultTimeout(30 * 1000)
+  // pageNS.setDefaultTimeout(30 * 1000)
   pageLoc.setDefaultTimeout(5 * 1000)
 
   // 注意调用返回 Promise，而不是传递函数的引用，否则不会运行
-  const results = await Promise.allSettled(
-    [ckLocNotifily(pageLoc), ckV2exNotifily(fData.v2ex.data)]
-  )
+  const promises: PromiseName<RetTag, Promise<RetPayload>>[] = [{
+    tag: hostloc.TAG,
+    promise: hostloc.ckNotifily(pageLoc)
+  }, {
+    tag: v2ex.TAG,
+    promise: v2ex.ckNotifily(fData.v2ex.data)
+  }]
+  const results = await Promise.allSettled(promises.map(p => p.promise))
 
-  for (let result of results) {
+  for (const [i, result] of results.entries()) {
     if (result.status === "rejected") {
       const err = parseAxiosErr(result.reason)
-      console.log("😱 执行失败：", err.message, err.stack)
-      pushTGMsg("执行失败", err.message, TAG)
+      console.log("😱 执行失败：", promises[i].tag, err.message, err.stack)
+      pushTGMsg("执行失败", err.message, promises[i].tag)
       continue
     }
 
     // 根据 data 判断是否有新通知
-    if (result.value.data.url) {
-      if (fData[result.value.tag].hadNotify) {
-        console.log("😂 有新通知。但已发送过通知，此次不再发送", result.value.tag, result.value.data.url)
+    if (result.value.url) {
+      if (fData[promises[i].tag].hadNotify) {
+        console.log("😂 有新通知。但已发送过通知，此次不再发送", promises[i].tag, result.value.url)
         continue
       }
 
-      console.log("😊 有新通知", result.value.tag, result.value.data.url)
-      pushBulletNotify(TAG, result.value.tag, result.value.data.url)
-      fData[result.value.tag].hadNotify = true
+      console.log("😊 有新通知", promises[i].tag, result.value.url)
+      pushBulletNotify(TAG, promises[i].tag, result.value.url)
+      fData[promises[i].tag].hadNotify = true
 
-      if (result.value.data.extra) {
-        fData[result.value.tag].data = result.value.data.extra
+      if (result.value.extra) {
+        fData[promises[i].tag].data = result.value.extra
       }
     } else {
-      console.log("😪", TAG, result.value.tag, "没有新通知")
-      fData[result.value.tag].hadNotify = false
+      console.log("😪", TAG, promises[i].tag, "没有新通知")
+      fData[promises[i].tag].hadNotify = false
     }
   }
 

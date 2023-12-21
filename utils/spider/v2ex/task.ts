@@ -2,8 +2,7 @@
 import {mAxios} from "../../http"
 import {envTip} from "../base/comm"
 import {NotificationResp} from "./types"
-import {Result} from "../../types/result"
-import {RetPayload, RetTag} from "../../../task_notify_ckecker"
+import {RetPayload} from "../../../task_notify_ckecker"
 
 export const TAG = "v2ex"
 
@@ -17,7 +16,7 @@ const headers = {
 }
 
 // 检测是否有通知
-export const ckV2exNotifily = async (lastCk: number): Promise<Result<RetTag, RetPayload>> => {
+export const ckNotifily = async (lastCk: number): Promise<RetPayload> => {
   if (!process.env[ENV_KEY]) {
     console.log("😢", TAG, envTip(ENV_KEY))
     throw Error(`${TAG} ${envTip(ENV_KEY)}`)
@@ -33,9 +32,9 @@ export const ckV2exNotifily = async (lastCk: number): Promise<Result<RetTag, Ret
 
   const index = data.result.findIndex(item => item.created > (lastCk || 0))
   if (index === -1) {
-    return {tag: TAG, data: {url: ""}}
+    return {url: ""}
   }
   console.log(TAG, "有新通知，创建时间：", data.result[index].created)
 
-  return {tag: TAG, data: {url: "https://v2ex.com/notifications", extra: data.result[index].created}}
+  return {url: "https://v2ex.com/notifications", extra: data.result[index].created}
 }

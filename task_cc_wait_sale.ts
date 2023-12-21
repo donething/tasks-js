@@ -6,8 +6,8 @@
 // cron: */10 * * * * *
 
 import notifyTopics, {TaskInfo} from "./utils/notify"
-import {parseLocSaleLJ} from "./utils/spider/hostloc/hostloc"
-import parseNSRss from "./utils/spider/nodeseek/nodeseek"
+import * as hostloc from "./utils/spider/hostloc/hostloc"
+import * as nodeseek from "./utils/spider/nodeseek/nodeseek"
 
 const TAG = "CC有售"
 
@@ -16,12 +16,14 @@ const taskInfo: TaskInfo = {
   // 需要扫描帖子的网址及节点
   topicTaskInfos: [
     {
-      fun: parseLocSaleLJ,
+      tag: hostloc.TAG,
+      fun: hostloc.parseLocSaleLJ,
       // VPS 综合讨论区
       node: "45"
     },
     {
-      fun: parseNSRss,
+      tag: nodeseek.TAG,
+      fun: nodeseek.parseNsRss,
       // （首页）所有新帖
       node: ""
     }

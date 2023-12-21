@@ -3,10 +3,7 @@ import {envTip} from "../base/comm"
 import {evalText, PupOptions, waitForNavNoThrow} from "../base/puppeteer/puppeteer"
 import {SignResp} from "./types"
 import {sleep} from "do-utils"
-import {Result} from "../../types/result"
-import {RetTag} from "../../../task_daily"
-
-export const TAG = "nodeseek"
+import {TAG} from "./nodeseek"
 
 // 环境变量的键
 const ENV_KEY = "NODESEEK_USER_PWD"
@@ -103,9 +100,9 @@ export const sign = async () => {
 }
 
 // 检测通知
-export const ckNodeSeekNotifily = async (page: Page): Promise<Result<RetTag, string>> => {
+export const ckNotifily = async (page: Page): Promise<string> => {
   if (!(await login(page))) {
-    return {tag: TAG, data: ""}
+    return ""
   }
 
   await page.goto("https://www.nodeseek.com/")
@@ -115,7 +112,7 @@ export const ckNodeSeekNotifily = async (page: Page): Promise<Result<RetTag, str
 
   const count = await evalText(page, "div.user-card span.notify-count")
 
-  return {tag: TAG, data: !!count ? "https://www.nodeseek.com/notification" : ""}
+  return !!count ? "https://www.nodeseek.com/notification" : ""
 }
 
 // 提取网页弹出的消息

@@ -6,12 +6,14 @@
 // new Env('每日任务')
 // cron: 10 0 * * *
 
-import startLocTask from "./utils/spider/hostloc/task"
-import startMtTask from "./utils/spider/mteam/mteam"
+import * as hostloc from "./utils/spider/hostloc/task"
+import * as mteam from "./utils/spider/mteam/mteam"
 import {parseAxiosErr} from "./utils/comm"
 import puppeteer from "puppeteer-core"
 import {PupOptions} from "./utils/spider/base/puppeteer/puppeteer"
 import {pushTGDaily} from "./utils/tgpush"
+import {PromiseName} from "./utils/types/result"
+import startLocTask from "./utils/spider/hostloc/task"
 
 const TAG = "每日任务"
 
@@ -31,17 +33,24 @@ const startTask = async () => {
   page.setDefaultTimeout(5 * 1000)
 
   // 注意调用返回 Promise，而不是传递函数的引用，否则不会运行
-  const results = await Promise.allSettled([startMtTask(), startLocTask(page)])
-  for (let result of results) {
+  const promises: PromiseName<RetTag, Promise<string>>[] = [{
+    tag: hostloc.TAG,
+    promise: startLocTask(page)
+  }, {
+    tag: mteam.TAG,
+    promise: mteam.startMtTask()
+  }]
+  const results = await Promise.allSettled(promises.map(p => p.promise))
+  for (const [i, result] of results.entries()) {
     if (result.status === "rejected") {
       const err = parseAxiosErr(result.reason)
-      console.log("😱 执行失败：", err.message, err.stack)
-      pushTGDaily(TAG, "执行失败", err.message)
+      console.log("😱 执行失败：", promises[i].tag, err.message, err.stack)
+      pushTGDaily(TAG, `${promises[i].tag} 执行失败`, err.message)
       continue
     }
 
-    console.log("🤨 执行结果：", result.value.tag, result.value.data)
-    pushTGDaily(TAG, `${result.value.tag} 执行完成`, result.value.data)
+    console.log("🤨 执行结果：", promises[i].tag, result.value)
+    pushTGDaily(TAG, `${promises[i].tag} 执行完成`, result.value)
   }
 
   console.log("🤨", TAG, "已执行完毕")

@@ -10,7 +10,7 @@ import {date} from "do-utils"
 import {mAxios, UserAgents} from "../../http"
 import {getHTMLTopics} from "../base/html"
 
-const name = "hostloc"
+export const TAG = "hostloc"
 
 // 匹配帖子的 ID
 const tidReg = /thread-(\d+)-/i
@@ -44,7 +44,7 @@ export const parseLocRss = async (fid = ""): Promise<Topic[]> => {
     const content = truncate4tg(item.description || item.content || "")
     const pub = date(new Date(item.pubDate), TOPIC_TIME)
 
-    topics.push({name, tid, title, url, author, content, pub})
+    topics.push({tag: TAG, tid, title, url, author, content, pub})
   }
 
   return topics
@@ -56,7 +56,7 @@ export const parseLocRss = async (fid = ""): Promise<Topic[]> => {
  */
 const parseLocHtml = async (fid = ""): Promise<Topic[]> => {
   const url = `https://hostloc.com/forum.php?mod=forumdisplay&fid=${fid}&orderby=dateline`
-  const info: UrlInfo = {include: check, headers, name, selector, tidReg, url}
+  const info: UrlInfo = {include: check, headers, name: TAG, selector, tidReg, url}
 
   return await getHTMLTopics(info)
 }
@@ -85,7 +85,7 @@ export const parseLocSaleLJ = async () => {
     const d = dStr.substring(0, dStr.lastIndexOf(" "))
     const pub = date(new Date(d), TOPIC_TIME)
 
-    topics.push({name, tid, title, url, author, content, pub})
+    topics.push({tag: TAG, tid, title, url, author, content, pub})
   }
 
   return topics

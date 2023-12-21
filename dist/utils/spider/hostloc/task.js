@@ -3,7 +3,7 @@
  * 执行 hostloc 任务
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ckLocNotifily = exports.TAG = void 0;
+exports.ckNotifily = exports.TAG = void 0;
 const puppeteer_1 = require("../base/puppeteer/puppeteer");
 const comm_1 = require("../base/comm");
 const do_utils_1 = require("do-utils");
@@ -41,7 +41,7 @@ const startLocTask = async (page) => {
         `未完成 访问空间的任务。只成功领取 ${spaceAward}/${SPACE_NUM} 次奖励`;
     message += spaceMsg;
     console.log("🤨", exports.TAG, spaceMsg);
-    return { tag: exports.TAG, data: message };
+    return message;
 };
 // 登录
 const login = async (username, password, page) => {
@@ -95,7 +95,7 @@ const accessSpace = async (uid, page) => {
     return false;
 };
 // 检测是否有通知
-const ckLocNotifily = async (page) => {
+const ckNotifily = async (page) => {
     if (!process.env[ENV_KEY]) {
         console.log("😢", exports.TAG, (0, comm_1.envTip)(ENV_KEY));
         throw Error(`${exports.TAG} ${(0, comm_1.envTip)(ENV_KEY)}`);
@@ -105,7 +105,7 @@ const ckLocNotifily = async (page) => {
     await page.goto("https://hostloc.com/");
     await page.waitForSelector("a#myprompt");
     const text = await (0, puppeteer_1.evalText)(page, "a#myprompt");
-    return { tag: exports.TAG, data: { url: text.includes("提醒(") ? "https://hostloc.com/home.php?mod=space&do=notice" : "" } };
+    return { url: text.includes("提醒(") ? "https://hostloc.com/home.php?mod=space&do=notice" : "" };
 };
-exports.ckLocNotifily = ckLocNotifily;
+exports.ckNotifily = ckNotifily;
 exports.default = startLocTask;

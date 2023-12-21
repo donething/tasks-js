@@ -63,7 +63,7 @@ export const pushTGMsg = async (title: string, content: string, tag = "") => {
  * @param t 主题信息
  */
 export const pushTGTopic = async (tag: string, t: Topic) => {
-  const topicStr = `*[${TGSender.escapeMk(t.title)}](${TGSender.escapeMk(t.url)})*\n\n\\#${TGSender.escapeMk(t.name)} \\#${TGSender.escapeMk(t.author || "[作者未知]")} _${TGSender.escapeMk(t.pub || "[日期未知]")}_`
+  const topicStr = `*[${TGSender.escapeMk(t.title)}](${TGSender.escapeMk(t.url)})*\n\n\\#${TGSender.escapeMk(t.tag)} \\#${TGSender.escapeMk(t.author || "[作者未知]")} _${TGSender.escapeMk(t.pub || "[日期未知]")}_`
   return push(`\\#${TGSender.escapeMk(tag)} 新帖`, topicStr, tgKey.freshPost)
 }
 

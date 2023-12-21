@@ -8,13 +8,14 @@
 import notifyTopics, {TaskInfo} from "./utils/notify"
 import parseV2exRss from "./utils/spider/v2ex/v2ex"
 
-const TAG = "V2exVPS"
+const TAG = "v2ex"
 
 // 任务信息
 const taskInfo: TaskInfo = {
   // 需要扫描帖子的网址及节点
   topicTaskInfos: [
     {
+      tag: TAG,
       fun: parseV2exRss,
       node: ""
     }

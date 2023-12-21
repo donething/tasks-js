@@ -3,19 +3,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ckNodeSeekNotifily = exports.sign = exports.TAG = void 0;
+exports.ckNotifily = exports.sign = void 0;
 const puppeteer_core_1 = __importDefault(require("puppeteer-core"));
 const comm_1 = require("../base/comm");
 const puppeteer_1 = require("../base/puppeteer/puppeteer");
 const do_utils_1 = require("do-utils");
-exports.TAG = "nodeseek";
+const nodeseek_1 = require("./nodeseek");
 // 环境变量的键
 const ENV_KEY = "NODESEEK_USER_PWD";
 // 登录
 const login = async (page) => {
     if (!process.env[ENV_KEY]) {
-        console.log("😢", exports.TAG, (0, comm_1.envTip)(ENV_KEY));
-        throw Error(`${exports.TAG} ${(0, comm_1.envTip)(ENV_KEY)}`);
+        console.log("😢", nodeseek_1.TAG, (0, comm_1.envTip)(ENV_KEY));
+        throw Error(`${nodeseek_1.TAG} ${(0, comm_1.envTip)(ENV_KEY)}`);
     }
     const [username, password] = process.env[ENV_KEY].split("//");
     await page.goto("https://www.nodeseek.com/signIn.html");
@@ -76,24 +76,24 @@ const sign = async () => {
         return await resp.json();
     });
     if (!resp.success) {
-        console.log(exports.TAG, "签到失败：", resp.message);
+        console.log(nodeseek_1.TAG, "签到失败：", resp.message);
         return;
     }
-    console.log(exports.TAG, "签到成功：", resp.message);
+    console.log(nodeseek_1.TAG, "签到成功：", resp.message);
 };
 exports.sign = sign;
 // 检测通知
-const ckNodeSeekNotifily = async (page) => {
+const ckNotifily = async (page) => {
     if (!(await login(page))) {
-        return { tag: exports.TAG, data: "" };
+        return "";
     }
     await page.goto("https://www.nodeseek.com/");
     // 等待输入框出现后，输入用户名、密码后，点击“登录”
     await page.waitForSelector("div.user-card");
     const count = await (0, puppeteer_1.evalText)(page, "div.user-card span.notify-count");
-    return { tag: exports.TAG, data: !!count ? "https://www.nodeseek.com/notification" : "" };
+    return !!count ? "https://www.nodeseek.com/notification" : "";
 };
-exports.ckNodeSeekNotifily = ckNodeSeekNotifily;
+exports.ckNotifily = ckNotifily;
 // 提取网页弹出的消息
 const pickMsg = async (page) => {
     const msgElem = await page.$("div.msc-content .msc-title");

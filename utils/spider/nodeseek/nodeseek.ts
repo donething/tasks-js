@@ -11,14 +11,16 @@ import {date} from "do-utils"
 import {TOPIC_TIME, truncate4tg} from "../base/comm"
 import {PupOptions} from "../base/puppeteer/puppeteer"
 
+
 // 匹配 Rss 地址的正则
 const rssReg = /\.xml$/i
 
-const name = "nodeseek"
 const rssUrl = "https://www.nodeseek.com/rss.xml"
 const ua = "Mozilla/5.0 (Windows NT 5.1; rv:5.0) Gecko/20100101 Firefox/5.0"
 
 const parser = new Parser<NSRss, Item>()
+
+export const TAG = "nodeseek"
 
 /**
  * 获取 RSS 订阅的文本内容
@@ -59,7 +61,7 @@ const getRssContent = async (): Promise<string | null> => {
 }
 
 // 解析帖子
-const parseNSRss = async (): Promise<Topic[]> => {
+export const parseNsRss = async (): Promise<Topic[]> => {
   const rssContent = await getRssContent()
   if (!rssContent) {
     throw Error("获取的 RSS 内容为空")
@@ -77,10 +79,9 @@ const parseNSRss = async (): Promise<Topic[]> => {
     const content = truncate4tg(item.description || item.content || "")
     const pub = date(new Date(item.pubDate), TOPIC_TIME)
 
-    topics.push({name, tid, title, url, author, content, pub})
+    topics.push({tag: TAG, tid, title, url, author, content, pub})
   }
 
   return topics
 }
 
-export default parseNSRss
