@@ -85,6 +85,7 @@ const startCheck = async () => {
       pushBulletNotify(`${TAG} ${promises[i].tag}`, "有新通知", result.value.url)
       fData[promises[i].tag].hadNotify = true
 
+      console.log("值", result.value)
       if (result.value.extra) {
         fData[promises[i].tag].data = result.value.extra
       }
@@ -95,7 +96,6 @@ const startCheck = async () => {
   }
 
   // 保存文件
-  console.log("数据：", fData)
   writeJSON(dbPath, fData)
 
   console.log("🤨", "已执行完毕")

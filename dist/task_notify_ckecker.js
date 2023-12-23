@@ -78,6 +78,7 @@ const startCheck = async () => {
             console.log("😊", promises[i].tag, "有新通知", result.value.url);
             (0, bulletpush_1.pushBulletNotify)(`${TAG} ${promises[i].tag}`, "有新通知", result.value.url);
             fData[promises[i].tag].hadNotify = true;
+            console.log("值", result.value);
             if (result.value.extra) {
                 fData[promises[i].tag].data = result.value.extra;
             }
@@ -88,7 +89,6 @@ const startCheck = async () => {
         }
     }
     // 保存文件
-    console.log("数据：", fData);
     (0, file_1.writeJSON)(dbPath, fData);
     console.log("🤨", "已执行完毕");
     await browser.close();
