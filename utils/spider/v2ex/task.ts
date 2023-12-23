@@ -30,6 +30,7 @@ export const ckNotifily = async (lastCk: number): Promise<RetPayload> => {
     throw Error(`${TAG} 获取最新通知失败：${data.message}`)
   }
 
+  console.log("上次检测：", lastCk, data.result[0].created)
   const index = data.result.findIndex(item => item.created > (lastCk || 0))
   if (index === -1) {
     return {url: ""}
