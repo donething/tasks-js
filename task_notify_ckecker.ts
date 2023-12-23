@@ -24,7 +24,7 @@ const dbPath = "./db/notify_ckecker.json"
 // 任务返回时的 tag 类型
 export type RetTag = "v2ex" | "hostloc" | "nodeseek"
 // 任务返回时的 data 类型
-export type RetPayload = { url: string, extra?: number }
+export type RetPayload = { url: string, extra?: any }
 
 // 保存到文件的数据
 type FData = {
@@ -95,6 +95,7 @@ const startCheck = async () => {
   }
 
   // 保存文件
+  console.log("数据：", fData)
   writeJSON(dbPath, fData)
 
   console.log("🤨", "已执行完毕")

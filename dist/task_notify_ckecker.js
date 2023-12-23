@@ -88,6 +88,7 @@ const startCheck = async () => {
         }
     }
     // 保存文件
+    console.log("数据：", fData);
     (0, file_1.writeJSON)(dbPath, fData);
     console.log("🤨", "已执行完毕");
     await browser.close();
