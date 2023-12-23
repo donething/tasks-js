@@ -28,7 +28,7 @@ const taskInfo: TaskInfo = {
   filepath: "./db/v2ex_vps_topics.json",
 
   // 发送通知时的提示文本
-  tag: TAG
+  tag: "VPS"
 }
 
 notifyTopics(taskInfo)
