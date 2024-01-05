@@ -30,6 +30,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+// new Env('站内通知检测')
+// cron: */3 * * * *
 const puppeteer_core_1 = __importDefault(require("puppeteer-core"));
 const puppeteer_1 = require("./utils/spider/base/puppeteer/puppeteer");
 const comm_1 = require("./utils/comm");
@@ -38,8 +40,6 @@ const v2ex = __importStar(require("./utils/spider/v2ex/task"));
 const tgpush_1 = require("./utils/tgpush");
 const bulletpush_1 = require("./utils/bulletpush");
 const file_1 = require("./utils/file");
-// new Env('站内通知检测')
-// cron: */3 * * * *
 const TAG = "站内通知";
 // 保存上次检测的的时间戳，避免重复通知
 const dbPath = "./db/notify_ckecker.json";
