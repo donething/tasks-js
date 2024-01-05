@@ -122,11 +122,11 @@ const startOrder = async (users) => {
     // 判断需购买的VPS是否有货
     const promises = productList.map(u => ({ tag: u, promise: hasStock(u) }));
     // 根据是否有货判断购买
-    const results = await Promise.allSettled(promises.map(p => p));
+    const results = await Promise.allSettled(promises.map(p => p.promise));
     for (const [i, result] of results.entries()) {
         if (result.status === "rejected") {
             console.log("检查是否有货时出错", promises[i].tag, result.reason);
-            await (0, tgpush_1.pushTGMsg)("检查是否有货时出错", result.reason, TAG);
+            (0, tgpush_1.pushTGMsg)("检查是否有货时出错", result.reason, TAG);
             continue;
         }
         // 是否有货，有就订购
@@ -141,7 +141,7 @@ const startOrder = async (users) => {
         }
         // 订购成功，处理数据
         fData.hadOrder.push(available[0].email);
-        await (0, tgpush_1.pushTGMsg)(`已成功下单 VPS`, `邮箱：${available[0].email}\n\n产品：${promises[i].tag}`, TAG);
+        (0, tgpush_1.pushTGMsg)(`已成功下单 VPS`, `邮箱：${available[0].email}\n\n产品：${promises[i].tag}`, TAG);
         available.shift();
         if (available.length === 0) {
             console.log("此时，环境变量的账号列表中，已没有还未订购VPS的账号");

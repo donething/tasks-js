@@ -148,11 +148,11 @@ const startOrder = async (users: User[]) => {
   const promises = productList.map(u => ({tag: u, promise: hasStock(u)}))
 
   // 根据是否有货判断购买
-  const results = await Promise.allSettled(promises.map(p => p))
+  const results = await Promise.allSettled(promises.map(p => p.promise))
   for (const [i, result] of results.entries()) {
     if (result.status === "rejected") {
       console.log("检查是否有货时出错", promises[i].tag, result.reason)
-      await pushTGMsg("检查是否有货时出错", result.reason, TAG)
+      pushTGMsg("检查是否有货时出错", result.reason, TAG)
       continue
     }
 
@@ -171,7 +171,7 @@ const startOrder = async (users: User[]) => {
 
     // 订购成功，处理数据
     fData.hadOrder.push(available[0].email)
-    await pushTGMsg(`已成功下单 VPS`, `邮箱：${available[0].email}\n\n产品：${promises[i].tag}`, TAG)
+    pushTGMsg(`已成功下单 VPS`, `邮箱：${available[0].email}\n\n产品：${promises[i].tag}`, TAG)
 
     available.shift()
     if (available.length === 0) {
