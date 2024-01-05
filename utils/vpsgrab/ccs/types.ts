@@ -8,4 +8,6 @@ export interface User {
 export interface FData {
   // 已订购过的账号（邮箱），一号限购一台
   hadOrder: string[]
+  // 是否已发送通知没有可用账号
+  hadNotifyUnavailable: boolean
 }

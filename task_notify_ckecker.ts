@@ -3,6 +3,9 @@
  * 注意设置各个任务的`环境变量`
  */
 
+// new Env('站内通知检测')
+// cron: */3 * * * *
+
 import puppeteer from "puppeteer-core"
 import {PupOptions} from "./utils/spider/base/puppeteer/puppeteer"
 import {parseAxiosErr} from "./utils/comm"
@@ -12,9 +15,6 @@ import {pushTGMsg} from "./utils/tgpush"
 import {pushBulletNotify} from "./utils/bulletpush"
 import {readJSON, writeJSON} from "./utils/file"
 import {PromiseName} from "./utils/types/result"
-
-// new Env('站内通知检测')
-// cron: */3 * * * *
 
 const TAG = "站内通知"
 

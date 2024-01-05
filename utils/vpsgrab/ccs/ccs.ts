@@ -1,6 +1,9 @@
 import {mAxios} from "../../http"
 import {FData, User} from "./types"
 import {readJSON, writeJSON} from "../../file"
+import {pushTGMsg} from "../../tgpush"
+
+const TAG = "订购CCS"
 
 // 需要订购的产品
 const productList = [
@@ -133,12 +136,13 @@ const hasStock = async (url: string): Promise<boolean> => {
 // 开始订购
 const startOrder = async (users: User[]) => {
   // 读取数据
-  const fData = readJSON<FData>(dbPath, {hadOrder: []})
+  const fData = readJSON<FData>(dbPath, {hadOrder: [], hadNotifyUnavailable: false})
   const available = users.filter(u => !fData.hadOrder.includes(u.email))
   if (available.length === 0) {
     console.log("环境变量的账号列表中，没有还未订购VPS的账号")
     return
   }
+  fData.hadNotifyUnavailable = false
 
   // 判断需购买的VPS是否有货
   const promises = productList.map(u => ({tag: u, promise: hasStock(u)}))
@@ -148,6 +152,7 @@ const startOrder = async (users: User[]) => {
   for (const [i, result] of results.entries()) {
     if (result.status === "rejected") {
       console.log("检查是否有货时出错", promises[i].tag, result.reason)
+      await pushTGMsg("检查是否有货时出错", result.reason, TAG)
       continue
     }
 
@@ -166,10 +171,13 @@ const startOrder = async (users: User[]) => {
 
     // 订购成功，处理数据
     fData.hadOrder.push(available[0].email)
+    await pushTGMsg(`已成功下单 VPS`, `邮箱：${available[0].email}\n\n产品：${promises[i].tag}`, TAG)
 
     available.shift()
     if (available.length === 0) {
       console.log("此时，环境变量的账号列表中，已没有还未订购VPS的账号")
+      await pushTGMsg("账号不足", "已没有还未订购VPS的账号", TAG)
+      fData.hadNotifyUnavailable = true
       break
     }
   }
