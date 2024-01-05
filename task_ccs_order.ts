@@ -1,11 +1,11 @@
 /**
  * 订购 CCS 的 VPS
  */
-import CCS from "./utils/vpsgrab/ccs/ccs"
-import {User} from "./utils/vpsgrab/ccs/types"
-
 // new Env('订购CCS')
 // cron: */3 * * * * *
+
+import CCS from "./utils/vpsgrab/ccs/ccs"
+import {User} from "./utils/vpsgrab/ccs/types"
 
 // 环境变量的键
 const ENV_KEY = "CCS_ORDER_EMAIL_PSW"
