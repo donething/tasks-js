@@ -70,6 +70,7 @@ const order = async (productUrl) => {
     // 只对指定数据中心的 VPS 下订单
     if (!dcList.includes(dcName)) {
         console.log(`不下单，DC不满足要求：[${hostname}]DC为"${dcName}"`);
+        (0, tgpush_1.pushTGMsg)("不下单，DC不满足要求", `[${hostname}]DC为"${dcName}"\n\n${productUrl}`, TAG);
         return false;
     }
     // POST 加入购物车

@@ -83,6 +83,7 @@ const order = async (productUrl: string): Promise<boolean> => {
   // 只对指定数据中心的 VPS 下订单
   if (!dcList.includes(dcName)) {
     console.log(`不下单，DC不满足要求：[${hostname}]DC为"${dcName}"`)
+    pushTGMsg("不下单，DC不满足要求", `[${hostname}]DC为"${dcName}"\n\n${productUrl}`, TAG)
     return false
   }
 
