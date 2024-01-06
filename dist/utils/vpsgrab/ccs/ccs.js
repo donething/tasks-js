@@ -11,7 +11,8 @@ const productList = [
     "https://cloud.colocrossing.com/aff.php?aff=&pid=25"
 ];
 // 需要所在的数据中心
-const dcList = ["Los Angeles", "Buffalo"];
+// const dcList = ["Los Angeles", "Buffalo"]
+const dcList = ["Los Angeles"];
 // 网站地址
 const addr = "https://cloud.colocrossing.com";
 // 数据文件的路径
