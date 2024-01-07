@@ -17,6 +17,7 @@ const startTask = async () => {
         console.log(`请添加环境变量'${ENV_KEY}'，值为"邮箱,密码"，注意英文逗号。可用英文分号";"分隔多个账号，每号限购一台`);
         return;
     }
+    // 从环境变量中解析订购账号的列表
     const accounts = process.env[ENV_KEY].split(";");
     const users = accounts.map(accountStr => {
         // 处理密码可能包含分隔符","的情况

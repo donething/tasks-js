@@ -17,6 +17,7 @@ const startTask = async () => {
     return
   }
 
+  // 从环境变量中解析订购账号的列表
   const accounts = process.env[ENV_KEY].split(";")
   const users: User[] = accounts.map(accountStr => {
     // 处理密码可能包含分隔符","的情况
