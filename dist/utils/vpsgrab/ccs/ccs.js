@@ -1,8 +1,32 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const http_1 = require("../../http");
 const file_1 = require("../../file");
 const tgpush_1 = require("../../tgpush");
+const cheerio = __importStar(require("cheerio"));
 const TAG = "订购CCS";
 // 需要订购的产品
 const productList = [
@@ -11,7 +35,7 @@ const productList = [
     "https://cloud.colocrossing.com/aff.php?aff=&pid=25"
 ];
 // 需要所在的数据中心
-// const dcList = ["Los Angeles", "Buffalo"]
+// const dcList = ["Los Angeles", "New York"]
 const dcList = ["Los Angeles"];
 // 网站地址
 const addr = "https://cloud.colocrossing.com";
@@ -42,7 +66,7 @@ const login = async (user) => {
     // 登录成功
 };
 // 订购
-const order = async (productUrl) => {
+const order = async (productUrl, user) => {
     const headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) ' +
             'Chrome/119.0.0.0 Safari/537.36',
@@ -50,36 +74,47 @@ const order = async (productUrl) => {
         "Referer": addr,
         "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
     };
-    // 从产品页面获取需要的 token
+    // 从产品页面获取需要的表单
     const productHtmlResp = await http_1.mAxios.get(productUrl, { headers });
     if (productHtmlResp.data.trim() === "") {
         console.log(`无货 ${productUrl}`);
         return false;
     }
-    const result = /name="rootpw".+?value="(?<rootpw>.+)"([^]+?)name="hostname".+?value="(?<hostname>.+)"([^]+?)Region([^]+?)option value="(?<dcID>\d+)".+?>(?<dcNameStr>[^]+?)</.exec(productHtmlResp.data);
-    if (!result?.groups) {
-        throw Error("解析产品页面的 rootpw、hostname 出错");
+    // 按照指定次序，提取选项中的数据中心。{"New York": "174"}
+    const $ = cheerio.load(productHtmlResp.data);
+    const rootpw = $('input[name="rootpw"]').val();
+    const hostname = $("#inputHostname").val();
+    const dcOptions = $("#inputConfigOption72 option");
+    let dc = undefined;
+    // 先提取所有数据中心
+    // 在 jQuery 中，.map()方法返回的是一个 jQuery 对象，而不是一个标准的 JavaScript 数组
+    // 最后要用 `.get()`提取实际值
+    const dcs = dcOptions.map((_, el) => ({ name: $(el).text().trim(), id: $(el).attr('value') })).get();
+    // 按指定的数据中心的次序优先选择
+    for (let dcitem of dcList) {
+        dc = dcs.find(el => el.name.includes(dcitem));
+        if (dc) {
+            break;
+        }
     }
-    // 提取信息
-    // dcID 对应 dcName："174"为"New York"
-    const { rootpw, hostname, dcID, dcNameStr } = result.groups;
-    const dcName = dcNameStr.trim().replace(", USA.", "");
+    // 只对指定数据中心的 VPS 下订单
+    if (!dc) {
+        console.log(`不下单，DC不满足要求。[${hostname}]可选的DC为`, dcs);
+        (0, tgpush_1.pushTGMsg)("不下单，DC不满足要求", `[${hostname}]可选的DC为：\n"${JSON.stringify(dcs, null, "  ")}"\n\n${productUrl}`, TAG);
+        return false;
+    }
     // 有一个重要参数 i 是重定向到产品真正购买页面后的 URL 中
     const params = new URLSearchParams(new URL(productHtmlResp.request.res.responseUrl).searchParams);
     const i = params.get("i");
-    // 只对指定数据中心的 VPS 下订单
-    if (!dcList.includes(dcName)) {
-        console.log(`不下单，DC不满足要求：[${hostname}]DC为"${dcName}"`);
-        (0, tgpush_1.pushTGMsg)("不下单，DC不满足要求", `[${hostname}]DC为"${dcName}"\n\n${productUrl}`, TAG);
-        return false;
-    }
+    // 先登录
+    await login(user);
     // POST 加入购物车
-    const data = `ajax=1&a=confproduct&configure=true&i=${i}&billingcycle=annually&rootpw=${decodeURIComponent(rootpw)}&hostname=${decodeURIComponent(hostname)}&ns1prefix=ns1&ns2prefix=ns2&configoption%5B72%5D=${dcID}&configoption%5B75%5D=0&configoption%5B77%5D=209`;
+    const data = `ajax=1&a=confproduct&configure=true&i=${i}&billingcycle=annually&rootpw=${decodeURIComponent(rootpw)}&hostname=${decodeURIComponent(hostname)}&ns1prefix=ns1&ns2prefix=ns2&configoption%5B72%5D=${dc.id}&configoption%5B75%5D=0&configoption%5B77%5D=209`;
     const cartResp = await http_1.mAxios.post(`${addr}/cart.php`, data, { headers });
     if (cartResp.data.trim() !== "") {
         throw Error(`加入购物车出错："${cartResp.data}"`);
     }
-    console.log(`已加入购物车：Hostname: ${hostname}, DC: ${dcName}`);
+    console.log(`已加入购物车：Hostname: ${hostname}, DC: ${dc.name}`);
     // 从结算页面，获取 csrfToken、account_id（当前付费账号非用户账号的ID）
     const checkoutHtmlResp = await http_1.mAxios.get(`${addr}/cart.php?a=confdomains`);
     if (checkoutHtmlResp.data.includes("Your Shopping Cart is Empty")) {
@@ -98,7 +133,7 @@ const order = async (productUrl) => {
         throw Error(`结算失败：${checkoutResp.data}`);
     }
     // 成功订购
-    console.log(`订购成功：Hostname: ${hostname}, DC: ${dcName}`);
+    console.log(`订购成功：Hostname: ${hostname}, DC: ${dc.name}`);
     return true;
 };
 // 是否有货
@@ -136,8 +171,9 @@ const startOrder = async (users) => {
             console.log("无货", promises[i].tag);
             continue;
         }
-        await login(available[0]);
-        const success = await order(promises[i].tag);
+        // 订购
+        console.log("有货，开始订购", promises[i].tag);
+        const success = await order(promises[i].tag, available[0]);
         if (!success) {
             continue;
         }
