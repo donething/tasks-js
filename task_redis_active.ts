@@ -4,7 +4,7 @@
  */
 
 // new Env('激活 Redis')
-// cron: * 2 * * *
+// cron: * * 30 2 *
 
 const active = async (url: string) => {
   if (!url) {

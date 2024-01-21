@@ -13,11 +13,12 @@ import {mAxios, UserAgents} from "./utils/http"
 import {pushTGMsg} from "./utils/tgpush"
 import {getHTMLTopics} from "./utils/spider/base/html"
 import {Topic, UrlInfo} from "./utils/spider/types"
+import {Root} from "./utils/comm"
 
 const TAG = "fljh"
 
 // 保存数据的文件路径
-const FILE_FLJH = "./db/fljh.json"
+const FILE_FLJH = Root + "/fljh.json"
 
 // 标签
 // 回复的内容

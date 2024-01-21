@@ -5,7 +5,7 @@
  */
 
 // new Env('京豆变化')
-// cron: 5 13,22 * * *
+// cron: * * 30 2 *
 
 import {isQL} from "./utils/utils"
 import {date} from "do-utils"

@@ -8,6 +8,7 @@
 import notifyTopics, {TaskInfo} from "./utils/notify"
 import * as hostloc from "./utils/spider/hostloc/hostloc"
 import * as nodeseek from "./utils/spider/nodeseek/nodeseek"
+import {Root} from "./utils/comm"
 
 const TAG = "CC有售"
 
@@ -33,7 +34,7 @@ const taskInfo: TaskInfo = {
   reg: /\b(cc)(?!s)|(cloudcone)\b/i,
 
   // 保存数据的文件路径
-  filepath: "./db/cc_wait_sale.json",
+  filepath: Root + "/cc_wait_sale.json",
 
   // 发送通知时的提示文本
   tag: TAG,

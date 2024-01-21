@@ -6,7 +6,7 @@
  */
 
 // new Env('cloudcone黑五活动开启')
-// cron: */1 * * * * *
+// cron: * * 30 2 *
 
 import {request} from "do-utils"
 import {pushTGMsg} from "./utils/tgpush"

@@ -7,6 +7,7 @@
 
 import notifyTopics, {TaskInfo} from "./utils/notify"
 import parseV2exRss from "./utils/spider/v2ex/v2ex"
+import {Root} from "./utils/comm"
 
 const TAG = "v2ex"
 
@@ -25,7 +26,7 @@ const taskInfo: TaskInfo = {
   reg: /\b(vps)\b/i,
 
   // 保存数据的文件路径
-  filepath: "./db/v2ex_vps_topics.json",
+  filepath: Root + "/v2ex_vps_topics.json",
 
   // 发送通知时的提示文本
   tag: "VPS"

@@ -4,6 +4,9 @@
  * @see 使用 Puppeteer 自动输入京东滑动验证码 https://wxsm.space/2018/fill-jd-slider-captcha-by-puppeteer/
  */
 
+// new Env('获取京东Cookie')
+// cron: * * 30 2 *
+
 import puppeteer, {Page} from "puppeteer-core"
 import {PupOptions} from "./utils/spider/base/puppeteer/puppeteer"
 import {sleep, typeError} from "do-utils"

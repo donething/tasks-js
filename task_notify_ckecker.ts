@@ -8,7 +8,7 @@
 
 import puppeteer from "puppeteer-core"
 import {PupOptions} from "./utils/spider/base/puppeteer/puppeteer"
-import {parseAxiosErr} from "./utils/comm"
+import {parseAxiosErr, Root} from "./utils/comm"
 import * as hostloc from "./utils/spider/hostloc/task"
 import * as v2ex from "./utils/spider/v2ex/task"
 import {pushTGMsg} from "./utils/tgpush"
@@ -19,7 +19,7 @@ import {PromiseName} from "./utils/types/result"
 const TAG = "站内通知"
 
 // 保存上次检测的的时间戳，避免重复通知
-const dbPath = "./db/notify_ckecker.json"
+const dbPath = Root + "/notify_ckecker.json"
 
 // 任务返回时的 tag 类型
 export type RetTag = "v2ex" | "hostloc" | "nodeseek"
