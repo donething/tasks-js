@@ -1,5 +1,5 @@
 import {expect} from "chai"
-import pushWxMsg from "../utils/wxpush"
+import pushWxMsg from "../utils/push/wxpush"
 // 加载 .env 文件中的环境变量
 require('dotenv').config()
 

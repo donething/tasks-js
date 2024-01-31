@@ -1,5 +1,5 @@
-import {mAxios} from "./http"
-import {Topic} from "./spider/types"
+import {mAxios} from "../http"
+import {Topic} from "../spider/types"
 import pushWxMsg from "./wxpush"
 
 const TAG = "pushbullet"

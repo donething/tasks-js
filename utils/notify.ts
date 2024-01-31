@@ -5,8 +5,8 @@ import {Topic, TopicTaskInfo} from "./spider/types"
 import {readJSON, writeJSON} from "./file"
 import {isQL} from "./utils"
 import {parseAxiosErr} from "./comm"
-import {pushBulletTopic} from "./bulletpush"
-import {pushTGMsg} from "./tgpush"
+import {pushBulletTopic} from "./push/bulletpush"
+import {pushTGMsg} from "./push/tgpush"
 
 // 需要保存到文件的数据结构
 export interface Notify {

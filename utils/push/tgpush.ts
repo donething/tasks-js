@@ -4,7 +4,7 @@
  */
 
 import {TGSender} from "do-utils"
-import {Topic} from "./spider/types"
+import {Topic} from "../spider/types"
 import pushWxMsg from "./wxpush"
 
 interface Token {

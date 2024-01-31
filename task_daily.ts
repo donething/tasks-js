@@ -11,7 +11,7 @@ import * as mteam from "./utils/spider/mteam/mteam"
 import {parseAxiosErr} from "./utils/comm"
 import puppeteer from "puppeteer-core"
 import {PupOptions} from "./utils/spider/base/puppeteer/puppeteer"
-import {pushTGDaily} from "./utils/tgpush"
+import {pushTGDaily} from "./utils/push/tgpush"
 import {PromiseName} from "./utils/types/result"
 import startLocTask from "./utils/spider/hostloc/task"
 

@@ -10,7 +10,7 @@
 import {isQL} from "./utils/utils"
 import {date} from "do-utils"
 import {UserAgents} from "./utils/http"
-import {pushTGMsg, pushTGDaily} from "./utils/tgpush"
+import {pushTGMsg, pushTGDaily} from "./utils/push/tgpush"
 
 const TAG = "京豆变化"
 

@@ -1,7 +1,7 @@
 import {mAxios} from "../../http"
 import {FData, User} from "./types"
 import {readJSON, writeJSON} from "../../file"
-import {pushTGMsg} from "../../tgpush"
+import {pushTGMsg} from "../../push/tgpush"
 import * as cheerio from "cheerio"
 import {Root} from "../../comm"
 

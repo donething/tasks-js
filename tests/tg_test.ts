@@ -1,4 +1,4 @@
-import {pushTGMsg} from "../utils/tgpush"
+import {pushTGMsg} from "../utils/push/tgpush"
 import {expect} from "chai"
 import {TGSender} from "do-utils"
 
