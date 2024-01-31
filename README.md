@@ -59,6 +59,12 @@ rm -rf /ql/data/scripts/donething_tasks-js/utils && mv /ql/data/scripts/donethin
 
 `本地依赖`脚本放在`/utils`目录中
 
+### 持久存储数据
+
+以`Root`开头拼接路径，可以将创建的文件存储到宿主机中，以便备份
+
+如`const dbPath = Root + "/notify_ckecker.json"`
+
 ### cron
 
 设置脚本的`名称`、`cron`：
