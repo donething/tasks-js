@@ -100,7 +100,7 @@ export const sign = async () => {
 }
 
 // 检测通知
-export const ckNotifily = async (page: Page): Promise<string> => {
+export const ckNotification = async (page: Page): Promise<string> => {
   if (!(await login(page))) {
     return ""
   }

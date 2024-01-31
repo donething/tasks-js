@@ -59,10 +59,10 @@ const startCheck = async () => {
   // 注意调用返回 Promise，而不是传递函数的引用，否则不会运行
   const promises: PromiseName<RetTag, Promise<RetPayload>>[] = [{
     tag: hostloc.TAG,
-    promise: hostloc.ckNotifily(pageLoc)
+    promise: hostloc.ckNotification(pageLoc)
   }, {
     tag: v2ex.TAG,
-    promise: v2ex.ckNotifily(fData.v2ex.data)
+    promise: v2ex.ckNotification(fData.v2ex.data)
   }]
   const results = await Promise.allSettled(promises.map(p => p.promise))
 
