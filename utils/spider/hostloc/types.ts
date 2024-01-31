@@ -15,7 +15,7 @@ export interface Item {
 }
 
 // RSS
-export interface LocRSS {
+export interface RSS {
   title: string;
   link: string;
   description: string;

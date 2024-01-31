@@ -20,8 +20,6 @@ export type TaskInfo = {
   filepath: string
   // 需要获取的网站及节点的信息
   topicTaskInfos: TopicTaskInfo[]
-  // 用来判断帖子标题是否需要通知。如 /\b(cc|cloudcone)\b/i
-  reg: RegExp
   // 发送通知时的提示文本。如 "CC有售"
   tag: string
 }
@@ -43,7 +41,7 @@ const notifyTopics = async (taskInfo: TaskInfo) => {
 
     for (const t of topics) {
       // 只匹配指定帖子
-      if (!taskInfo.reg.test(t.title)) {
+      if (!task.needNotify(t)) {
         console.log(`😒 跳过帖子：`, t.title, "\n  ", t.url, "\n")
         continue
       }

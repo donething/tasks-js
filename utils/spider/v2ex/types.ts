@@ -15,7 +15,7 @@ export interface Item {
 }
 
 // RSS 信息
-export interface V2RSS {
+export interface RSS {
   title: string
   subtitle: string
   link: string

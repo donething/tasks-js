@@ -7,8 +7,7 @@ import {evalText, waitForNavNoThrow} from "../base/puppeteer/puppeteer"
 import {envTip} from "../base/comm"
 import {sleep} from "do-utils"
 import {RetPayload} from "../../../task_notify_ckecker"
-
-export const TAG = "hostloc"
+import Hostloc from "./hostloc"
 
 // 需要访问空间的用户 uid
 const uids = ["66244", "61525", "62920", "61253", "62278", "29148",
@@ -22,18 +21,18 @@ const ENV_KEY = "LOC_USER_PWD"
 // 执行 hostloc 的任务
 const startLocTask = async (page: Page): Promise<string> => {
   if (!process.env[ENV_KEY]) {
-    console.log("😢", TAG, envTip(ENV_KEY))
-    throw Error(`${TAG} ${envTip(ENV_KEY)}`)
+    console.log("😢", Hostloc.TAG, envTip(ENV_KEY))
+    throw Error(`${Hostloc.TAG} ${envTip(ENV_KEY)}`)
   }
 
   const [username, password] = process.env[ENV_KEY].split("//")
 
-  console.log("🤨", TAG, "开始执行任务")
+  console.log("🤨", Hostloc.TAG, "开始执行任务")
 
   // 登录
   await login(username, password, page)
 
-  console.log("😊", TAG, "登录成功")
+  console.log("😊", Hostloc.TAG, "登录成功")
 
   // 完成任务发送的通知
   let message = ""
@@ -51,7 +50,7 @@ const startLocTask = async (page: Page): Promise<string> => {
   const spaceMsg = spaceAward >= SPACE_NUM ? "已完成 访问空间的任务" :
     `未完成 访问空间的任务。只成功领取 ${spaceAward}/${SPACE_NUM} 次奖励`
   message += spaceMsg
-  console.log("🤨", TAG, spaceMsg)
+  console.log("🤨", Hostloc.TAG, spaceMsg)
 
   return message
 }
@@ -81,14 +80,14 @@ const login = async (username: string, password: string, page: Page): Promise<bo
       return true
     }
 
-    throw Error(`${TAG} 检查到未处理的提示文本：\n${text}`)
+    throw Error(`${Hostloc.TAG} 检查到未处理的提示文本：\n${text}`)
   }
 
   // 可能登录成功
   // 获取用户名的元素来验证
   const name = await evalText(page, "div#um p strong a")
   if (name !== username) {
-    throw Error(`${TAG} 解析的用户名和登录的用户名不匹配`)
+    throw Error(`${Hostloc.TAG} 解析的用户名和登录的用户名不匹配`)
   }
 
   // 登录成功
@@ -109,23 +108,23 @@ const accessSpace = async (uid: string, page: Page): Promise<boolean> => {
 
     // 成功访问空间
     if (tip.includes("访问别人空间")) {
-      console.log("😊", TAG, `已访问空间 ${page.url()}`)
+      console.log("😊", Hostloc.TAG, `已访问空间 ${page.url()}`)
       return true
     }
 
-    console.log("😢", TAG, "访问空间失败", page.url(), `\n${tip}`)
+    console.log("😢", Hostloc.TAG, "访问空间失败", page.url(), `\n${tip}`)
   } catch (e) {
-    console.log("😢", TAG, "没有出现奖励提示。可能今日已访问过该用户的空间", page.url())
+    console.log("😢", Hostloc.TAG, "没有出现奖励提示。可能今日已访问过该用户的空间", page.url())
   }
 
   return false
 }
 
 // 检测是否有通知
-export const ckNotification = async (page: Page): Promise<RetPayload> => {
+const ckNotification = async (page: Page): Promise<RetPayload> => {
   if (!process.env[ENV_KEY]) {
-    console.log("😢", TAG, envTip(ENV_KEY))
-    throw Error(`${TAG} ${envTip(ENV_KEY)}`)
+    console.log("😢", Hostloc.TAG, envTip(ENV_KEY))
+    throw Error(`${Hostloc.TAG} ${envTip(ENV_KEY)}`)
   }
 
   const [username, password] = process.env[ENV_KEY].split("//")
@@ -141,4 +140,7 @@ export const ckNotification = async (page: Page): Promise<RetPayload> => {
   return {url: text.includes("提醒(") ? "https://hostloc.com/home.php?mod=space&do=notice" : ""}
 }
 
-export default startLocTask
+// Hostloc 的任务
+const HostlocTask = {startLocTask, ckNotification}
+
+export default HostlocTask

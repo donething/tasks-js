@@ -6,8 +6,9 @@
 import {mAxios, UserAgents} from "../../http"
 import {parseSetCookie} from "do-utils"
 import {envTip} from "../base/comm"
+import {SiteName} from "../types"
 
-export const TAG = "mteam"
+const TAG: SiteName = "mteam"
 
 const addr = "https://kp.m-team.cc"
 const loginUrl = `${addr}/takelogin.php`
@@ -16,7 +17,7 @@ const loginUrl = `${addr}/takelogin.php`
 const ENV_KEY = "MT_USER_PWD"
 
 // 开始 馒头PT 的任务
-export const startMtTask = async (): Promise<string> => {
+const startTask = async (): Promise<string> => {
   if (!process.env[ENV_KEY]) {
     console.log("😢", TAG, envTip(ENV_KEY))
     throw Error(`${TAG} ${envTip(ENV_KEY)}`)
@@ -84,3 +85,7 @@ const login = async (username: string, password: string): Promise<boolean> => {
   return true
 }
 
+// 馒头PT
+const MTeam = {TAG, startTask}
+
+export default MTeam

@@ -2,12 +2,14 @@
 /**
  * 执行 hostloc 任务
  */
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ckNotifily = exports.TAG = void 0;
 const puppeteer_1 = require("../base/puppeteer/puppeteer");
 const comm_1 = require("../base/comm");
 const do_utils_1 = require("do-utils");
-exports.TAG = "hostloc";
+const hostloc_1 = __importDefault(require("./hostloc"));
 // 需要访问空间的用户 uid
 const uids = ["66244", "61525", "62920", "61253", "62278", "29148",
     "62445", "59122", "24752", "32049", "65872", "62181"];
@@ -18,14 +20,14 @@ const ENV_KEY = "LOC_USER_PWD";
 // 执行 hostloc 的任务
 const startLocTask = async (page) => {
     if (!process.env[ENV_KEY]) {
-        console.log("😢", exports.TAG, (0, comm_1.envTip)(ENV_KEY));
-        throw Error(`${exports.TAG} ${(0, comm_1.envTip)(ENV_KEY)}`);
+        console.log("😢", hostloc_1.default.TAG, (0, comm_1.envTip)(ENV_KEY));
+        throw Error(`${hostloc_1.default.TAG} ${(0, comm_1.envTip)(ENV_KEY)}`);
     }
     const [username, password] = process.env[ENV_KEY].split("//");
-    console.log("🤨", exports.TAG, "开始执行任务");
+    console.log("🤨", hostloc_1.default.TAG, "开始执行任务");
     // 登录
     await login(username, password, page);
-    console.log("😊", exports.TAG, "登录成功");
+    console.log("😊", hostloc_1.default.TAG, "登录成功");
     // 完成任务发送的通知
     let message = "";
     // 访问空间
@@ -40,7 +42,7 @@ const startLocTask = async (page) => {
     const spaceMsg = spaceAward >= SPACE_NUM ? "已完成 访问空间的任务" :
         `未完成 访问空间的任务。只成功领取 ${spaceAward}/${SPACE_NUM} 次奖励`;
     message += spaceMsg;
-    console.log("🤨", exports.TAG, spaceMsg);
+    console.log("🤨", hostloc_1.default.TAG, spaceMsg);
     return message;
 };
 // 登录
@@ -62,13 +64,13 @@ const login = async (username, password, page) => {
         if (text?.includes("每天登录")) {
             return true;
         }
-        throw Error(`${exports.TAG} 检查到未处理的提示文本：\n${text}`);
+        throw Error(`${hostloc_1.default.TAG} 检查到未处理的提示文本：\n${text}`);
     }
     // 可能登录成功
     // 获取用户名的元素来验证
     const name = await (0, puppeteer_1.evalText)(page, "div#um p strong a");
     if (name !== username) {
-        throw Error(`${exports.TAG} 解析的用户名和登录的用户名不匹配`);
+        throw Error(`${hostloc_1.default.TAG} 解析的用户名和登录的用户名不匹配`);
     }
     // 登录成功
     return true;
@@ -84,21 +86,21 @@ const accessSpace = async (uid, page) => {
         const tip = await (0, puppeteer_1.evalText)(page, selector);
         // 成功访问空间
         if (tip.includes("访问别人空间")) {
-            console.log("😊", exports.TAG, `已访问空间 ${page.url()}`);
+            console.log("😊", hostloc_1.default.TAG, `已访问空间 ${page.url()}`);
             return true;
         }
-        console.log("😢", exports.TAG, "访问空间失败", page.url(), `\n${tip}`);
+        console.log("😢", hostloc_1.default.TAG, "访问空间失败", page.url(), `\n${tip}`);
     }
     catch (e) {
-        console.log("😢", exports.TAG, "没有出现奖励提示。可能今日已访问过该用户的空间", page.url());
+        console.log("😢", hostloc_1.default.TAG, "没有出现奖励提示。可能今日已访问过该用户的空间", page.url());
     }
     return false;
 };
 // 检测是否有通知
-const ckNotifily = async (page) => {
+const ckNotification = async (page) => {
     if (!process.env[ENV_KEY]) {
-        console.log("😢", exports.TAG, (0, comm_1.envTip)(ENV_KEY));
-        throw Error(`${exports.TAG} ${(0, comm_1.envTip)(ENV_KEY)}`);
+        console.log("😢", hostloc_1.default.TAG, (0, comm_1.envTip)(ENV_KEY));
+        throw Error(`${hostloc_1.default.TAG} ${(0, comm_1.envTip)(ENV_KEY)}`);
     }
     const [username, password] = process.env[ENV_KEY].split("//");
     await login(username, password, page);
@@ -107,5 +109,6 @@ const ckNotifily = async (page) => {
     const text = await (0, puppeteer_1.evalText)(page, "a#myprompt");
     return { url: text.includes("提醒(") ? "https://hostloc.com/home.php?mod=space&do=notice" : "" };
 };
-exports.ckNotifily = ckNotifily;
-exports.default = startLocTask;
+// Hostloc 的任务
+const HostlocTask = { startLocTask, ckNotification };
+exports.default = HostlocTask;

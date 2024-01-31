@@ -7,7 +7,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.parseNsRss = exports.TAG = void 0;
 const puppeteer_core_1 = __importDefault(require("puppeteer-core"));
 const rss_parser_1 = __importDefault(require("rss-parser"));
 const do_utils_1 = require("do-utils");
@@ -18,7 +17,7 @@ const rssReg = /\.xml$/i;
 const rssUrl = "https://www.nodeseek.com/rss.xml";
 const ua = "Mozilla/5.0 (Windows NT 5.1; rv:5.0) Gecko/20100101 Firefox/5.0";
 const parser = new rss_parser_1.default();
-exports.TAG = "nodeseek";
+const TAG = "nodeseek";
 /**
  * 获取 RSS 订阅的文本内容
  */
@@ -48,7 +47,7 @@ const getRssContent = async () => {
     return xmlText;
 };
 // 解析帖子
-const parseNsRss = async () => {
+const parseRss = async () => {
     const rssContent = await getRssContent();
     if (!rssContent) {
         throw Error("获取的 RSS 内容为空");
@@ -63,8 +62,11 @@ const parseNsRss = async () => {
         // xmlparser 将 description 解析到了 content 变量
         const content = (0, comm_1.truncate4tg)(item.description || item.content || "");
         const pub = (0, do_utils_1.date)(new Date(item.pubDate), comm_1.TOPIC_TIME);
-        topics.push({ tag: exports.TAG, tid, title, url, author, content, pub });
+        const category = item.category;
+        topics.push({ tag: TAG, tid, title, url, author, content, pub, category });
     }
     return topics;
 };
-exports.parseNsRss = parseNsRss;
+// Nodeseek
+const Nodeseek = { TAG, parseRss };
+exports.default = Nodeseek;

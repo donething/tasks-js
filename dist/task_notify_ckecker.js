@@ -3,29 +3,6 @@
  * 检测网站站内的通知
  * 注意设置各个任务的`环境变量`
  */
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -35,11 +12,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const puppeteer_core_1 = __importDefault(require("puppeteer-core"));
 const puppeteer_1 = require("./utils/spider/base/puppeteer/puppeteer");
 const comm_1 = require("./utils/comm");
-const hostloc = __importStar(require("./utils/spider/hostloc/task"));
-const v2ex = __importStar(require("./utils/spider/v2ex/task"));
 const tgpush_1 = require("./utils/push/tgpush");
 const bulletpush_1 = require("./utils/push/bulletpush");
 const file_1 = require("./utils/file");
+const hostloc_1 = __importDefault(require("./utils/spider/hostloc/hostloc"));
+const task_1 = __importDefault(require("./utils/spider/hostloc/task"));
+const v2ex_1 = __importDefault(require("./utils/spider/v2ex/v2ex"));
+const task_2 = __importDefault(require("./utils/spider/v2ex/task"));
 const TAG = "站内通知";
 // 保存上次检测的的时间戳，避免重复通知
 const dbPath = comm_1.Root + "/notify_ckecker.json";
@@ -55,11 +34,11 @@ const startCheck = async () => {
     pageLoc.setDefaultTimeout(5 * 1000);
     // 注意调用返回 Promise，而不是传递函数的引用，否则不会运行
     const promises = [{
-            tag: hostloc.TAG,
-            promise: hostloc.ckNotifily(pageLoc)
+            tag: hostloc_1.default.TAG,
+            promise: task_1.default.ckNotification(pageLoc)
         }, {
-            tag: v2ex.TAG,
-            promise: v2ex.ckNotifily(fData.v2ex.data)
+            tag: v2ex_1.default.TAG,
+            promise: task_2.default.ckNotification(fData.v2ex.data)
         }];
     const results = await Promise.allSettled(promises.map(p => p.promise));
     for (const [i, result] of results.entries()) {

@@ -3,42 +3,19 @@
  * 执行每日任务
  * 注意设置各个任务的`环境变量`
  */
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 // new Env('每日任务')
-// cron: 10 0 * * *
-const hostloc = __importStar(require("./utils/spider/hostloc/task"));
-const mteam = __importStar(require("./utils/spider/mteam/mteam"));
+// cron: 10 8 * * *
 const comm_1 = require("./utils/comm");
 const puppeteer_core_1 = __importDefault(require("puppeteer-core"));
 const puppeteer_1 = require("./utils/spider/base/puppeteer/puppeteer");
 const tgpush_1 = require("./utils/push/tgpush");
+const hostloc_1 = __importDefault(require("./utils/spider/hostloc/hostloc"));
 const task_1 = __importDefault(require("./utils/spider/hostloc/task"));
+const mteam_1 = __importDefault(require("./utils/spider/mteam/mteam"));
 const TAG = "每日任务";
 // 开始每日任务
 const startTask = async () => {
@@ -50,11 +27,11 @@ const startTask = async () => {
     page.setDefaultTimeout(5 * 1000);
     // 注意调用返回 Promise，而不是传递函数的引用，否则不会运行
     const promises = [{
-            tag: hostloc.TAG,
-            promise: (0, task_1.default)(page)
+            tag: hostloc_1.default.TAG,
+            promise: task_1.default.startLocTask(page)
         }, {
-            tag: mteam.TAG,
-            promise: mteam.startMtTask()
+            tag: mteam_1.default.TAG,
+            promise: mteam_1.default.startTask()
         }];
     const results = await Promise.allSettled(promises.map(p => p.promise));
     for (const [i, result] of results.entries()) {

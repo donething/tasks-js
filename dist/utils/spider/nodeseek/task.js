@@ -3,19 +3,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ckNotifily = exports.sign = void 0;
 const puppeteer_core_1 = __importDefault(require("puppeteer-core"));
 const comm_1 = require("../base/comm");
 const puppeteer_1 = require("../base/puppeteer/puppeteer");
 const do_utils_1 = require("do-utils");
-const nodeseek_1 = require("./nodeseek");
+const nodeseek_1 = __importDefault(require("./nodeseek"));
 // 环境变量的键
 const ENV_KEY = "NODESEEK_USER_PWD";
 // 登录
 const login = async (page) => {
     if (!process.env[ENV_KEY]) {
-        console.log("😢", nodeseek_1.TAG, (0, comm_1.envTip)(ENV_KEY));
-        throw Error(`${nodeseek_1.TAG} ${(0, comm_1.envTip)(ENV_KEY)}`);
+        console.log("😢", nodeseek_1.default.TAG, (0, comm_1.envTip)(ENV_KEY));
+        throw Error(`${nodeseek_1.default.TAG} ${(0, comm_1.envTip)(ENV_KEY)}`);
     }
     const [username, password] = process.env[ENV_KEY].split("//");
     await page.goto("https://www.nodeseek.com/signIn.html");
@@ -76,14 +75,13 @@ const sign = async () => {
         return await resp.json();
     });
     if (!resp.success) {
-        console.log(nodeseek_1.TAG, "签到失败：", resp.message);
+        console.log(nodeseek_1.default.TAG, "签到失败：", resp.message);
         return;
     }
-    console.log(nodeseek_1.TAG, "签到成功：", resp.message);
+    console.log(nodeseek_1.default.TAG, "签到成功：", resp.message);
 };
-exports.sign = sign;
 // 检测通知
-const ckNotifily = async (page) => {
+const ckNotification = async (page) => {
     if (!(await login(page))) {
         return "";
     }
@@ -93,7 +91,6 @@ const ckNotifily = async (page) => {
     const count = await (0, puppeteer_1.evalText)(page, "div.user-card span.notify-count");
     return !!count ? "https://www.nodeseek.com/notification" : "";
 };
-exports.ckNotifily = ckNotifily;
 // 提取网页弹出的消息
 const pickMsg = async (page) => {
     const msgElem = await page.$("div.msc-content .msc-title");
@@ -103,3 +100,6 @@ const pickMsg = async (page) => {
     }
     return "";
 };
+// Nodeseek 的任务
+const NodeseekTask = { sign, ckNotification };
+exports.default = NodeseekTask;

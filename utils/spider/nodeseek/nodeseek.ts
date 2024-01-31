@@ -5,8 +5,8 @@
 
 import puppeteer from "puppeteer-core"
 import Parser from "rss-parser"
-import {Item, NSRss} from "./types"
-import {Topic} from "../types"
+import {Item, Rss} from "./types"
+import {SiteName, Topic} from "../types"
 import {date} from "do-utils"
 import {TOPIC_TIME, truncate4tg} from "../base/comm"
 import {PupOptions} from "../base/puppeteer/puppeteer"
@@ -18,9 +18,9 @@ const rssReg = /\.xml$/i
 const rssUrl = "https://www.nodeseek.com/rss.xml"
 const ua = "Mozilla/5.0 (Windows NT 5.1; rv:5.0) Gecko/20100101 Firefox/5.0"
 
-const parser = new Parser<NSRss, Item>()
+const parser = new Parser<Rss, Item>()
 
-export const TAG = "nodeseek"
+const TAG:SiteName = "nodeseek"
 
 /**
  * 获取 RSS 订阅的文本内容
@@ -61,7 +61,7 @@ const getRssContent = async (): Promise<string | null> => {
 }
 
 // 解析帖子
-export const parseNsRss = async (): Promise<Topic[]> => {
+const parseRss = async (): Promise<Topic[]> => {
   const rssContent = await getRssContent()
   if (!rssContent) {
     throw Error("获取的 RSS 内容为空")
@@ -78,10 +78,15 @@ export const parseNsRss = async (): Promise<Topic[]> => {
     // xmlparser 将 description 解析到了 content 变量
     const content = truncate4tg(item.description || item.content || "")
     const pub = date(new Date(item.pubDate), TOPIC_TIME)
+    const category = item.category
 
-    topics.push({tag: TAG, tid, title, url, author, content, pub})
+    topics.push({tag: TAG, tid, title, url, author, content, pub, category})
   }
 
   return topics
 }
 
+// Nodeseek
+const Nodeseek = {TAG, parseRss}
+
+export default Nodeseek

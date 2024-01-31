@@ -9,12 +9,14 @@
 import puppeteer from "puppeteer-core"
 import {PupOptions} from "./utils/spider/base/puppeteer/puppeteer"
 import {parseAxiosErr, Root} from "./utils/comm"
-import * as hostloc from "./utils/spider/hostloc/task"
-import * as v2ex from "./utils/spider/v2ex/task"
 import {pushTGMsg} from "./utils/push/tgpush"
 import {pushBulletNotify} from "./utils/push/bulletpush"
 import {readJSON, writeJSON} from "./utils/file"
 import {PromiseName} from "./utils/types/result"
+import Hostloc from "./utils/spider/hostloc/hostloc"
+import HostlocTask from "./utils/spider/hostloc/task"
+import V2ex from "./utils/spider/v2ex/v2ex"
+import V2exTask from "./utils/spider/v2ex/task"
 
 const TAG = "站内通知"
 
@@ -58,11 +60,11 @@ const startCheck = async () => {
 
   // 注意调用返回 Promise，而不是传递函数的引用，否则不会运行
   const promises: PromiseName<RetTag, Promise<RetPayload>>[] = [{
-    tag: hostloc.TAG,
-    promise: hostloc.ckNotification(pageLoc)
+    tag: Hostloc.TAG,
+    promise: HostlocTask.ckNotification(pageLoc)
   }, {
-    tag: v2ex.TAG,
-    promise: v2ex.ckNotification(fData.v2ex.data)
+    tag: V2ex.TAG,
+    promise: V2exTask.ckNotification(fData.v2ex.data)
   }]
   const results = await Promise.allSettled(promises.map(p => p.promise))
 

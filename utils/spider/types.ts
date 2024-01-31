@@ -1,5 +1,5 @@
 // 网站名
-export type SiteName = "v2ex" | "hostloc" | "nodeseek" | "fljh"
+export type SiteName = "v2ex" | "hostloc" | "nodeseek" | "fljh" | "mteam"
 
 // 提取的主题关键信息
 export interface Topic {
@@ -23,6 +23,9 @@ export interface Topic {
 
   // 发布时间
   pub: string
+
+  // 所在分区
+  category?: string
 }
 
 // 请求头
@@ -48,8 +51,12 @@ export type TopicFunc = (...args: any[]) => Promise<Topic[]>
 
 // 需要获取帖子的任务信息
 export type TopicTaskInfo = {
+  // 网站名
   tag: SiteName,
+  // 获取主题列表的函数
   fun: TopicFunc
-  // TopicSite.getTids 需要指定的节点/分区/分区号。如 "tech"、"45"
+  // 判断是否需要发送通知
+  needNotify: (t: Topic) => boolean
+  // TopicSite.getTids 需要指定的节点/分区/分区号。如 "tech"、"45"。注意有些获取主题列表的函数中，可能忽视该参数
   node: string
 }

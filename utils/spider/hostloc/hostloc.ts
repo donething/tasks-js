@@ -2,21 +2,21 @@
  * 解析 hostloc 的帖子
  */
 
-import {Topic, UrlInfo} from "../types"
+import {SiteName, Topic, UrlInfo} from "../types"
 import Parser from "rss-parser"
-import {Item, LocRSS, LocSaleLJItem} from "./types"
+import {Item, RSS, LocSaleLJItem} from "./types"
 import {TOPIC_TIME, truncate4tg} from "../base/comm"
 import {date} from "do-utils"
 import {mAxios, UserAgents} from "../../http"
 import {getHTMLTopics} from "../base/html"
 
-export const TAG = "hostloc"
+const TAG:SiteName = "hostloc"
 
 // 匹配帖子的 ID
 const tidReg = /thread-(\d+)-/i
 const check = "全球主机交流论坛"
 const selector = "table#threadlisttableid tbody[id^='normalthread'] th.new a.xst"
-const parser = new Parser<LocRSS, Item>()
+const parser = new Parser<RSS, Item>()
 
 const headers = {"User-Agent": UserAgents.Win}
 
@@ -24,7 +24,7 @@ const headers = {"User-Agent": UserAgents.Win}
  * 解析 hostloc 的最新帖子
  * @param fid 板块的 ID，为空""表示获取所有新帖。如 "45"表示获取“美国VPS综合讨论”分区的新帖
  */
-export const parseLocRss = async (fid = ""): Promise<Topic[]> => {
+const parseRss = async (fid = ""): Promise<Topic[]> => {
   const url = `https://hostloc.com/forum.php?mod=rss&fid=${fid}`
   const resp = await mAxios.get(url, {headers})
   const rss = await parser.parseString(resp.data)
@@ -54,7 +54,7 @@ export const parseLocRss = async (fid = ""): Promise<Topic[]> => {
  * 解析 hostloc 的最新帖子
  * @param fid 板块的 ID，为空""表示获取所有新帖。如 "45"表示获取“美国VPS综合讨论”分区的新帖
  */
-const parseLocHtml = async (fid = ""): Promise<Topic[]> => {
+const parseHtml = async (fid = ""): Promise<Topic[]> => {
   const url = `https://hostloc.com/forum.php?mod=forumdisplay&fid=${fid}&orderby=dateline`
   const info: UrlInfo = {include: check, headers, name: TAG, selector, tidReg, url}
 
@@ -62,7 +62,7 @@ const parseLocHtml = async (fid = ""): Promise<Topic[]> => {
 }
 
 // 解析 https://hostloc.mjj.sale/
-export const parseLocSaleLJ = async () => {
+const parseSaleLJ = async () => {
   const resp = await mAxios.get("https://hostloc.mjj.sale/")
   const data: LocSaleLJItem[] = resp.data.new_data[0]
 
@@ -91,4 +91,7 @@ export const parseLocSaleLJ = async () => {
   return topics
 }
 
-export default parseLocHtml
+// hostloc
+const hostloc = {TAG, parseRss, parseHtml, parseSaleLJ}
+
+export default hostloc

@@ -17,7 +17,7 @@ export type Item = {
 }
 
 // RSS
-export type NSRss = {
+export type Rss = {
   title: string
   description: string
   link: string

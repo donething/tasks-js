@@ -3,7 +3,7 @@ import {envTip} from "../base/comm"
 import {evalText, PupOptions, waitForNavNoThrow} from "../base/puppeteer/puppeteer"
 import {SignResp} from "./types"
 import {sleep} from "do-utils"
-import {TAG} from "./nodeseek"
+import Nodeseek from "./nodeseek"
 
 // 环境变量的键
 const ENV_KEY = "NODESEEK_USER_PWD"
@@ -11,8 +11,8 @@ const ENV_KEY = "NODESEEK_USER_PWD"
 // 登录
 const login = async (page: Page): Promise<boolean> => {
   if (!process.env[ENV_KEY]) {
-    console.log("😢", TAG, envTip(ENV_KEY))
-    throw Error(`${TAG} ${envTip(ENV_KEY)}`)
+    console.log("😢", Nodeseek.TAG, envTip(ENV_KEY))
+    throw Error(`${Nodeseek.TAG} ${envTip(ENV_KEY)}`)
   }
 
   const [username, password] = process.env[ENV_KEY].split("//")
@@ -65,7 +65,7 @@ const login = async (page: Page): Promise<boolean> => {
 }
 
 // 签到
-export const sign = async () => {
+const sign = async () => {
   // Launch the browser and open a new blank page
   const browser = await puppeteer.launch(PupOptions)
 
@@ -92,15 +92,15 @@ export const sign = async () => {
   })
 
   if (!resp.success) {
-    console.log(TAG, "签到失败：", resp.message)
+    console.log(Nodeseek.TAG, "签到失败：", resp.message)
     return
   }
 
-  console.log(TAG, "签到成功：", resp.message)
+  console.log(Nodeseek.TAG, "签到成功：", resp.message)
 }
 
 // 检测通知
-export const ckNotification = async (page: Page): Promise<string> => {
+const ckNotification = async (page: Page): Promise<string> => {
   if (!(await login(page))) {
     return ""
   }
@@ -126,3 +126,8 @@ const pickMsg = async (page: Page): Promise<string> => {
 
   return ""
 }
+
+// Nodeseek 的任务
+const NodeseekTask = {sign, ckNotification}
+
+export default NodeseekTask

@@ -19,7 +19,7 @@ const notifyTopics = async (taskInfo) => {
         !utils_1.isQL && console.log(`获取的主题：\n`, topics);
         for (const t of topics) {
             // 只匹配指定帖子
-            if (!taskInfo.reg.test(t.title)) {
+            if (!task.needNotify(t)) {
                 console.log(`😒 跳过帖子：`, t.title, "\n  ", t.url, "\n");
                 continue;
             }

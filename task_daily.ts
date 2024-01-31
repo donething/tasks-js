@@ -4,16 +4,16 @@
  */
 
 // new Env('每日任务')
-// cron: 10 0 * * *
+// cron: 10 8 * * *
 
-import * as hostloc from "./utils/spider/hostloc/task"
-import * as mteam from "./utils/spider/mteam/mteam"
 import {parseAxiosErr} from "./utils/comm"
 import puppeteer from "puppeteer-core"
 import {PupOptions} from "./utils/spider/base/puppeteer/puppeteer"
 import {pushTGDaily} from "./utils/push/tgpush"
 import {PromiseName} from "./utils/types/result"
-import startLocTask from "./utils/spider/hostloc/task"
+import Hostloc from "./utils/spider/hostloc/hostloc"
+import HostlocTask from "./utils/spider/hostloc/task"
+import MTeam from "./utils/spider/mteam/mteam"
 
 const TAG = "每日任务"
 
@@ -34,11 +34,11 @@ const startTask = async () => {
 
   // 注意调用返回 Promise，而不是传递函数的引用，否则不会运行
   const promises: PromiseName<RetTag, Promise<string>>[] = [{
-    tag: hostloc.TAG,
-    promise: startLocTask(page)
+    tag: Hostloc.TAG,
+    promise: HostlocTask.startLocTask(page)
   }, {
-    tag: mteam.TAG,
-    promise: mteam.startMtTask()
+    tag: MTeam.TAG,
+    promise: MTeam.startTask()
   }]
   const results = await Promise.allSettled(promises.map(p => p.promise))
   for (const [i, result] of results.entries()) {
