@@ -41,7 +41,7 @@ const client = axios.create({
   jar: new CookieJar(),
 
   // 超时
-  timeout: 5000
+  timeout: 20*1000
 })
 
 // 添加响应拦截器：增加超时时重试
@@ -71,7 +71,7 @@ client.interceptors.response.use((response) => {
         setTimeout(() => {
           console.log(`🤨 开始第 ${retryCount} 次重试:`, config.url)
           resolve(client.request(config))
-        }, 2000) // 1秒钟的延迟
+        }, 2000) // 几秒的延迟
       })
     }
   }

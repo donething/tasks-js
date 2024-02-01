@@ -17,7 +17,7 @@ export const PupOptions: PuppeteerLaunchOptions = {
  */
 export const waitForNavNoThrow = async (page: Page,
                                         waitUntil: PuppeteerLifeCycleEvent = "networkidle0",
-                                        timeout = 3000) => {
+                                        timeout = 20*1000) => {
   try {
     await page.waitForNavigation({waitUntil, timeout})
   } catch (err) {

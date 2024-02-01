@@ -3,7 +3,7 @@
  */
 
 // new Env('新帖相关')
-// cron: */10 * * * * *
+// cron: */30 * * * * *
 
 import notifyTopics, {TaskInfo} from "./utils/notify"
 import {Root} from "./utils/comm"
