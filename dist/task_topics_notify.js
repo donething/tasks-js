@@ -7,7 +7,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 // new Env('新帖相关')
-// cron: */10 * * * * *
+// cron: */30 * * * * *
 const notify_1 = __importDefault(require("./utils/notify"));
 const comm_1 = require("./utils/comm");
 const hostloc_1 = __importDefault(require("./utils/spider/hostloc/hostloc"));

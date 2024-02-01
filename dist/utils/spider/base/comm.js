@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.envTip = exports.truncate4tg = exports.TOPIC_TIME = void 0;
 // 发送消息到 TG 时，时间的格式
 exports.TOPIC_TIME = "YYYY-mm-dd HH:MM:SS";
+// 发送到 TG 消息中的帖子的最大长度
 const TOPIC_MAX = 100;
 // 发送到 TG 消息中的帖子的最大长度
 const truncate4tg = (content) => {

@@ -15,7 +15,7 @@ exports.PupOptions = {
  *
  * 因为有些页面一直在请求，无法等待完成，所以会超时，此时可以避免抛出错误
  */
-const waitForNavNoThrow = async (page, waitUntil = "networkidle0", timeout = 3000) => {
+const waitForNavNoThrow = async (page, waitUntil = "networkidle0", timeout = 20 * 1000) => {
     try {
         await page.waitForNavigation({ waitUntil, timeout });
     }
