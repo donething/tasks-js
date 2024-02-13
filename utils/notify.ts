@@ -16,7 +16,7 @@ export interface Notify {
 
 // 扫描并通知有关的新帖的任务信息
 export type TaskInfo = {
-  // 数据文件的保存路径。如 "./backups/cc_low_price.json"
+  // 数据文件的保存路径。如 BACKUPS + "/cc_low_price.json"
   filepath: string
   // 需要获取的网站及节点的信息
   topicTaskInfos: TopicTaskInfo[]
@@ -37,7 +37,7 @@ const notifyTopics = async (taskInfo: TaskInfo) => {
   const tasks = taskInfo.topicTaskInfos.map(async task => {
     const topics = await task.fun(task.node)
 
-    !isQL && console.log(`获取的主题：\n`, topics)
+    !isQL && console.log(`[${task.tag}]获取的主题：\n`, topics)
 
     for (const t of topics) {
       // 只匹配指定帖子

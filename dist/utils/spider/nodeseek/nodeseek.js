@@ -62,7 +62,7 @@ const parseRss = async () => {
         // xmlparser 将 description 解析到了 content 变量
         const content = (0, comm_1.truncate4tg)(item.description || item.content || "");
         const pub = (0, do_utils_1.date)(new Date(item.pubDate), comm_1.TOPIC_TIME);
-        const category = item.category;
+        const category = item.categories ? item.categories[0] : undefined;
         topics.push({ tag: TAG, tid, title, url, author, content, pub, category });
     }
     return topics;

@@ -56,6 +56,7 @@ export type TopicTaskInfo = {
   // 获取主题列表的函数
   fun: TopicFunc
   // 判断是否需要发送通知
+  // 需要先检测主题的关键信息的完整性，如：`t => checkTopic(t, ["title"]) && /\b(cc)(?!s)|(cloudcone)\b/i.test(t.title)`
   needNotify: (t: Topic) => boolean
   // TopicSite.getTids 需要指定的节点/分区/分区号。如 "tech"、"45"。注意有些获取主题列表的函数中，可能忽视该参数
   node: string

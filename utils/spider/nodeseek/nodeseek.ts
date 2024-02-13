@@ -20,7 +20,7 @@ const ua = "Mozilla/5.0 (Windows NT 5.1; rv:5.0) Gecko/20100101 Firefox/5.0"
 
 const parser = new Parser<Rss, Item>()
 
-const TAG:SiteName = "nodeseek"
+const TAG: SiteName = "nodeseek"
 
 /**
  * 获取 RSS 订阅的文本内容
@@ -78,7 +78,7 @@ const parseRss = async (): Promise<Topic[]> => {
     // xmlparser 将 description 解析到了 content 变量
     const content = truncate4tg(item.description || item.content || "")
     const pub = date(new Date(item.pubDate), TOPIC_TIME)
-    const category = item.category
+    const category = item.categories ? item.categories[0] : undefined
 
     topics.push({tag: TAG, tid, title, url, author, content, pub, category})
   }

@@ -61,9 +61,9 @@ rm -rf /ql/data/scripts/donething_tasks-js/utils && mv /ql/data/scripts/donethin
 
 ### 持久存储数据
 
-以`./backups/`开头拼接路径，可以将创建的文件存储到宿主机中，以便备份
+以`BACKUPS(./backups)`拼接路径，可以将创建的文件存储到宿主机中，以便备份
 
-如`const dbPath = "./backups/notify_ckecker.json"`
+如`const dbPath = BACKUPS + "notify_ckecker.json"`
 
 ### cron
 

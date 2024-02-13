@@ -27,6 +27,7 @@ const http_1 = require("../../http");
 const file_1 = require("../../file");
 const tgpush_1 = require("../../push/tgpush");
 const cheerio = __importStar(require("cheerio"));
+const comm_1 = require("../../comm");
 const TAG = "订购CCS";
 // 需要订购的产品
 const productList = [
@@ -40,7 +41,7 @@ const dcList = ["Los Angeles"];
 // 网站地址
 const addr = "https://cloud.colocrossing.com";
 // 数据文件的路径
-const dbPath = "./backups/ccs_order.json";
+const dbPath = comm_1.BACKUPS + "/ccs_order.json";
 /**
  * 登录
  * 登录失败时，会直接抛出错误

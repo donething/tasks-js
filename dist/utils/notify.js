@@ -16,7 +16,7 @@ const notifyTopics = async (taskInfo) => {
     // 异步执行所有任务
     const tasks = taskInfo.topicTaskInfos.map(async (task) => {
         const topics = await task.fun(task.node);
-        !utils_1.isQL && console.log(`获取的主题：\n`, topics);
+        !utils_1.isQL && console.log(`[${task.tag}]获取的主题：\n`, topics);
         for (const t of topics) {
             // 只匹配指定帖子
             if (!task.needNotify(t)) {

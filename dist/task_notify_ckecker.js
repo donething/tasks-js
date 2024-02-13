@@ -21,7 +21,7 @@ const v2ex_1 = __importDefault(require("./utils/spider/v2ex/v2ex"));
 const task_2 = __importDefault(require("./utils/spider/v2ex/task"));
 const TAG = "站内通知";
 // 保存上次检测的的时间戳，避免重复通知
-const dbPath = "./backups/notify_ckecker.json";
+const dbPath = comm_1.BACKUPS + "/notify_ckecker.json";
 // 执行检测
 const startCheck = async () => {
     // 读取已提示的帖子列表（ID 列表）
