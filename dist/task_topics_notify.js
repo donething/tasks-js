@@ -9,7 +9,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // new Env('新帖相关')
 // cron: */30 * * * * *
 const notify_1 = __importDefault(require("./utils/notify"));
-const comm_1 = require("./utils/comm");
 const hostloc_1 = __importDefault(require("./utils/spider/hostloc/hostloc"));
 const nodeseek_1 = __importDefault(require("./utils/spider/nodeseek/nodeseek"));
 const v2ex_1 = __importDefault(require("./utils/spider/v2ex/v2ex"));
@@ -41,7 +40,7 @@ const taskInfo = {
         }
     ],
     // 保存数据的文件路径
-    filepath: comm_1.Root + "/topics_notify.json",
+    filepath: "./backups/topics_notify.json",
     // 发送通知时的提示文本
     tag: TAG,
 };

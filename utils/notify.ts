@@ -16,7 +16,7 @@ export interface Notify {
 
 // 扫描并通知有关的新帖的任务信息
 export type TaskInfo = {
-  // 数据文件的保存路径。如 Root + "/cc_low_price.json"
+  // 数据文件的保存路径。如 "./backups/cc_low_price.json"
   filepath: string
   // 需要获取的网站及节点的信息
   topicTaskInfos: TopicTaskInfo[]

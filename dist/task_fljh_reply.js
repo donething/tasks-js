@@ -12,10 +12,9 @@ const do_utils_1 = require("do-utils");
 const http_1 = require("./utils/http");
 const tgpush_1 = require("./utils/push/tgpush");
 const html_1 = require("./utils/spider/base/html");
-const comm_1 = require("./utils/comm");
 const TAG = "fljh";
 // 保存数据的文件路径
-const FILE_FLJH = comm_1.Root + "/fljh.json";
+const FILE_FLJH = "./backups/fljh.json";
 // 标签
 // 回复的内容
 const content = encodeURIComponent("感谢分享！！");

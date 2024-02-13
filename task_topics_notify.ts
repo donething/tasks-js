@@ -6,7 +6,6 @@
 // cron: */30 * * * * *
 
 import notifyTopics, {TaskInfo} from "./utils/notify"
-import {Root} from "./utils/comm"
 import Hostloc from "./utils/spider/hostloc/hostloc"
 import Nodeseek from "./utils/spider/nodeseek/nodeseek"
 import V2ex from "./utils/spider/v2ex/v2ex"
@@ -41,7 +40,7 @@ const taskInfo: TaskInfo = {
   ],
 
   // 保存数据的文件路径
-  filepath: Root + "/topics_notify.json",
+  filepath: "./backups/topics_notify.json",
 
   // 发送通知时的提示文本
   tag: TAG,

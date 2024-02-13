@@ -3,7 +3,6 @@ import {FData, User} from "./types"
 import {readJSON, writeJSON} from "../../file"
 import {pushTGMsg} from "../../push/tgpush"
 import * as cheerio from "cheerio"
-import {Root} from "../../comm"
 
 const TAG = "订购CCS"
 
@@ -21,7 +20,7 @@ const dcList = ["Los Angeles"]
 const addr = "https://cloud.colocrossing.com"
 
 // 数据文件的路径
-const dbPath = Root + "/ccs_order.json"
+const dbPath = "./backups/ccs_order.json"
 
 /**
  * 登录
