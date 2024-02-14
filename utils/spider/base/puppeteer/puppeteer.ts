@@ -1,4 +1,4 @@
-import puppeteer, {Page, PuppeteerLaunchOptions, PuppeteerLifeCycleEvent} from "puppeteer-core"
+import {Page, PuppeteerLaunchOptions, PuppeteerLifeCycleEvent} from "puppeteer-core"
 import {isQL} from "../../../utils"
 
 // Puppeteer 选项
