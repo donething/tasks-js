@@ -7,7 +7,7 @@
 // cron: */3 * * * *
 
 import puppeteer from "puppeteer-core"
-import {PupOptions} from "./utils/spider/base/puppeteer/puppeteer"
+import {pageTimeout, PupOptions} from "./utils/spider/base/puppeteer/puppeteer"
 import {BACKUPS, parseAxiosErr} from "./utils/comm"
 import {pushTGMsg} from "./utils/push/tgpush"
 import {pushBulletNotify} from "./utils/push/bulletpush"
@@ -56,7 +56,7 @@ const startCheck = async () => {
   const pageLoc = await browser.newPage()
 
   // pageNS.setDefaultTimeout(30 * 1000)
-  pageLoc.setDefaultTimeout(5 * 1000)
+  pageLoc.setDefaultTimeout(pageTimeout)
 
   // 注意调用返回 Promise，而不是传递函数的引用，否则不会运行
   const promises: PromiseName<RetTag, Promise<RetPayload>>[] = [{

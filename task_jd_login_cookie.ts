@@ -8,7 +8,7 @@
 // cron: * * 30 2 *
 
 import puppeteer, {Page} from "puppeteer-core"
-import {PupOptions} from "./utils/spider/base/puppeteer/puppeteer"
+import {pageTimeout, PupOptions} from "./utils/spider/base/puppeteer/puppeteer"
 import {sleep, typeError} from "do-utils"
 import {createCanvas, Image} from "canvas"
 import simulateHumanMove from "./utils/spider/base/puppeteer/simulateHumanMove"
@@ -185,7 +185,7 @@ const startJDCookie = async () => {
 
   for (let i = 0; i < 10; i++) {
     const page = await browser.newPage()
-    page.setDefaultTimeout(5000)
+    page.setDefaultTimeout(pageTimeout)
 
     try {
       success = await login(page, username, password)

@@ -24,7 +24,7 @@ const startTask = async () => {
     // Launch the browser and open a new blank page
     const browser = await puppeteer_core_1.default.launch(puppeteer_1.PupOptions);
     const page = await browser.newPage();
-    page.setDefaultTimeout(5 * 1000);
+    page.setDefaultTimeout(puppeteer_1.pageTimeout);
     // 注意调用返回 Promise，而不是传递函数的引用，否则不会运行
     const promises = [{
             tag: hostloc_1.default.TAG,

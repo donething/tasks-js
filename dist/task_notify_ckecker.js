@@ -31,7 +31,7 @@ const startCheck = async () => {
     // const pageNS = await browser.newPage()
     const pageLoc = await browser.newPage();
     // pageNS.setDefaultTimeout(30 * 1000)
-    pageLoc.setDefaultTimeout(5 * 1000);
+    pageLoc.setDefaultTimeout(puppeteer_1.pageTimeout);
     // 注意调用返回 Promise，而不是传递函数的引用，否则不会运行
     const promises = [{
             tag: hostloc_1.default.TAG,

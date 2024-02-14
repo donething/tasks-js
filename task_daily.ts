@@ -8,7 +8,7 @@
 
 import {parseAxiosErr} from "./utils/comm"
 import puppeteer from "puppeteer-core"
-import {PupOptions} from "./utils/spider/base/puppeteer/puppeteer"
+import {pageTimeout, PupOptions} from "./utils/spider/base/puppeteer/puppeteer"
 import {pushTGDaily} from "./utils/push/tgpush"
 import {PromiseName} from "./utils/types/result"
 import Hostloc from "./utils/spider/hostloc/hostloc"
@@ -30,7 +30,7 @@ const startTask = async () => {
 
   const page = await browser.newPage()
 
-  page.setDefaultTimeout(5 * 1000)
+  page.setDefaultTimeout(pageTimeout)
 
   // 注意调用返回 Promise，而不是传递函数的引用，否则不会运行
   const promises: PromiseName<RetTag, Promise<string>>[] = [{

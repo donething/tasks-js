@@ -160,7 +160,7 @@ const startJDCookie = async () => {
     const browser = await puppeteer_core_1.default.launch(puppeteer_1.PupOptions);
     for (let i = 0; i < 10; i++) {
         const page = await browser.newPage();
-        page.setDefaultTimeout(5000);
+        page.setDefaultTimeout(puppeteer_1.pageTimeout);
         try {
             success = await login(page, username, password);
             const cookies = await page.cookies();

@@ -58,7 +58,7 @@ const sign = async () => {
     // Launch the browser and open a new blank page
     const browser = await puppeteer_core_1.default.launch(puppeteer_1.PupOptions);
     const page = await browser.newPage();
-    page.setDefaultTimeout(60 * 1000);
+    page.setDefaultTimeout(puppeteer_1.pageTimeout);
     if (!(await login(page))) {
         return;
     }

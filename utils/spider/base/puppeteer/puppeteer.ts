@@ -10,6 +10,8 @@ export const PupOptions: PuppeteerLaunchOptions = {
   args: ["--no-sandbox", "--disabled-setupid-sandbox", "--start-maximized"]
 }
 
+export const pageTimeout = 20 * 1000
+
 /**
  * waitForNavigation 超时而不抛出错误
  *
@@ -17,9 +19,9 @@ export const PupOptions: PuppeteerLaunchOptions = {
  */
 export const waitForNavNoThrow = async (page: Page,
                                         waitUntil: PuppeteerLifeCycleEvent = "networkidle0",
-                                        timeout = 20*1000) => {
+                                        t = pageTimeout) => {
   try {
-    await page.waitForNavigation({waitUntil, timeout})
+    await page.waitForNavigation({waitUntil, timeout: t})
   } catch (err) {
     // 不抛出错误
   }

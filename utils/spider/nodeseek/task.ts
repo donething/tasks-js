@@ -1,6 +1,6 @@
 import puppeteer, {Page} from "puppeteer-core"
 import {envTip} from "../base/comm"
-import {evalText, PupOptions, waitForNavNoThrow} from "../base/puppeteer/puppeteer"
+import {evalText, pageTimeout, PupOptions, waitForNavNoThrow} from "../base/puppeteer/puppeteer"
 import {SignResp} from "./types"
 import {sleep} from "do-utils"
 import Nodeseek from "./nodeseek"
@@ -71,7 +71,7 @@ const sign = async () => {
 
   const page = await browser.newPage()
 
-  page.setDefaultTimeout(60 * 1000)
+  page.setDefaultTimeout(pageTimeout)
 
   if (!(await login(page))) {
     return
