@@ -9,8 +9,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 // new Env('站内通知检测')
 // cron: */3 * * * *
-const puppeteer_core_1 = __importDefault(require("puppeteer-core"));
-const puppeteer_1 = require("./utils/spider/base/puppeteer/puppeteer");
 const comm_1 = require("./utils/comm");
 const tgpush_1 = require("./utils/push/tgpush");
 const bulletpush_1 = require("./utils/push/bulletpush");
@@ -26,16 +24,10 @@ const dbPath = comm_1.BACKUPS + "/notify_ckecker.json";
 const startCheck = async () => {
     // 读取已提示的帖子列表（ID 列表）
     let fData = (0, file_1.readJSON)(dbPath, { v2ex: {}, hostloc: {}, nodeseek: {} });
-    // Launch the browser and open a new blank page
-    const browser = await puppeteer_core_1.default.launch(puppeteer_1.PupOptions);
-    // const pageNS = await browser.newPage()
-    const pageLoc = await browser.newPage();
-    // pageNS.setDefaultTimeout(30 * 1000)
-    pageLoc.setDefaultTimeout(puppeteer_1.pageTimeout);
     // 注意调用返回 Promise，而不是传递函数的引用，否则不会运行
     const promises = [{
             tag: hostloc_1.default.TAG,
-            promise: task_1.default.ckNotification(pageLoc)
+            promise: task_1.default.ckNotification()
         }, {
             tag: v2ex_1.default.TAG,
             promise: task_2.default.ckNotification(fData.v2ex.data)
@@ -69,6 +61,5 @@ const startCheck = async () => {
     // 保存文件
     (0, file_1.writeJSON)(dbPath, fData);
     console.log("🤨", "已执行完毕");
-    await browser.close();
 };
 startCheck();

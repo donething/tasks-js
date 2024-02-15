@@ -6,8 +6,6 @@
 // new Env('站内通知检测')
 // cron: */3 * * * *
 
-import puppeteer from "puppeteer-core"
-import {pageTimeout, PupOptions} from "./utils/spider/base/puppeteer/puppeteer"
 import {BACKUPS, parseAxiosErr} from "./utils/comm"
 import {pushTGMsg} from "./utils/push/tgpush"
 import {pushBulletNotify} from "./utils/push/bulletpush"
@@ -49,19 +47,10 @@ const startCheck = async () => {
   // 读取已提示的帖子列表（ID 列表）
   let fData = readJSON<FData>(dbPath, {v2ex: {}, hostloc: {}, nodeseek: {}})
 
-  // Launch the browser and open a new blank page
-  const browser = await puppeteer.launch(PupOptions)
-
-  // const pageNS = await browser.newPage()
-  const pageLoc = await browser.newPage()
-
-  // pageNS.setDefaultTimeout(30 * 1000)
-  pageLoc.setDefaultTimeout(pageTimeout)
-
   // 注意调用返回 Promise，而不是传递函数的引用，否则不会运行
   const promises: PromiseName<RetTag, Promise<RetPayload>>[] = [{
     tag: Hostloc.TAG,
-    promise: HostlocTask.ckNotification(pageLoc)
+    promise: HostlocTask.ckNotification()
   }, {
     tag: V2ex.TAG,
     promise: V2exTask.ckNotification(fData.v2ex.data)
@@ -100,8 +89,6 @@ const startCheck = async () => {
   writeJSON(dbPath, fData)
 
   console.log("🤨", "已执行完毕")
-
-  await browser.close()
 }
 
 startCheck()

@@ -8,6 +8,8 @@ import {envTip} from "../base/comm"
 import {sleep} from "do-utils"
 import {RetPayload} from "../../../task_notify_ckecker"
 import Hostloc from "./hostloc"
+import {mAxios, UserAgents} from "../../http"
+import {isQL} from "../../utils"
 
 // 需要访问空间的用户 uid
 const uids = ["66244", "61525", "62920", "61253", "62278", "29148",
@@ -17,6 +19,19 @@ const SPACE_NUM = 10
 
 // 环境变量的键
 const ENV_KEY = "LOC_USER_PWD"
+
+const addr = "https://hostloc.com"
+
+const headersGet = {
+  "referer": addr,
+  "user-agent": UserAgents.Win,
+}
+const headersPost = {
+  "origin": addr,
+  "referer": addr,
+  "content-type": "application/x-www-form-urlencoded",
+  "user-agent": UserAgents.Win
+}
 
 // 执行 hostloc 的任务
 const startLocTask = async (page: Page): Promise<string> => {
@@ -121,7 +136,7 @@ const accessSpace = async (uid: string, page: Page): Promise<boolean> => {
 }
 
 // 检测是否有通知
-const ckNotification = async (page: Page): Promise<RetPayload> => {
+const ckNotificationPuppeteer = async (page: Page): Promise<RetPayload> => {
   if (!process.env[ENV_KEY]) {
     console.log("😢", Hostloc.TAG, envTip(ENV_KEY))
     throw Error(`${Hostloc.TAG} ${envTip(ENV_KEY)}`)
@@ -140,7 +155,55 @@ const ckNotification = async (page: Page): Promise<RetPayload> => {
   return {url: text.includes("提醒(") ? "https://hostloc.com/home.php?mod=space&do=notice" : ""}
 }
 
+// 登录(Post)
+const postLogin = async (username: string, password: string): Promise<boolean> => {
+  // 提取 formhash
+  const respHtml = await mAxios.get(addr, {headers: headersGet})
+  const hashText = respHtml.data
+  const formReg = /<input.+?name="formhash"\s+value="(.+?)"/s
+  const formMatch = hashText.match(formReg)
+  if (!formMatch || formMatch.length <= 1) {
+    throw Error(`提取 formhas 失败：${hashText}`)
+  }
+
+  const formhash = formMatch[1]
+  !isQL && console.log(`🤨 提取的登录信息 formhash: ${formhash}`)
+
+  // 登录
+  !isQL && console.log(`🤨 登录信息 username='${username}', password='${password}'`)
+  const data = `fastloginfield=username&username=${decodeURIComponent(username)}&password=${decodeURIComponent(password)}&formhash=${formhash}&quickforward=no&handlekey=ls`
+
+  const loginPostUrl = `${addr}/member.php?mod=logging&action=login&loginsubmit=yes&infloat=yes&lssubmit=yes&inajax=1`
+  const respPost = await mAxios.post(loginPostUrl, data, {headers: headersPost})
+  const postText = respPost.data
+
+  // 判断是否成功
+  if (!postText.includes("window.location.href")) {
+    console.log("登录失败：\n", postText)
+    throw Error(`登录失败：'${postText}'`)
+  }
+
+  return true
+}
+
+// 检测通知(Get)
+const ckNotification = async () => {
+  if (!process.env[ENV_KEY]) {
+    console.log("😢", Hostloc.TAG, envTip(ENV_KEY))
+    throw Error(`${Hostloc.TAG} ${envTip(ENV_KEY)}`)
+  }
+
+  const [username, password] = process.env[ENV_KEY].split("//")
+
+  await postLogin(username, password)
+
+  const respHtml = await mAxios.get(addr, {headers: headersGet})
+  const text = respHtml.data
+
+  return {url: text.includes("a showmenu new") ? "https://hostloc.com/home.php?mod=space&do=notice" : ""}
+}
+
 // Hostloc 的任务
-const HostlocTask = {startLocTask, ckNotification}
+const HostlocTask = {startLocTask, ckNotification, ckNotificationPuppeteer}
 
 export default HostlocTask
