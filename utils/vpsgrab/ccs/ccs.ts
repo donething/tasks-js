@@ -15,7 +15,7 @@ const productList = [
 ]
 // 需要所在的数据中心
 // const dcList = ["Los Angeles", "New York"]
-const dcList = ["Los Angeles"]
+const dcList = ["Los Angeles", "New York"]
 
 // 网站地址
 const addr = "https://cloud.colocrossing.com"
@@ -149,7 +149,7 @@ const hasStock = async (url: string): Promise<boolean> => {
   }
 
   const resp = await mAxios.get(url, {headers})
-  return resp.data.trim() !== ""
+  return resp.data.trim().includes("Order Summary")
 }
 
 // 开始订购

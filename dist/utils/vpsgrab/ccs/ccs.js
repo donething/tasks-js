@@ -37,7 +37,7 @@ const productList = [
 ];
 // 需要所在的数据中心
 // const dcList = ["Los Angeles", "New York"]
-const dcList = ["Los Angeles"];
+const dcList = ["Los Angeles", "New York"];
 // 网站地址
 const addr = "https://cloud.colocrossing.com";
 // 数据文件的路径
@@ -145,7 +145,7 @@ const hasStock = async (url) => {
         "Referer": addr,
     };
     const resp = await http_1.mAxios.get(url, { headers });
-    return resp.data.trim() !== "";
+    return resp.data.trim().includes("Order Summary");
 };
 // 开始订购
 const startOrder = async (users) => {
