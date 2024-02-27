@@ -29,11 +29,13 @@ const tgpush_1 = require("../../push/tgpush");
 const cheerio = __importStar(require("cheerio"));
 const comm_1 = require("../../comm");
 const TAG = "订购CCS";
+// AFF
+const aff = "379";
 // 需要订购的产品
 const productList = [
-    "https://cloud.colocrossing.com/aff.php?aff=&pid=23",
-    "https://cloud.colocrossing.com/aff.php?aff=&pid=24",
-    "https://cloud.colocrossing.com/aff.php?aff=&pid=25"
+    `https://cloud.colocrossing.com/aff.php?aff=${aff}&pid=23`,
+    `https://cloud.colocrossing.com/aff.php?aff=${aff}&pid=24`,
+    `https://cloud.colocrossing.com/aff.php?aff=${aff}&pid=25`
 ];
 // 需要所在的数据中心
 // const dcList = ["Los Angeles", "New York"]
